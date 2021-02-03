@@ -32,6 +32,10 @@ namespace ConvertSys
             this.label1 = new System.Windows.Forms.Label();
             this.TB_DataBaseDirectory = new System.Windows.Forms.TextBox();
             this.BTN_BrowsDB = new System.Windows.Forms.Button();
+            this.BTN_Start = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.TB_ExcelFileDirectory = new System.Windows.Forms.TextBox();
+            this.BTN_BrowseExcel = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -60,16 +64,57 @@ namespace ConvertSys
             this.BTN_BrowsDB.UseVisualStyleBackColor = true;
             this.BTN_BrowsDB.Click += new System.EventHandler(this.BTN_BrowsDB_Click);
             // 
+            // BTN_Start
+            // 
+            this.BTN_Start.Location = new System.Drawing.Point(629, 98);
+            this.BTN_Start.Name = "BTN_Start";
+            this.BTN_Start.Size = new System.Drawing.Size(158, 23);
+            this.BTN_Start.TabIndex = 3;
+            this.BTN_Start.Text = "Запуск";
+            this.BTN_Start.UseVisualStyleBackColor = true;
+            this.BTN_Start.Click += new System.EventHandler(this.BTN_Start_Click);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(12, 63);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(94, 13);
+            this.label2.TabIndex = 4;
+            this.label2.Text = "Файл выдел .xlsx";
+            // 
+            // TB_ExcelFileDirectory
+            // 
+            this.TB_ExcelFileDirectory.Location = new System.Drawing.Point(257, 60);
+            this.TB_ExcelFileDirectory.Name = "TB_ExcelFileDirectory";
+            this.TB_ExcelFileDirectory.Size = new System.Drawing.Size(433, 20);
+            this.TB_ExcelFileDirectory.TabIndex = 5;
+            // 
+            // BTN_BrowseExcel
+            // 
+            this.BTN_BrowseExcel.Location = new System.Drawing.Point(696, 57);
+            this.BTN_BrowseExcel.Name = "BTN_BrowseExcel";
+            this.BTN_BrowseExcel.Size = new System.Drawing.Size(91, 23);
+            this.BTN_BrowseExcel.TabIndex = 6;
+            this.BTN_BrowseExcel.Text = "Обзор";
+            this.BTN_BrowseExcel.UseVisualStyleBackColor = true;
+            this.BTN_BrowseExcel.Click += new System.EventHandler(this.BTN_BrowseExcel_Click);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(800, 130);
+            this.Controls.Add(this.BTN_BrowseExcel);
+            this.Controls.Add(this.TB_ExcelFileDirectory);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.BTN_Start);
             this.Controls.Add(this.BTN_BrowsDB);
             this.Controls.Add(this.TB_DataBaseDirectory);
             this.Controls.Add(this.label1);
             this.Name = "MainWindow";
             this.Text = "Главное окно";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainWindow_FormClosed);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -80,5 +125,9 @@ namespace ConvertSys
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox TB_DataBaseDirectory;
         private System.Windows.Forms.Button BTN_BrowsDB;
+        private System.Windows.Forms.Button BTN_Start;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox TB_ExcelFileDirectory;
+        private System.Windows.Forms.Button BTN_BrowseExcel;
     }
 }
