@@ -29,6 +29,7 @@ namespace ConvertSys
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             this.label1 = new System.Windows.Forms.Label();
             this.TB_DataBaseDirectory = new System.Windows.Forms.TextBox();
             this.BTN_BrowsDB = new System.Windows.Forms.Button();
@@ -122,6 +123,7 @@ namespace ConvertSys
             this.Controls.Add(this.BTN_BrowsDB);
             this.Controls.Add(this.TB_DataBaseDirectory);
             this.Controls.Add(this.label1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainWindow";
             this.Text = "Главное окно";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainWindow_FormClosed);
