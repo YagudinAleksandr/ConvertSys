@@ -36,6 +36,7 @@ namespace ConvertSys
             this.label2 = new System.Windows.Forms.Label();
             this.TB_ExcelFileDirectory = new System.Windows.Forms.TextBox();
             this.BTN_BrowseExcel = new System.Windows.Forms.Button();
+            this.lbTimes = new System.Windows.Forms.ListBox();
             this.SuspendLayout();
             // 
             // label1
@@ -66,7 +67,7 @@ namespace ConvertSys
             // 
             // BTN_Start
             // 
-            this.BTN_Start.Location = new System.Drawing.Point(629, 98);
+            this.BTN_Start.Location = new System.Drawing.Point(629, 392);
             this.BTN_Start.Name = "BTN_Start";
             this.BTN_Start.Size = new System.Drawing.Size(158, 23);
             this.BTN_Start.TabIndex = 3;
@@ -100,11 +101,20 @@ namespace ConvertSys
             this.BTN_BrowseExcel.UseVisualStyleBackColor = true;
             this.BTN_BrowseExcel.Click += new System.EventHandler(this.BTN_BrowseExcel_Click);
             // 
+            // lbTimes
+            // 
+            this.lbTimes.FormattingEnabled = true;
+            this.lbTimes.Location = new System.Drawing.Point(16, 91);
+            this.lbTimes.Name = "lbTimes";
+            this.lbTimes.Size = new System.Drawing.Size(771, 290);
+            this.lbTimes.TabIndex = 7;
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 130);
+            this.ClientSize = new System.Drawing.Size(800, 427);
+            this.Controls.Add(this.lbTimes);
             this.Controls.Add(this.BTN_BrowseExcel);
             this.Controls.Add(this.TB_ExcelFileDirectory);
             this.Controls.Add(this.label2);
@@ -129,5 +139,6 @@ namespace ConvertSys
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox TB_ExcelFileDirectory;
         private System.Windows.Forms.Button BTN_BrowseExcel;
+        private System.Windows.Forms.ListBox lbTimes;
     }
 }
