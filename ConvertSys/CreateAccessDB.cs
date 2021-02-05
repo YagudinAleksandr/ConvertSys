@@ -1,54 +1,45 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ADOX;
-using ADODB;
 using System.Windows.Forms;
 
 namespace ConvertSys
 {
-    public class Class1
+    public class CreateAccessDB
     {
         public static void CreateNiewAccessDatabase()
         {
-            
+
             string fileName = "NewDB.mdb";
-            
-            
+
+
             ADOX.Catalog cat = new ADOX.Catalog();
 
-            
+
             try
             {
                 //Создаем базу данных
                 cat.Create("Provider=Microsoft.Jet.OLEDB.4.0;" + "Data Source=" + fileName + "; Jet OLEDB:Engine Type=5");
-                
+
                 //Закрываем базу данных
                 ADODB.Connection con = cat.ActiveConnection as ADODB.Connection;
                 if (con != null)
                     con.Close();
 
-                
+
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
             cat = null;
-            
+
             //Строка подключения к созданной базе данных
-            string connectionString = string.Format("Provider={0}; Data Source={1}; Jet OLEDB:Engine Type={2}","Microsoft.Jet.OLEDB.4.0","NewDB.mdb",5);
-            
+            string connectionString = string.Format("Provider={0}; Data Source={1}; Jet OLEDB:Engine Type={2}", "Microsoft.Jet.OLEDB.4.0", "NewDB.mdb", 5);
+
             using (var con = new System.Data.OleDb.OleDbConnection(connectionString))
             {
                 con.Open();
 
-                
+
                 //Создание таблиц баз данных
                 System.Data.OleDb.OleDbCommand oleDbCommand = new System.Data.OleDb.OleDbCommand();
                 oleDbCommand.Connection = con;
@@ -250,7 +241,7 @@ namespace ConvertSys
                         "ADD CONSTRAINT TblVydYarusSostaw_TblVydYarus_FK FOREIGN KEY (NomSoed) REFERENCES TblVydIarus ON UPDATE CASCADE ON DELETE CASCADE;";
                     oleDbCommand.ExecuteNonQuery();
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     MessageBox.Show(e.Message);
                     return;
@@ -262,11 +253,11 @@ namespace ConvertSys
                 }
 
 
-                MessageBox.Show("База данных успешно создана!");    
-                    
+                MessageBox.Show("База данных успешно создана!");
+
 
             }
-            
+
         }
     }
 }
