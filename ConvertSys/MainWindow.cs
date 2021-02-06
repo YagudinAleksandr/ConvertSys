@@ -17,6 +17,7 @@ namespace ConvertSys
     public partial class MainWindow : Form
     {
         private OleDbConnection connectionToAccess;
+        private OleDbConnection connectionToNSIAccess;
         public MainWindow()
         {
             InitializeComponent();
@@ -65,11 +66,15 @@ namespace ConvertSys
             if(TB_MainDB.Text!="")
             {
                 string connectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + TB_MainDB.Text;
+                string connectionToNSIDb = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + TB_DataBaseDirectory.Text;
 
                 try
                 {
                     connectionToAccess = new OleDbConnection(connectionString);
                     connectionToAccess.Open();
+
+                    connectionToNSIAccess = new OleDbConnection(connectionToNSIDb);
+                    connectionToNSIAccess.Open();
                 }
                 catch
                 {
@@ -80,12 +85,14 @@ namespace ConvertSys
                 try
                 {
                     //Открываем команды OleDB
+                    //Команды общие
                     OleDbCommand command = new OleDbCommand();
+                    //Команды к базе данных NSI
+                    OleDbCommand commandNSI = new OleDbCommand();
 
-                    //Переменная для подключения к Excel таблице
-                    string excelFileDir = TB_ExcelFileDirectory.Text;
+                    
                     DataSet ds = new DataSet();
-                    string ExcelConnectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Extended Properties=Excel 12.0 XML;Data Source=" + excelFileDir;
+                    string ExcelConnectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Extended Properties=Excel 12.0 XML;Data Source=" + TB_ExcelFileDirectory.Text;
                     //Прохождение по строкам и столбцам в Excel таблице
                     using (System.Data.OleDb.OleDbConnection connectionToExcel = new System.Data.OleDb.OleDbConnection(ExcelConnectionString))
                     {
@@ -113,44 +120,86 @@ namespace ConvertSys
                             ds.Tables.Add(dt);
                         }
 
-                        List<List<string>> list_table = new List<List<string>>();
-                        for (int j = 0; j < ds.Tables[0].Columns.Count; j++)
+
+
+
+                        for (int i = 1; i < ds.Tables[0].Rows.Count; i++)
                         {
-                            List<string> list_row = new List<string>();
-                            for (int i = 1; i < ds.Tables[0].Rows.Count; i++)
+
+
+                            int kvartal = Convert.ToInt32(ds.Tables[0].Rows[i].ItemArray[2]);//Квартал
+                            int vydel = Convert.ToInt32(ds.Tables[0].Rows[i].ItemArray[4]);//Выдел
+                            string point = ds.Tables[0].Rows[i].ItemArray[6].ToString();//Целевое назначение лесов
+                            string landCat = ds.Tables[0].Rows[i].ItemArray[7].ToString();//Категория земель
+                            string bonitet = ds.Tables[0].Rows[i].ItemArray[8].ToString();//Бонитет
+
+                            
+                                
+
+                            /*Проверка, существует ли запись в таблице*/
+                            command.CommandText = @"SELECT COUNT(*) FROM TblKvr WHERE KvrNomK = " + kvartal;
+                            command.Connection = connectionToAccess;
+                            int count = (int)command.ExecuteScalar();
+
+
+                            commandNSI.Connection = connectionToNSIAccess;
+                            commandNSI.CommandText = "SELECT KL FROM KlsKatZem WHERE TX = '" + landCat + "'";
+                            int scLandCat = (int)commandNSI.ExecuteScalar();
+
+                            int scBonitet = 0;
+                            if (bonitet != "")
                             {
+                                commandNSI.CommandText = "SELECT KL FROM KlsBonitet WHERE TX = '" + bonitet + "'";
+                                scBonitet = (int)commandNSI.ExecuteScalar();
+                            }
 
-                                //list_row.Add(ds.Tables[0].Rows[i].ItemArray[j].ToString());
-                                int kvartal = Convert.ToInt32(ds.Tables[0].Rows[i].ItemArray[2]);
-                                int vydel = Convert.ToInt32(ds.Tables[0].Rows[i].ItemArray[4]);
-                                /*Проверка, существует ли запись в таблице*/
-                                command.CommandText = @"SELECT COUNT(*) FROM TblKvr WHERE KvrNomK = " + kvartal;
-                                command.Connection = connectionToAccess;
-                                int count = (int)command.ExecuteScalar();
-                                if (count == 0)
+
+
+
+
+
+                            if (count == 0)
+                            {
+                                command.CommandText = "INSERT INTO TblKvr ([KvrNomK]) VALUES (" + kvartal + ");";
+                                command.ExecuteNonQuery();
+
+                                command.CommandText = "SELECT NomZ FROM TblKvr WHERE KvrNomK =" + kvartal;
+                                int nomZ = (int)command.ExecuteScalar();
+
+
+                                if(scBonitet !=0)
                                 {
-                                    command.CommandText = "INSERT INTO TblKvr ([KvrNomK]) VALUES (" + kvartal + ");";
-                                    command.ExecuteNonQuery();
-
-                                    command.CommandText = "SELECT NomZ FROM TblKvr WHERE KvrNomK =" + kvartal;
-                                    int nomZ = (int)command.ExecuteScalar();
-
-                                    command.CommandText = "INSERT INTO TblVyd([NomSoed],[KvrNom],[VydNom]) VALUES (" + nomZ + "," + kvartal + "," + vydel + ");";
+                                    command.CommandText = "INSERT INTO TblVyd([NomSoed],[KvrNom],[VydNom],[KatZem],[Bonitet]) VALUES (" + nomZ + "," + kvartal + "," + vydel + "," + scLandCat +
+                                        "," + scBonitet + ");";
                                     command.ExecuteNonQuery();
                                 }
                                 else
                                 {
-                                    command.CommandText = "SELECT NomZ FROM TblKvr WHERE KvrNomK =" + kvartal;
-                                    int nomZ = (int)command.ExecuteScalar();
-
-
+                                    command.CommandText = "INSERT INTO TblVyd([NomSoed],[KvrNom],[VydNom],[KatZem]) VALUES (" + nomZ + "," + kvartal + "," + vydel + "," + scLandCat + ");";
+                                    command.ExecuteNonQuery();
                                 }
+                                
+                            }
+                            else
+                            {
+                                command.CommandText = "SELECT NomZ FROM TblKvr WHERE KvrNomK =" + kvartal;
+                                int nomZ = (int)command.ExecuteScalar();
 
+                                if (scBonitet != 0)
+                                {
+                                    command.CommandText = "INSERT INTO TblVyd([NomSoed],[KvrNom],[VydNom],[KatZem],[Bonitet]) VALUES (" + nomZ + "," + kvartal + "," + vydel + "," + scLandCat +
+                                        "," + scBonitet + ");";
+                                    command.ExecuteNonQuery();
+                                }
+                                else
+                                {
+                                    command.CommandText = "INSERT INTO TblVyd([NomSoed],[KvrNom],[VydNom],[KatZem]) VALUES (" + nomZ + "," + kvartal + "," + vydel + "," + scLandCat + ");";
+                                    command.ExecuteNonQuery();
+                                }
                             }
 
-                            //list_table.Add(list_row);
-
                         }
+
 
                     }
                     MessageBox.Show("OK!");
@@ -159,7 +208,11 @@ namespace ConvertSys
                 {
                     MessageBox.Show(ex.Message);
                 }
-                    
+                finally
+                {
+                    connectionToAccess.Close();
+                    connectionToNSIAccess.Close();
+                }
 
                     /*
                     string query = "SELECT NomZ,NomSoed,KatZem,GodAkt,PorodaPrb,TipLesa,Tlu,Info FROM TblVyd";
@@ -177,7 +230,7 @@ namespace ConvertSys
                     //reader.Close();
                     //RTB_Result.Text = command.ExecuteScalar().ToString();
 
-                    connectionToAccess.Close();
+                    
                 
                 
             }
