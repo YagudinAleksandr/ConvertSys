@@ -135,6 +135,8 @@ namespace ConvertSys
                             string bonitet = ds.Tables[0].Rows[i].ItemArray[8].ToString();//Бонитет
                             string square = Convert.ToDouble(ds.Tables[0].Rows[i].ItemArray[9]).ToString(CultureInfo.InvariantCulture);//Площадь
                             string hozSection = ds.Tables[0].Rows[i].ItemArray[19].ToString();//Хозяйственная часть
+                            string preoblPrd = ds.Tables[0].Rows[i].ItemArray[20].ToString();//Преобладающая порода
+                            int groupAge = Convert.ToInt32(ds.Tables[0].Rows[i].ItemArray[21]);//Группа возраста
                             
                                 
 
@@ -164,6 +166,22 @@ namespace ConvertSys
                                 scHozSection = (int)commandNSI.ExecuteScalar();
                             }
 
+                            //Преобладающая порода
+                            int scPreoblPrd = 0;
+                            if (preoblPrd != "")
+                            {
+                                commandNSI.CommandText = "SELECT KL FROM KlsPoroda WHERE Tx_s = '" + preoblPrd + "'";
+                                scPreoblPrd = (int)commandNSI.ExecuteScalar();
+                            }
+
+
+                            //Класс возраста
+                            int scGroupAge = 0;
+                            if (groupAge != 0)
+                            {
+                                commandNSI.CommandText = "SELECT KL FROM KlsVozGrp WHERE Kod = '" + groupAge + "'";
+                                scGroupAge = (int)commandNSI.ExecuteScalar();
+                            }
 
 
                             if (count == 0)
@@ -185,7 +203,17 @@ namespace ConvertSys
 
                                     if(scHozSection != 0)
                                     {
-                                        command.CommandText = @"INSERT INTO TblVyd([HozSek]) VALUES (" + scHozSection + ") WHERE NomZ=" + lastID + ";";
+                                        command.CommandText = @"UPDATE TblVyd SET HozSek = " + scHozSection + " WHERE NomZ=" + lastID + ";";
+                                        command.ExecuteNonQuery();
+                                    }
+                                    if (scPreoblPrd != 0)
+                                    {
+                                        command.CommandText = @"UPDATE TblVyd SET PorodaPrb = " + scHozSection + " WHERE NomZ=" + lastID + ";";
+                                        command.ExecuteNonQuery();
+                                    }
+                                    if (scGroupAge != 0)
+                                    {
+                                        command.CommandText = @"UPDATE TblVyd SET VozGrpVyd = " + scGroupAge + " WHERE NomZ=" + lastID + ";";
                                         command.ExecuteNonQuery();
                                     }
                                     //Внесение данных по ярусу
@@ -200,7 +228,17 @@ namespace ConvertSys
 
                                     if (scHozSection != 0)
                                     {
-                                        command.CommandText = @"INSERT INTO TblVyd([HozSek]) VALUES (" + scHozSection + ") WHERE NomZ=" + lastID + ";";
+                                        command.CommandText = @"UPDATE TblVyd SET HozSek = " + scHozSection + " WHERE NomZ=" + lastID + ";";
+                                        command.ExecuteNonQuery();
+                                    }
+                                    if (scPreoblPrd != 0)
+                                    {
+                                        command.CommandText = @"UPDATE TblVyd SET PorodaPrb = " + scPreoblPrd + " WHERE NomZ=" + lastID + ";";
+                                        command.ExecuteNonQuery();
+                                    }
+                                    if (scGroupAge != 0)
+                                    {
+                                        command.CommandText = @"UPDATE TblVyd SET VozGrpVyd = " + scGroupAge + " WHERE NomZ=" + lastID + ";";
                                         command.ExecuteNonQuery();
                                     }
                                     //Внесение данных по ярусу
@@ -222,10 +260,19 @@ namespace ConvertSys
 
                                     if (scHozSection != 0)
                                     {
-                                        command.CommandText = @"INSERT INTO TblVyd([HozSek]) VALUES (" + scHozSection + ") WHERE NomZ=" + lastID + ";";
+                                        command.CommandText = @"UPDATE TblVyd SET HozSek = " + scHozSection + " WHERE NomZ=" + lastID + ";";
                                         command.ExecuteNonQuery();
                                     }
-
+                                    if (scPreoblPrd != 0)
+                                    {
+                                        command.CommandText = @"UPDATE TblVyd SET PorodaPrb = " + scPreoblPrd + " WHERE NomZ=" + lastID + ";";
+                                        command.ExecuteNonQuery();
+                                    }
+                                    if (scGroupAge != 0)
+                                    {
+                                        command.CommandText = @"UPDATE TblVyd SET VozGrpVyd = " + scGroupAge + " WHERE NomZ=" + lastID + ";";
+                                        command.ExecuteNonQuery();
+                                    }
                                     //Внесение данных по ярусу
                                 }
                                 else
@@ -238,10 +285,19 @@ namespace ConvertSys
 
                                     if (scHozSection != 0)
                                     {
-                                        command.CommandText = @"INSERT INTO TblVyd([HozSek]) VALUES (" + scHozSection + ") WHERE NomZ=" + lastID + ";";
+                                        command.CommandText = @"UPDATE TblVyd SET HozSek = "+ scHozSection + " WHERE NomZ=" + lastID + ";";
                                         command.ExecuteNonQuery();
                                     }
-
+                                    if (scPreoblPrd != 0)
+                                    {
+                                        command.CommandText = @"UPDATE TblVyd SET PorodaPrb = " + scPreoblPrd + " WHERE NomZ=" + lastID + ";";
+                                        command.ExecuteNonQuery();
+                                    }
+                                    if (scGroupAge != 0)
+                                    {
+                                        command.CommandText = @"UPDATE TblVyd SET VozGrpVyd = " + scGroupAge + " WHERE NomZ=" + lastID + ";";
+                                        command.ExecuteNonQuery();
+                                    }
                                     //Внесение данных по ярусу
                                 }
                             }
