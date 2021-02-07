@@ -134,6 +134,7 @@ namespace ConvertSys
                             string landCat = ds.Tables[0].Rows[i].ItemArray[7].ToString();//Категория земель
                             string bonitet = ds.Tables[0].Rows[i].ItemArray[8].ToString();//Бонитет
                             string square = Convert.ToDouble(ds.Tables[0].Rows[i].ItemArray[9]).ToString(CultureInfo.InvariantCulture);//Площадь
+                            string hozSection = ds.Tables[0].Rows[i].ItemArray[19].ToString();//Хозяйственная часть
                             
                                 
 
@@ -155,8 +156,13 @@ namespace ConvertSys
                                 scBonitet = (int)commandNSI.ExecuteScalar();
                             }
 
-
-
+                            //Хозяйственная часть
+                            int scHozSection = 0;
+                            if (hozSection != "")
+                            {
+                                commandNSI.CommandText = "SELECT KL FROM KlsHozSek WHERE TX = '" + hozSection + "'";
+                                scHozSection = (int)commandNSI.ExecuteScalar();
+                            }
 
 
 
@@ -174,14 +180,32 @@ namespace ConvertSys
                                     command.CommandText = @"INSERT INTO TblVyd([NomSoed],[KvrNom],[VydNom],[KatZem],[Bonitet],[VydPls]) VALUES (" + nomZ + "," + kvartal + "," + vydel + "," + scLandCat +
                                         "," + scBonitet + "," + square + ");";
                                     command.ExecuteNonQuery();
+                                    command.CommandText = "SELECT @@IDENTITY";
+                                    int lastID = Convert.ToInt32(command.ExecuteScalar());
+
+                                    if(scHozSection != 0)
+                                    {
+                                        command.CommandText = @"INSERT INTO TblVyd([HozSek]) VALUES (" + scHozSection + ") WHERE NomZ=" + lastID + ";";
+                                        command.ExecuteNonQuery();
+                                    }
+                                    //Внесение данных по ярусу
                                 }
                                 else
                                 {
                                     command.CommandText = @"INSERT INTO TblVyd([NomSoed],[KvrNom],[VydNom],[KatZem],[VydPls]) VALUES (" + nomZ + "," + kvartal + ","
                                         + vydel + "," + scLandCat + "," + square + ");";
                                     command.ExecuteNonQuery();
+                                    command.CommandText = "SELECT @@IDENTITY";
+                                    int lastID = Convert.ToInt32(command.ExecuteScalar());
+
+                                    if (scHozSection != 0)
+                                    {
+                                        command.CommandText = @"INSERT INTO TblVyd([HozSek]) VALUES (" + scHozSection + ") WHERE NomZ=" + lastID + ";";
+                                        command.ExecuteNonQuery();
+                                    }
+                                    //Внесение данных по ярусу
                                 }
-                                
+
                             }
                             else
                             {
@@ -193,12 +217,32 @@ namespace ConvertSys
                                     command.CommandText = @"INSERT INTO TblVyd([NomSoed],[KvrNom],[VydNom],[KatZem],[Bonitet],[VydPls]) VALUES (" + nomZ + "," + kvartal + "," + vydel + "," + scLandCat +
                                        "," + scBonitet + "," + square + ");";
                                     command.ExecuteNonQuery();
+                                    command.CommandText = "SELECT @@IDENTITY";
+                                    int lastID = Convert.ToInt32(command.ExecuteScalar());
+
+                                    if (scHozSection != 0)
+                                    {
+                                        command.CommandText = @"INSERT INTO TblVyd([HozSek]) VALUES (" + scHozSection + ") WHERE NomZ=" + lastID + ";";
+                                        command.ExecuteNonQuery();
+                                    }
+
+                                    //Внесение данных по ярусу
                                 }
                                 else
                                 {
                                     command.CommandText = @"INSERT INTO TblVyd([NomSoed],[KvrNom],[VydNom],[KatZem],[VydPls]) VALUES (" + nomZ + "," + kvartal + ","
                                         + vydel + "," + scLandCat + "," + square + ");";
                                     command.ExecuteNonQuery();
+                                    command.CommandText = "SELECT @@IDENTITY";
+                                    int lastID = Convert.ToInt32(command.ExecuteScalar());
+
+                                    if (scHozSection != 0)
+                                    {
+                                        command.CommandText = @"INSERT INTO TblVyd([HozSek]) VALUES (" + scHozSection + ") WHERE NomZ=" + lastID + ";";
+                                        command.ExecuteNonQuery();
+                                    }
+
+                                    //Внесение данных по ярусу
                                 }
                             }
 
@@ -247,10 +291,12 @@ namespace ConvertSys
 
         private void button1_Click(object sender, EventArgs e)
         {
+            /*
             DatabaseCreation databaseCreation = new DatabaseCreation();
             databaseCreation.ShowDialog();
             databaseCreation = null;
-            //CreateAccessDB.CreateNiewAccessDatabase();
+            */
+            CreateAccessDB.CreateNiewAccessDatabase();
         }
     }
 }
