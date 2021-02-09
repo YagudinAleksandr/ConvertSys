@@ -127,8 +127,9 @@ namespace ConvertSys
                         for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
                         {
 
-
+                            //Квартал
                             int kvartal = Convert.ToInt32(ds.Tables[0].Rows[i].ItemArray[2]);//Квартал
+                            //Выдел
                             int vydel = Convert.ToInt32(ds.Tables[0].Rows[i].ItemArray[4]);//Выдел
                             string point = ds.Tables[0].Rows[i].ItemArray[6].ToString();//Целевое назначение лесов
                             string landCat = ds.Tables[0].Rows[i].ItemArray[7].ToString();//Категория земель
@@ -137,8 +138,33 @@ namespace ConvertSys
                             string hozSection = ds.Tables[0].Rows[i].ItemArray[19].ToString();//Хозяйственная часть
                             string preoblPrd = ds.Tables[0].Rows[i].ItemArray[20].ToString();//Преобладающая порода
                             int groupAge = Convert.ToInt32(ds.Tables[0].Rows[i].ItemArray[21]);//Группа возраста
-                            
-                                
+                            int ageClass = Convert.ToInt32(ds.Tables[0].Rows[i].ItemArray[23]);//Класс возраста
+                            string zapazNaVydel = Convert.ToDouble(ds.Tables[0].Rows[i].ItemArray[24]).ToString(CultureInfo.InvariantCulture);//Запас на выдел
+                            string zakhlamlennost = Convert.ToDouble(ds.Tables[0].Rows[i].ItemArray[25]).ToString(CultureInfo.InvariantCulture);//Захламленность
+                            string sukhostoy = Convert.ToDouble(ds.Tables[0].Rows[i].ItemArray[26]).ToString(CultureInfo.InvariantCulture);//Сухостой
+                            string tipLesa = ds.Tables[0].Rows[i].ItemArray[28].ToString();//Тип леса
+                            string tlu = ds.Tables[0].Rows[i].ItemArray[29].ToString();//ТЛУ
+                            //Ярус 1
+                            string sostav = ds.Tables[0].Rows[i].ItemArray[10].ToString();//Состав яруса
+                            int vozrast = 0;
+                            if (ds.Tables[0].Rows[i].ItemArray[11] != "")
+                                vozrast = Convert.ToInt32(ds.Tables[0].Rows[i].ItemArray[11]);//Средний возраст яруса
+                            double visota = 0;
+                            if (ds.Tables[0].Rows[i].ItemArray[12] != "")
+                                visota = Convert.ToDouble(ds.Tables[0].Rows[i].ItemArray[12]);//Средняя высота яруса
+                            double diametr = 0;
+                            if (ds.Tables[0].Rows[i].ItemArray[13] != "")
+                                diametr = Convert.ToDouble(ds.Tables[0].Rows[i].ItemArray[13]);//Средняя высота яруса
+                            int proishozdenie = 0;
+                            if (ds.Tables[0].Rows[i].ItemArray[14] != "")
+                                proishozdenie = Convert.ToInt32(ds.Tables[0].Rows[i].ItemArray[14]);//Происхождение
+                            double polnota = 0;
+                            if (ds.Tables[0].Rows[i].ItemArray[15] != "")
+                                polnota = Convert.ToDouble(ds.Tables[0].Rows[i].ItemArray[15]);//Полнота
+                            //Ярус 2
+                            //Ярус 3
+                            //Ярус 9
+                            //Ярус 30
 
                             /*Проверка, существует ли запись в таблице*/
                             command.CommandText = @"SELECT COUNT(*) FROM TblKvr WHERE KvrNomK = " + kvartal;
@@ -175,14 +201,27 @@ namespace ConvertSys
                             }
 
 
-                            //Класс возраста
+                            //Группа возраста
                             int scGroupAge = 0;
                             if (groupAge != 0)
                             {
                                 commandNSI.CommandText = "SELECT KL FROM KlsVozGrp WHERE Kod = '" + groupAge + "'";
                                 scGroupAge = (int)commandNSI.ExecuteScalar();
                             }
-
+                            //Тип леса
+                            int scTipLesa = 0;
+                            if (tipLesa != "")
+                            {
+                                commandNSI.CommandText = "SELECT KL FROM KlsTipLesa WHERE Kod = '" + tipLesa + "'";
+                                scTipLesa = (int)commandNSI.ExecuteScalar();
+                            }
+                            //ТЛУ
+                            int scTlu = 0;
+                            if(tlu != "")
+                            {
+                                commandNSI.CommandText = "SELECT KL FROM KlsTLU WHERE Kod = '" + tlu + "'";
+                                scTlu = (int)commandNSI.ExecuteScalar();
+                            }
 
                             if (count == 0)
                             {
@@ -216,7 +255,75 @@ namespace ConvertSys
                                         command.CommandText = @"UPDATE TblVyd SET VozGrpVyd = " + scGroupAge + " WHERE NomZ=" + lastID + ";";
                                         command.ExecuteNonQuery();
                                     }
+                                    if (ageClass != 0)
+                                    {
+                                        command.CommandText = @"UPDATE TblVyd SET VozKls = " + ageClass + " WHERE NomZ=" + lastID + ";";
+                                        command.ExecuteNonQuery();
+                                    }
+                                    if(zapazNaVydel !="" && zapazNaVydel !="0")
+                                    {
+                                        command.CommandText = @"UPDATE TblVyd SET ZapasVyd = " + zapazNaVydel + " WHERE NomZ=" + lastID + ";";
+                                        command.ExecuteNonQuery();
+                                    }
+                                    if (zakhlamlennost != "" && zakhlamlennost != "0")
+                                    {
+                                        command.CommandText = @"UPDATE TblVyd SET ZapasZah = " + zakhlamlennost + " WHERE NomZ=" + lastID + ";";
+                                        command.ExecuteNonQuery();
+                                    }
+                                    if (sukhostoy != "" && sukhostoy != "0")
+                                    {
+                                        command.CommandText = @"UPDATE TblVyd SET ZapasSuh = " + sukhostoy + " WHERE NomZ=" + lastID + ";";
+                                        command.ExecuteNonQuery();
+                                    }
+                                    if (scTipLesa != 0)
+                                    {
+                                        command.CommandText = @"UPDATE TblVyd SET TipLesa = " + scTipLesa + " WHERE NomZ=" + lastID + ";";
+                                        command.ExecuteNonQuery();
+                                    }
+                                    if (scTlu != 0)
+                                    {
+                                        command.CommandText = @"UPDATE TblVyd SET TLU = " + scTlu + " WHERE NomZ=" + lastID + ";";
+                                        command.ExecuteNonQuery();
+                                    }
                                     //Внесение данных по ярусу
+                                    if(sostav != "")
+                                    {
+                                        commandNSI.CommandText = "SELECT KL FROM KlsIarus WHERE Kod = 1";
+                                        int klIarus = (int)commandNSI.ExecuteScalar();
+
+                                        command.CommandText = @"INSERT INTO TblVydIarus([NoSoed],[Iarus],[Sostav]) VALUES (" + lastID + ","+klIarus+"+'"+sostav+"')";
+                                        command.ExecuteNonQuery();
+
+                                        command.CommandText = "SELECT @@IDENTITY";
+                                        int lastIdIarus = Convert.ToInt32(command.ExecuteScalar());
+
+                                        if(visota != 0)
+                                        {
+                                            command.CommandText = "UPDATE TblVydIarus SET VysotaIar=" + visota + "WHERE NomZ=" + lastIdIarus + ";";
+                                            command.ExecuteNonQuery();
+                                        }
+                                        if(vozrast != 0)
+                                        {
+                                            command.CommandText = "UPDATE TblVydIarus SET VozrastIar=" + vozrast + "WHERE NomZ=" + lastIdIarus + ";";
+                                            command.ExecuteNonQuery();
+                                        }
+                                        if(diametr!=0)
+                                        {
+                                            command.CommandText = "UPDATE TblVydIarus SET DiamIar=" + diametr + "WHERE NomZ=" + lastIdIarus + ";";
+                                            command.ExecuteNonQuery();
+                                        }
+                                        if (proishozdenie != 0)
+                                        {
+                                            command.CommandText = "UPDATE TblVydIarus SET Prois=" + proishozdenie + "WHERE NomZ=" + lastIdIarus + ";";
+                                            command.ExecuteNonQuery();
+                                        }
+                                        if (polnota != 0)
+                                        {
+                                            command.CommandText = "UPDATE TblVydIarus SET Polnota=" + polnota + "WHERE NomZ=" + lastIdIarus + ";";
+                                            command.ExecuteNonQuery();
+                                        }
+
+                                    }
                                 }
                                 else
                                 {
@@ -241,7 +348,75 @@ namespace ConvertSys
                                         command.CommandText = @"UPDATE TblVyd SET VozGrpVyd = " + scGroupAge + " WHERE NomZ=" + lastID + ";";
                                         command.ExecuteNonQuery();
                                     }
+                                    if (ageClass != 0)
+                                    {
+                                        command.CommandText = @"UPDATE TblVyd SET VozKls = " + ageClass + " WHERE NomZ=" + lastID + ";";
+                                        command.ExecuteNonQuery();
+                                    }
+                                    if (zapazNaVydel != "" && zapazNaVydel != "0")
+                                    {
+                                        command.CommandText = @"UPDATE TblVyd SET ZapasVyd = " + zapazNaVydel + " WHERE NomZ=" + lastID + ";";
+                                        command.ExecuteNonQuery();
+                                    }
+                                    if (zakhlamlennost != "" && zakhlamlennost != "0")
+                                    {
+                                        command.CommandText = @"UPDATE TblVyd SET ZapasZah = " + zakhlamlennost + " WHERE NomZ=" + lastID + ";";
+                                        command.ExecuteNonQuery();
+                                    }
+                                    if (sukhostoy != "" && sukhostoy != "0")
+                                    {
+                                        command.CommandText = @"UPDATE TblVyd SET ZapasSuh = " + sukhostoy + " WHERE NomZ=" + lastID + ";";
+                                        command.ExecuteNonQuery();
+                                    }
+                                    if (scTipLesa != 0)
+                                    {
+                                        command.CommandText = @"UPDATE TblVyd SET TipLesa = " + scTipLesa + " WHERE NomZ=" + lastID + ";";
+                                        command.ExecuteNonQuery();
+                                    }
+                                    if (scTlu != 0)
+                                    {
+                                        command.CommandText = @"UPDATE TblVyd SET TLU = " + scTlu + " WHERE NomZ=" + lastID + ";";
+                                        command.ExecuteNonQuery();
+                                    }
                                     //Внесение данных по ярусу
+                                    if (sostav != "")
+                                    {
+                                        commandNSI.CommandText = "SELECT KL FROM KlsIarus WHERE Kod = 1";
+                                        int klIarus = (int)commandNSI.ExecuteScalar();
+
+                                        command.CommandText = @"INSERT INTO TblVydIarus([NoSoed],[Iarus],[Sostav]) VALUES (" + lastID + "," + klIarus + "+'" + sostav + "')";
+                                        command.ExecuteNonQuery();
+
+                                        command.CommandText = "SELECT @@IDENTITY";
+                                        int lastIdIarus = Convert.ToInt32(command.ExecuteScalar());
+
+                                        if (visota != 0)
+                                        {
+                                            command.CommandText = "UPDATE TblVydIarus SET VysotaIar=" + visota + "WHERE NomZ=" + lastIdIarus + ";";
+                                            command.ExecuteNonQuery();
+                                        }
+                                        if (vozrast != 0)
+                                        {
+                                            command.CommandText = "UPDATE TblVydIarus SET VozrastIar=" + vozrast + "WHERE NomZ=" + lastIdIarus + ";";
+                                            command.ExecuteNonQuery();
+                                        }
+                                        if (diametr != 0)
+                                        {
+                                            command.CommandText = "UPDATE TblVydIarus SET DiamIar=" + diametr + "WHERE NomZ=" + lastIdIarus + ";";
+                                            command.ExecuteNonQuery();
+                                        }
+                                        if (proishozdenie != 0)
+                                        {
+                                            command.CommandText = "UPDATE TblVydIarus SET Prois=" + proishozdenie + "WHERE NomZ=" + lastIdIarus + ";";
+                                            command.ExecuteNonQuery();
+                                        }
+                                        if (polnota != 0)
+                                        {
+                                            command.CommandText = "UPDATE TblVydIarus SET Polnota=" + polnota + "WHERE NomZ=" + lastIdIarus + ";";
+                                            command.ExecuteNonQuery();
+                                        }
+
+                                    }
                                 }
 
                             }
@@ -273,7 +448,75 @@ namespace ConvertSys
                                         command.CommandText = @"UPDATE TblVyd SET VozGrpVyd = " + scGroupAge + " WHERE NomZ=" + lastID + ";";
                                         command.ExecuteNonQuery();
                                     }
+                                    if (ageClass != 0)
+                                    {
+                                        command.CommandText = @"UPDATE TblVyd SET VozKls = " + ageClass + " WHERE NomZ=" + lastID + ";";
+                                        command.ExecuteNonQuery();
+                                    }
+                                    if (zapazNaVydel != "" && zapazNaVydel != "0")
+                                    {
+                                        command.CommandText = @"UPDATE TblVyd SET ZapasVyd = " + zapazNaVydel + " WHERE NomZ=" + lastID + ";";
+                                        command.ExecuteNonQuery();
+                                    }
+                                    if (zakhlamlennost != "" && zakhlamlennost != "0")
+                                    {
+                                        command.CommandText = @"UPDATE TblVyd SET ZapasZah = " + zakhlamlennost + " WHERE NomZ=" + lastID + ";";
+                                        command.ExecuteNonQuery();
+                                    }
+                                    if (sukhostoy != "" && sukhostoy != "0")
+                                    {
+                                        command.CommandText = @"UPDATE TblVyd SET ZapasSuh = " + sukhostoy + " WHERE NomZ=" + lastID + ";";
+                                        command.ExecuteNonQuery();
+                                    }
+                                    if (scTipLesa != 0)
+                                    {
+                                        command.CommandText = @"UPDATE TblVyd SET TipLesa = " + scTipLesa + " WHERE NomZ=" + lastID + ";";
+                                        command.ExecuteNonQuery();
+                                    }
+                                    if (scTlu != 0)
+                                    {
+                                        command.CommandText = @"UPDATE TblVyd SET TLU = " + scTlu + " WHERE NomZ=" + lastID + ";";
+                                        command.ExecuteNonQuery();
+                                    }
                                     //Внесение данных по ярусу
+                                    if (sostav != "")
+                                    {
+                                        commandNSI.CommandText = "SELECT KL FROM KlsIarus WHERE Kod = 1";
+                                        int klIarus = (int)commandNSI.ExecuteScalar();
+
+                                        command.CommandText = @"INSERT INTO TblVydIarus([NoSoed],[Iarus],[Sostav]) VALUES (" + lastID + "," + klIarus + "+'" + sostav + "')";
+                                        command.ExecuteNonQuery();
+
+                                        command.CommandText = "SELECT @@IDENTITY";
+                                        int lastIdIarus = Convert.ToInt32(command.ExecuteScalar());
+
+                                        if (visota != 0)
+                                        {
+                                            command.CommandText = "UPDATE TblVydIarus SET VysotaIar=" + visota + "WHERE NomZ=" + lastIdIarus + ";";
+                                            command.ExecuteNonQuery();
+                                        }
+                                        if (vozrast != 0)
+                                        {
+                                            command.CommandText = "UPDATE TblVydIarus SET VozrastIar=" + vozrast + "WHERE NomZ=" + lastIdIarus + ";";
+                                            command.ExecuteNonQuery();
+                                        }
+                                        if (diametr != 0)
+                                        {
+                                            command.CommandText = "UPDATE TblVydIarus SET DiamIar=" + diametr + "WHERE NomZ=" + lastIdIarus + ";";
+                                            command.ExecuteNonQuery();
+                                        }
+                                        if (proishozdenie != 0)
+                                        {
+                                            command.CommandText = "UPDATE TblVydIarus SET Prois=" + proishozdenie + "WHERE NomZ=" + lastIdIarus + ";";
+                                            command.ExecuteNonQuery();
+                                        }
+                                        if (polnota != 0)
+                                        {
+                                            command.CommandText = "UPDATE TblVydIarus SET Polnota=" + polnota + "WHERE NomZ=" + lastIdIarus + ";";
+                                            command.ExecuteNonQuery();
+                                        }
+
+                                    }
                                 }
                                 else
                                 {
@@ -298,7 +541,75 @@ namespace ConvertSys
                                         command.CommandText = @"UPDATE TblVyd SET VozGrpVyd = " + scGroupAge + " WHERE NomZ=" + lastID + ";";
                                         command.ExecuteNonQuery();
                                     }
+                                    if (ageClass != 0)
+                                    {
+                                        command.CommandText = @"UPDATE TblVyd SET VozKls = " + ageClass + " WHERE NomZ=" + lastID + ";";
+                                        command.ExecuteNonQuery();
+                                    }
+                                    if (zapazNaVydel != "" && zapazNaVydel != "0")
+                                    {
+                                        command.CommandText = @"UPDATE TblVyd SET ZapasVyd = " + zapazNaVydel + " WHERE NomZ=" + lastID + ";";
+                                        command.ExecuteNonQuery();
+                                    }
+                                    if (zakhlamlennost != "" && zakhlamlennost != "0")
+                                    {
+                                        command.CommandText = @"UPDATE TblVyd SET ZapasZah = " + zakhlamlennost + " WHERE NomZ=" + lastID + ";";
+                                        command.ExecuteNonQuery();
+                                    }
+                                    if (sukhostoy != "" && sukhostoy != "0")
+                                    {
+                                        command.CommandText = @"UPDATE TblVyd SET ZapasSuh = " + sukhostoy + " WHERE NomZ=" + lastID + ";";
+                                        command.ExecuteNonQuery();
+                                    }
+                                    if (scTipLesa != 0)
+                                    {
+                                        command.CommandText = @"UPDATE TblVyd SET TipLesa = " + scTipLesa + " WHERE NomZ=" + lastID + ";";
+                                        command.ExecuteNonQuery();
+                                    }
+                                    if (scTlu != 0)
+                                    {
+                                        command.CommandText = @"UPDATE TblVyd SET TLU = " + scTlu + " WHERE NomZ=" + lastID + ";";
+                                        command.ExecuteNonQuery();
+                                    }
                                     //Внесение данных по ярусу
+                                    if (sostav != "")
+                                    {
+                                        commandNSI.CommandText = "SELECT KL FROM KlsIarus WHERE Kod = 1";
+                                        int klIarus = (int)commandNSI.ExecuteScalar();
+
+                                        command.CommandText = @"INSERT INTO TblVydIarus([NoSoed],[Iarus],[Sostav]) VALUES (" + lastID + "," + klIarus + "+'" + sostav + "')";
+                                        command.ExecuteNonQuery();
+
+                                        command.CommandText = "SELECT @@IDENTITY";
+                                        int lastIdIarus = Convert.ToInt32(command.ExecuteScalar());
+
+                                        if (visota != 0)
+                                        {
+                                            command.CommandText = "UPDATE TblVydIarus SET VysotaIar=" + visota + "WHERE NomZ=" + lastIdIarus + ";";
+                                            command.ExecuteNonQuery();
+                                        }
+                                        if (vozrast != 0)
+                                        {
+                                            command.CommandText = "UPDATE TblVydIarus SET VozrastIar=" + vozrast + "WHERE NomZ=" + lastIdIarus + ";";
+                                            command.ExecuteNonQuery();
+                                        }
+                                        if (diametr != 0)
+                                        {
+                                            command.CommandText = "UPDATE TblVydIarus SET DiamIar=" + diametr + "WHERE NomZ=" + lastIdIarus + ";";
+                                            command.ExecuteNonQuery();
+                                        }
+                                        if (proishozdenie != 0)
+                                        {
+                                            command.CommandText = "UPDATE TblVydIarus SET Prois=" + proishozdenie + "WHERE NomZ=" + lastIdIarus + ";";
+                                            command.ExecuteNonQuery();
+                                        }
+                                        if (polnota != 0)
+                                        {
+                                            command.CommandText = "UPDATE TblVydIarus SET Polnota=" + polnota + "WHERE NomZ=" + lastIdIarus + ";";
+                                            command.ExecuteNonQuery();
+                                        }
+
+                                    }
                                 }
                             }
 
