@@ -82,7 +82,7 @@ namespace ConvertSys
                     MessageBox.Show("Возникли проблемы при соединение с базой данных");
                     return;
                 }
-                
+
                 try
                 {
                     //Открываем команды OleDB
@@ -91,7 +91,7 @@ namespace ConvertSys
                     //Команды к базе данных NSI
                     OleDbCommand commandNSI = new OleDbCommand();
 
-                    
+
                     DataSet ds = new DataSet();
                     string ExcelConnectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Extended Properties=Excel 12.0 XML;Data Source=" + TB_ExcelFileDirectory.Text;
                     //Прохождение по строкам и столбцам в Excel таблице
@@ -145,26 +145,33 @@ namespace ConvertSys
                             string tipLesa = ds.Tables[0].Rows[i].ItemArray[28].ToString();//Тип леса
                             string tlu = ds.Tables[0].Rows[i].ItemArray[29].ToString();//ТЛУ
                             //Ярус 1
-                            string sostav = ds.Tables[0].Rows[i].ItemArray[10].ToString();//Состав яруса
-                            int vozrast = 0;
-                            if (ds.Tables[0].Rows[i].ItemArray[11] != "")
-                                vozrast = Convert.ToInt32(ds.Tables[0].Rows[i].ItemArray[11]);//Средний возраст яруса
-                            double visota = 0;
-                            if (ds.Tables[0].Rows[i].ItemArray[12] != "")
-                                visota = Convert.ToDouble(ds.Tables[0].Rows[i].ItemArray[12]);//Средняя высота яруса
-                            double diametr = 0;
-                            if (ds.Tables[0].Rows[i].ItemArray[13] != "")
-                                diametr = Convert.ToDouble(ds.Tables[0].Rows[i].ItemArray[13]);//Средняя высота яруса
-                            int proishozdenie = 0;
-                            if (ds.Tables[0].Rows[i].ItemArray[14] != "")
-                                proishozdenie = Convert.ToInt32(ds.Tables[0].Rows[i].ItemArray[14]);//Происхождение
-                            double polnota = 0;
-                            if (ds.Tables[0].Rows[i].ItemArray[15] != "")
-                                polnota = Convert.ToDouble(ds.Tables[0].Rows[i].ItemArray[15]);//Полнота
+                            string sostavIarusaFirst = ds.Tables[0].Rows[i].ItemArray[10].ToString();//Состав яруса
+
+                            int vozrastIarusaFirst;//Возраст яруса
+                            if (!int.TryParse(ds.Tables[0].Rows[i].ItemArray[11].ToString(), out vozrastIarusaFirst))
+                                vozrastIarusaFirst = 0;
+
+                            double visotaIarusFirst;//Высота яруса
+                            if (!double.TryParse(ds.Tables[0].Rows[i].ItemArray[12].ToString(), out visotaIarusFirst))
+                                visotaIarusFirst = 0;
+
+                            double diametrIarusaFirst;//Диаметр яруса
+                            if (!double.TryParse(ds.Tables[0].Rows[i].ItemArray[13].ToString(), out diametrIarusaFirst))
+                                diametrIarusaFirst = 0;
+
+                            int proishozdeniyeIarusa;//Происхождение
+                            if (!int.TryParse(ds.Tables[0].Rows[i].ItemArray[14].ToString(), out proishozdeniyeIarusa))
+                                proishozdeniyeIarusa = 0;
+
+                            double polnotaIarusa;//Полнота яруса
+                            if (!double.TryParse(ds.Tables[0].Rows[i].ItemArray[15].ToString(), out polnotaIarusa))
+                                polnotaIarusa = 0;
                             //Ярус 2
-                            //Ярус 3
+                            string sostavIarusaSecond = ds.Tables[0].Rows[i].ItemArray[16].ToString();//Состав яруса
                             //Ярус 9
+                            string sostavIarusaNineth = ds.Tables[0].Rows[i].ItemArray[17].ToString();//Состав яруса
                             //Ярус 30
+                            string sostavIarusaThirtieth = ds.Tables[0].Rows[i].ItemArray[18].ToString();//Состав яруса
 
                             /*Проверка, существует ли запись в таблице*/
                             command.CommandText = @"SELECT COUNT(*) FROM TblKvr WHERE KvrNomK = " + kvartal;
@@ -217,7 +224,7 @@ namespace ConvertSys
                             }
                             //ТЛУ
                             int scTlu = 0;
-                            if(tlu != "")
+                            if (tlu != "")
                             {
                                 commandNSI.CommandText = "SELECT KL FROM KlsTLU WHERE Kod = '" + tlu + "'";
                                 scTlu = (int)commandNSI.ExecuteScalar();
@@ -232,7 +239,7 @@ namespace ConvertSys
                                 int nomZ = (int)command.ExecuteScalar();
 
 
-                                if(scBonitet !=0)
+                                if (scBonitet != 0)
                                 {
                                     command.CommandText = @"INSERT INTO TblVyd([NomSoed],[KvrNom],[VydNom],[KatZem],[Bonitet],[VydPls]) VALUES (" + nomZ + "," + kvartal + "," + vydel + "," + scLandCat +
                                         "," + scBonitet + "," + square + ");";
@@ -240,7 +247,7 @@ namespace ConvertSys
                                     command.CommandText = "SELECT @@IDENTITY";
                                     int lastID = Convert.ToInt32(command.ExecuteScalar());
 
-                                    if(scHozSection != 0)
+                                    if (scHozSection != 0)
                                     {
                                         command.CommandText = @"UPDATE TblVyd SET HozSek = " + scHozSection + " WHERE NomZ=" + lastID + ";";
                                         command.ExecuteNonQuery();
@@ -260,7 +267,7 @@ namespace ConvertSys
                                         command.CommandText = @"UPDATE TblVyd SET VozKls = " + ageClass + " WHERE NomZ=" + lastID + ";";
                                         command.ExecuteNonQuery();
                                     }
-                                    if(zapazNaVydel !="" && zapazNaVydel !="0")
+                                    if (zapazNaVydel != "" && zapazNaVydel != "0")
                                     {
                                         command.CommandText = @"UPDATE TblVyd SET ZapasVyd = " + zapazNaVydel + " WHERE NomZ=" + lastID + ";";
                                         command.ExecuteNonQuery();
@@ -286,43 +293,75 @@ namespace ConvertSys
                                         command.ExecuteNonQuery();
                                     }
                                     //Внесение данных по ярусу
-                                    if(sostav != "")
+                                    if(sostavIarusaFirst != "")
                                     {
-                                        commandNSI.CommandText = "SELECT KL FROM KlsIarus WHERE Kod = 1";
-                                        int klIarus = (int)commandNSI.ExecuteScalar();
-
-                                        command.CommandText = @"INSERT INTO TblVydIarus([NoSoed],[Iarus],[Sostav]) VALUES (" + lastID + ","+klIarus+"+'"+sostav+"')";
+                                        //Получение типа яруса изНСИ
+                                        commandNSI.CommandText = "SELECT KL FROM KlsIarus WHERE Kod = '1'";
+                                        int klsIarusNom = (int)commandNSI.ExecuteScalar();
+                                        //Внесение значения в ярус
+                                        command.CommandText = @"INSERT INTO TblVydIarus([NomSoed],[Iarus],[Sostav]) VALUES (" + lastID + "," + klsIarusNom + ",'" + sostavIarusaFirst + "');";
                                         command.ExecuteNonQuery();
-
+                                        //Получение ID записи яруса в базе
                                         command.CommandText = "SELECT @@IDENTITY";
-                                        int lastIdIarus = Convert.ToInt32(command.ExecuteScalar());
+                                        int lastIarusID = Convert.ToInt32(command.ExecuteScalar());
 
-                                        if(visota != 0)
+                                        //Возраст яруса
+                                        if(vozrastIarusaFirst !=0)
                                         {
-                                            command.CommandText = "UPDATE TblVydIarus SET VysotaIar=" + visota + "WHERE NomZ=" + lastIdIarus + ";";
+                                            command.CommandText = @"UPDATE TblVydIarus SET VozrastIar=" + vozrastIarusaFirst + " WHERE NomZ=" + lastIarusID + ";";
                                             command.ExecuteNonQuery();
                                         }
-                                        if(vozrast != 0)
+                                        //Высота яруса
+                                        if(vozrastIarusaFirst!=0)
                                         {
-                                            command.CommandText = "UPDATE TblVydIarus SET VozrastIar=" + vozrast + "WHERE NomZ=" + lastIdIarus + ";";
+                                            command.CommandText = @"UPDATE TblVydIarus SET VysotaIar='" + visotaIarusFirst + "' WHERE NomZ=" + lastIarusID + ";";
                                             command.ExecuteNonQuery();
                                         }
-                                        if(diametr!=0)
+                                        //Диаметр яруса
+                                        if(diametrIarusaFirst != 0)
                                         {
-                                            command.CommandText = "UPDATE TblVydIarus SET DiamIar=" + diametr + "WHERE NomZ=" + lastIdIarus + ";";
+                                            command.CommandText = @"UPDATE TblVydIarus SET DiamIar='" + diametrIarusaFirst + "' WHERE NomZ=" + lastIarusID + ";";
                                             command.ExecuteNonQuery();
                                         }
-                                        if (proishozdenie != 0)
+                                        //Происхождение яруса
+                                        if(proishozdeniyeIarusa != 0)
                                         {
-                                            command.CommandText = "UPDATE TblVydIarus SET Prois=" + proishozdenie + "WHERE NomZ=" + lastIdIarus + ";";
+                                            command.CommandText = @"UPDATE TblVydIarus SET Prois=" + proishozdeniyeIarusa + " WHERE NomZ=" + lastIarusID + ";";
                                             command.ExecuteNonQuery();
                                         }
-                                        if (polnota != 0)
+                                        //Полнота яруса
+                                        if(polnotaIarusa != 0)
                                         {
-                                            command.CommandText = "UPDATE TblVydIarus SET Polnota=" + polnota + "WHERE NomZ=" + lastIdIarus + ";";
+                                            command.CommandText = @"UPDATE TblVydIarus SET Polnota='" + polnotaIarusa + "' WHERE NomZ=" + lastIarusID + ";";
                                             command.ExecuteNonQuery();
                                         }
-
+                                    }
+                                    if (sostavIarusaSecond != "")
+                                    {
+                                        //Получение типа яруса изНСИ
+                                        commandNSI.CommandText = "SELECT KL FROM KlsIarus WHERE Kod = '2'";
+                                        int klsIarusNom = (int)commandNSI.ExecuteScalar();
+                                        //Внесение значения в ярус
+                                        command.CommandText = @"INSERT INTO TblVydIarus([NomSoed],[Iarus],[Sostav]) VALUES (" + lastID + "," + klsIarusNom + ",'" + sostavIarusaSecond + "');";
+                                        command.ExecuteNonQuery();
+                                    }
+                                    if (sostavIarusaNineth != "")
+                                    {
+                                        //Получение типа яруса изНСИ
+                                        commandNSI.CommandText = "SELECT KL FROM KlsIarus WHERE Kod = '9'";
+                                        int klsIarusNom = (int)commandNSI.ExecuteScalar();
+                                        //Внесение значения в ярус
+                                        command.CommandText = @"INSERT INTO TblVydIarus([NomSoed],[Iarus],[Sostav]) VALUES (" + lastID + "," + klsIarusNom + ",'" + sostavIarusaNineth + "');";
+                                        command.ExecuteNonQuery();
+                                    }
+                                    if (sostavIarusaThirtieth != "")
+                                    {
+                                        //Получение типа яруса изНСИ
+                                        commandNSI.CommandText = "SELECT KL FROM KlsIarus WHERE Kod = '30'";
+                                        int klsIarusNom = (int)commandNSI.ExecuteScalar();
+                                        //Внесение значения в ярус
+                                        command.CommandText = @"INSERT INTO TblVydIarus([NomSoed],[Iarus],[Sostav]) VALUES (" + lastID + "," + klsIarusNom + ",'" + sostavIarusaThirtieth + "');";
+                                        command.ExecuteNonQuery();
                                     }
                                 }
                                 else
@@ -379,43 +418,75 @@ namespace ConvertSys
                                         command.ExecuteNonQuery();
                                     }
                                     //Внесение данных по ярусу
-                                    if (sostav != "")
+                                    if (sostavIarusaFirst != "")
                                     {
-                                        commandNSI.CommandText = "SELECT KL FROM KlsIarus WHERE Kod = 1";
-                                        int klIarus = (int)commandNSI.ExecuteScalar();
-
-                                        command.CommandText = @"INSERT INTO TblVydIarus([NoSoed],[Iarus],[Sostav]) VALUES (" + lastID + "," + klIarus + "+'" + sostav + "')";
+                                        //Получение типа яруса изНСИ
+                                        commandNSI.CommandText = "SELECT KL FROM KlsIarus WHERE Kod = '1'";
+                                        int klsIarusNom = (int)commandNSI.ExecuteScalar();
+                                        //Внесение значения в ярус
+                                        command.CommandText = @"INSERT INTO TblVydIarus([NomSoed],[Iarus],[Sostav]) VALUES (" + lastID + "," + klsIarusNom + ",'" + sostavIarusaFirst + "');";
                                         command.ExecuteNonQuery();
-
+                                        //Получение ID записи яруса в базе
                                         command.CommandText = "SELECT @@IDENTITY";
-                                        int lastIdIarus = Convert.ToInt32(command.ExecuteScalar());
+                                        int lastIarusID = Convert.ToInt32(command.ExecuteScalar());
 
-                                        if (visota != 0)
+                                        //Возраст яруса
+                                        if (vozrastIarusaFirst != 0)
                                         {
-                                            command.CommandText = "UPDATE TblVydIarus SET VysotaIar=" + visota + "WHERE NomZ=" + lastIdIarus + ";";
+                                            command.CommandText = @"UPDATE TblVydIarus SET VozrastIar=" + vozrastIarusaFirst + " WHERE NomZ=" + lastIarusID + ";";
                                             command.ExecuteNonQuery();
                                         }
-                                        if (vozrast != 0)
+                                        //Высота яруса
+                                        if (vozrastIarusaFirst != 0)
                                         {
-                                            command.CommandText = "UPDATE TblVydIarus SET VozrastIar=" + vozrast + "WHERE NomZ=" + lastIdIarus + ";";
+                                            command.CommandText = @"UPDATE TblVydIarus SET VysotaIar='" + visotaIarusFirst + "' WHERE NomZ=" + lastIarusID + ";";
                                             command.ExecuteNonQuery();
                                         }
-                                        if (diametr != 0)
+                                        //Диаметр яруса
+                                        if (diametrIarusaFirst != 0)
                                         {
-                                            command.CommandText = "UPDATE TblVydIarus SET DiamIar=" + diametr + "WHERE NomZ=" + lastIdIarus + ";";
+                                            command.CommandText = @"UPDATE TblVydIarus SET DiamIar='" + diametrIarusaFirst + "' WHERE NomZ=" + lastIarusID + ";";
                                             command.ExecuteNonQuery();
                                         }
-                                        if (proishozdenie != 0)
+                                        //Происхождение яруса
+                                        if (proishozdeniyeIarusa != 0)
                                         {
-                                            command.CommandText = "UPDATE TblVydIarus SET Prois=" + proishozdenie + "WHERE NomZ=" + lastIdIarus + ";";
+                                            command.CommandText = @"UPDATE TblVydIarus SET Prois=" + proishozdeniyeIarusa + " WHERE NomZ=" + lastIarusID + ";";
                                             command.ExecuteNonQuery();
                                         }
-                                        if (polnota != 0)
+                                        //Полнота яруса
+                                        if (polnotaIarusa != 0)
                                         {
-                                            command.CommandText = "UPDATE TblVydIarus SET Polnota=" + polnota + "WHERE NomZ=" + lastIdIarus + ";";
+                                            command.CommandText = @"UPDATE TblVydIarus SET Polnota='" + polnotaIarusa + "' WHERE NomZ=" + lastIarusID + ";";
                                             command.ExecuteNonQuery();
                                         }
-
+                                    }
+                                    if (sostavIarusaSecond != "")
+                                    {
+                                        //Получение типа яруса изНСИ
+                                        commandNSI.CommandText = "SELECT KL FROM KlsIarus WHERE Kod = '2'";
+                                        int klsIarusNom = (int)commandNSI.ExecuteScalar();
+                                        //Внесение значения в ярус
+                                        command.CommandText = @"INSERT INTO TblVydIarus([NomSoed],[Iarus],[Sostav]) VALUES (" + lastID + "," + klsIarusNom + ",'" + sostavIarusaSecond + "');";
+                                        command.ExecuteNonQuery();
+                                    }
+                                    if (sostavIarusaNineth != "")
+                                    {
+                                        //Получение типа яруса изНСИ
+                                        commandNSI.CommandText = "SELECT KL FROM KlsIarus WHERE Kod = '9'";
+                                        int klsIarusNom = (int)commandNSI.ExecuteScalar();
+                                        //Внесение значения в ярус
+                                        command.CommandText = @"INSERT INTO TblVydIarus([NomSoed],[Iarus],[Sostav]) VALUES (" + lastID + "," + klsIarusNom + ",'" + sostavIarusaNineth + "');";
+                                        command.ExecuteNonQuery();
+                                    }
+                                    if (sostavIarusaThirtieth != "")
+                                    {
+                                        //Получение типа яруса изНСИ
+                                        commandNSI.CommandText = "SELECT KL FROM KlsIarus WHERE Kod = '30'";
+                                        int klsIarusNom = (int)commandNSI.ExecuteScalar();
+                                        //Внесение значения в ярус
+                                        command.CommandText = @"INSERT INTO TblVydIarus([NomSoed],[Iarus],[Sostav]) VALUES (" + lastID + "," + klsIarusNom + ",'" + sostavIarusaThirtieth + "');";
+                                        command.ExecuteNonQuery();
                                     }
                                 }
 
@@ -479,43 +550,75 @@ namespace ConvertSys
                                         command.ExecuteNonQuery();
                                     }
                                     //Внесение данных по ярусу
-                                    if (sostav != "")
+                                    if (sostavIarusaFirst != "")
                                     {
-                                        commandNSI.CommandText = "SELECT KL FROM KlsIarus WHERE Kod = 1";
-                                        int klIarus = (int)commandNSI.ExecuteScalar();
-
-                                        command.CommandText = @"INSERT INTO TblVydIarus([NoSoed],[Iarus],[Sostav]) VALUES (" + lastID + "," + klIarus + "+'" + sostav + "')";
+                                        //Получение типа яруса изНСИ
+                                        commandNSI.CommandText = "SELECT KL FROM KlsIarus WHERE Kod = '1'";
+                                        int klsIarusNom = (int)commandNSI.ExecuteScalar();
+                                        //Внесение значения в ярус
+                                        command.CommandText = @"INSERT INTO TblVydIarus([NomSoed],[Iarus],[Sostav]) VALUES (" + lastID + "," + klsIarusNom + ",'" + sostavIarusaFirst + "');";
                                         command.ExecuteNonQuery();
-
+                                        //Получение ID записи яруса в базе
                                         command.CommandText = "SELECT @@IDENTITY";
-                                        int lastIdIarus = Convert.ToInt32(command.ExecuteScalar());
+                                        int lastIarusID = Convert.ToInt32(command.ExecuteScalar());
 
-                                        if (visota != 0)
+                                        //Возраст яруса
+                                        if (vozrastIarusaFirst != 0)
                                         {
-                                            command.CommandText = "UPDATE TblVydIarus SET VysotaIar=" + visota + "WHERE NomZ=" + lastIdIarus + ";";
+                                            command.CommandText = @"UPDATE TblVydIarus SET VozrastIar=" + vozrastIarusaFirst + " WHERE NomZ=" + lastIarusID + ";";
                                             command.ExecuteNonQuery();
                                         }
-                                        if (vozrast != 0)
+                                        //Высота яруса
+                                        if (vozrastIarusaFirst != 0)
                                         {
-                                            command.CommandText = "UPDATE TblVydIarus SET VozrastIar=" + vozrast + "WHERE NomZ=" + lastIdIarus + ";";
+                                            command.CommandText = @"UPDATE TblVydIarus SET VysotaIar='" + visotaIarusFirst + "' WHERE NomZ=" + lastIarusID + ";";
                                             command.ExecuteNonQuery();
                                         }
-                                        if (diametr != 0)
+                                        //Диаметр яруса
+                                        if (diametrIarusaFirst != 0)
                                         {
-                                            command.CommandText = "UPDATE TblVydIarus SET DiamIar=" + diametr + "WHERE NomZ=" + lastIdIarus + ";";
+                                            command.CommandText = @"UPDATE TblVydIarus SET DiamIar='" + diametrIarusaFirst + "' WHERE NomZ=" + lastIarusID + ";";
                                             command.ExecuteNonQuery();
                                         }
-                                        if (proishozdenie != 0)
+                                        //Происхождение яруса
+                                        if (proishozdeniyeIarusa != 0)
                                         {
-                                            command.CommandText = "UPDATE TblVydIarus SET Prois=" + proishozdenie + "WHERE NomZ=" + lastIdIarus + ";";
+                                            command.CommandText = @"UPDATE TblVydIarus SET Prois=" + proishozdeniyeIarusa + " WHERE NomZ=" + lastIarusID + ";";
                                             command.ExecuteNonQuery();
                                         }
-                                        if (polnota != 0)
+                                        //Полнота яруса
+                                        if (polnotaIarusa != 0)
                                         {
-                                            command.CommandText = "UPDATE TblVydIarus SET Polnota=" + polnota + "WHERE NomZ=" + lastIdIarus + ";";
+                                            command.CommandText = @"UPDATE TblVydIarus SET Polnota='" + polnotaIarusa + "' WHERE NomZ=" + lastIarusID + ";";
                                             command.ExecuteNonQuery();
                                         }
-
+                                    }
+                                    if (sostavIarusaSecond != "")
+                                    {
+                                        //Получение типа яруса изНСИ
+                                        commandNSI.CommandText = "SELECT KL FROM KlsIarus WHERE Kod = '2'";
+                                        int klsIarusNom = (int)commandNSI.ExecuteScalar();
+                                        //Внесение значения в ярус
+                                        command.CommandText = @"INSERT INTO TblVydIarus([NomSoed],[Iarus],[Sostav]) VALUES (" + lastID + "," + klsIarusNom + ",'" + sostavIarusaSecond + "');";
+                                        command.ExecuteNonQuery();
+                                    }
+                                    if (sostavIarusaNineth != "")
+                                    {
+                                        //Получение типа яруса изНСИ
+                                        commandNSI.CommandText = "SELECT KL FROM KlsIarus WHERE Kod = '9'";
+                                        int klsIarusNom = (int)commandNSI.ExecuteScalar();
+                                        //Внесение значения в ярус
+                                        command.CommandText = @"INSERT INTO TblVydIarus([NomSoed],[Iarus],[Sostav]) VALUES (" + lastID + "," + klsIarusNom + ",'" + sostavIarusaNineth + "');";
+                                        command.ExecuteNonQuery();
+                                    }
+                                    if (sostavIarusaThirtieth != "")
+                                    {
+                                        //Получение типа яруса изНСИ
+                                        commandNSI.CommandText = "SELECT KL FROM KlsIarus WHERE Kod = '30'";
+                                        int klsIarusNom = (int)commandNSI.ExecuteScalar();
+                                        //Внесение значения в ярус
+                                        command.CommandText = @"INSERT INTO TblVydIarus([NomSoed],[Iarus],[Sostav]) VALUES (" + lastID + "," + klsIarusNom + ",'" + sostavIarusaThirtieth + "');";
+                                        command.ExecuteNonQuery();
                                     }
                                 }
                                 else
@@ -528,7 +631,7 @@ namespace ConvertSys
 
                                     if (scHozSection != 0)
                                     {
-                                        command.CommandText = @"UPDATE TblVyd SET HozSek = "+ scHozSection + " WHERE NomZ=" + lastID + ";";
+                                        command.CommandText = @"UPDATE TblVyd SET HozSek = " + scHozSection + " WHERE NomZ=" + lastID + ";";
                                         command.ExecuteNonQuery();
                                     }
                                     if (scPreoblPrd != 0)
@@ -572,43 +675,75 @@ namespace ConvertSys
                                         command.ExecuteNonQuery();
                                     }
                                     //Внесение данных по ярусу
-                                    if (sostav != "")
+                                    if (sostavIarusaFirst != "")
                                     {
-                                        commandNSI.CommandText = "SELECT KL FROM KlsIarus WHERE Kod = 1";
-                                        int klIarus = (int)commandNSI.ExecuteScalar();
-
-                                        command.CommandText = @"INSERT INTO TblVydIarus([NoSoed],[Iarus],[Sostav]) VALUES (" + lastID + "," + klIarus + "+'" + sostav + "')";
+                                        //Получение типа яруса изНСИ
+                                        commandNSI.CommandText = "SELECT KL FROM KlsIarus WHERE Kod = '1'";
+                                        int klsIarusNom = (int)commandNSI.ExecuteScalar();
+                                        //Внесение значения в ярус
+                                        command.CommandText = @"INSERT INTO TblVydIarus([NomSoed],[Iarus],[Sostav]) VALUES (" + lastID + "," + klsIarusNom + ",'" + sostavIarusaFirst + "');";
                                         command.ExecuteNonQuery();
-
+                                        //Получение ID записи яруса в базе
                                         command.CommandText = "SELECT @@IDENTITY";
-                                        int lastIdIarus = Convert.ToInt32(command.ExecuteScalar());
+                                        int lastIarusID = Convert.ToInt32(command.ExecuteScalar());
 
-                                        if (visota != 0)
+                                        //Возраст яруса
+                                        if (vozrastIarusaFirst != 0)
                                         {
-                                            command.CommandText = "UPDATE TblVydIarus SET VysotaIar=" + visota + "WHERE NomZ=" + lastIdIarus + ";";
+                                            command.CommandText = @"UPDATE TblVydIarus SET VozrastIar=" + vozrastIarusaFirst + " WHERE NomZ=" + lastIarusID + ";";
                                             command.ExecuteNonQuery();
                                         }
-                                        if (vozrast != 0)
+                                        //Высота яруса
+                                        if (vozrastIarusaFirst != 0)
                                         {
-                                            command.CommandText = "UPDATE TblVydIarus SET VozrastIar=" + vozrast + "WHERE NomZ=" + lastIdIarus + ";";
+                                            command.CommandText = @"UPDATE TblVydIarus SET VysotaIar='" + visotaIarusFirst + "' WHERE NomZ=" + lastIarusID + ";";
                                             command.ExecuteNonQuery();
                                         }
-                                        if (diametr != 0)
+                                        //Диаметр яруса
+                                        if (diametrIarusaFirst != 0)
                                         {
-                                            command.CommandText = "UPDATE TblVydIarus SET DiamIar=" + diametr + "WHERE NomZ=" + lastIdIarus + ";";
+                                            command.CommandText = @"UPDATE TblVydIarus SET DiamIar='" + diametrIarusaFirst + "' WHERE NomZ=" + lastIarusID + ";";
                                             command.ExecuteNonQuery();
                                         }
-                                        if (proishozdenie != 0)
+                                        //Происхождение яруса
+                                        if (proishozdeniyeIarusa != 0)
                                         {
-                                            command.CommandText = "UPDATE TblVydIarus SET Prois=" + proishozdenie + "WHERE NomZ=" + lastIdIarus + ";";
+                                            command.CommandText = @"UPDATE TblVydIarus SET Prois=" + proishozdeniyeIarusa + " WHERE NomZ=" + lastIarusID + ";";
                                             command.ExecuteNonQuery();
                                         }
-                                        if (polnota != 0)
+                                        //Полнота яруса
+                                        if (polnotaIarusa != 0)
                                         {
-                                            command.CommandText = "UPDATE TblVydIarus SET Polnota=" + polnota + "WHERE NomZ=" + lastIdIarus + ";";
+                                            command.CommandText = @"UPDATE TblVydIarus SET Polnota='" + polnotaIarusa + "' WHERE NomZ=" + lastIarusID + ";";
                                             command.ExecuteNonQuery();
                                         }
-
+                                    }
+                                    if (sostavIarusaSecond != "")
+                                    {
+                                        //Получение типа яруса изНСИ
+                                        commandNSI.CommandText = "SELECT KL FROM KlsIarus WHERE Kod = '2'";
+                                        int klsIarusNom = (int)commandNSI.ExecuteScalar();
+                                        //Внесение значения в ярус
+                                        command.CommandText = @"INSERT INTO TblVydIarus([NomSoed],[Iarus],[Sostav]) VALUES (" + lastID + "," + klsIarusNom + ",'" + sostavIarusaSecond + "');";
+                                        command.ExecuteNonQuery();
+                                    }
+                                    if (sostavIarusaNineth != "")
+                                    {
+                                        //Получение типа яруса изНСИ
+                                        commandNSI.CommandText = "SELECT KL FROM KlsIarus WHERE Kod = '9'";
+                                        int klsIarusNom = (int)commandNSI.ExecuteScalar();
+                                        //Внесение значения в ярус
+                                        command.CommandText = @"INSERT INTO TblVydIarus([NomSoed],[Iarus],[Sostav]) VALUES (" + lastID + "," + klsIarusNom + ",'" + sostavIarusaNineth + "');";
+                                        command.ExecuteNonQuery();
+                                    }
+                                    if (sostavIarusaThirtieth != "")
+                                    {
+                                        //Получение типа яруса изНСИ
+                                        commandNSI.CommandText = "SELECT KL FROM KlsIarus WHERE Kod = '30'";
+                                        int klsIarusNom = (int)commandNSI.ExecuteScalar();
+                                        //Внесение значения в ярус
+                                        command.CommandText = @"INSERT INTO TblVydIarus([NomSoed],[Iarus],[Sostav]) VALUES (" + lastID + "," + klsIarusNom + ",'" + sostavIarusaThirtieth + "');";
+                                        command.ExecuteNonQuery();
                                     }
                                 }
                             }
@@ -628,6 +763,9 @@ namespace ConvertSys
                     connectionToAccess.Close();
                     connectionToNSIAccess.Close();
                 }
+                
+                    
+                
 
                     /*
                     string query = "SELECT NomZ,NomSoed,KatZem,GodAkt,PorodaPrb,TipLesa,Tlu,Info FROM TblVyd";
