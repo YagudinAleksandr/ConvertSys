@@ -22,6 +22,7 @@ namespace ConvertSys
         public MainWindow()
         {
             InitializeComponent();
+            
         }
         private void BTN_BrowseMainDB_Click(object sender, EventArgs e)
         {
@@ -85,6 +86,8 @@ namespace ConvertSys
 
                 try
                 {
+                    
+
                     //Открываем команды OleDB
                     //Команды общие
                     OleDbCommand command = new OleDbCommand();
@@ -121,8 +124,10 @@ namespace ConvertSys
                             ds.Tables.Add(dt);
                         }
 
-
-
+                        PB_ConvertProgress.Minimum = 0;//Минимально значение ProgressBar
+                        PB_ConvertProgress.Maximum = ds.Tables[0].Rows.Count;//Максимальное значение ProgressBar
+                        
+                        PB_ConvertProgress.Step = 1;
 
                         for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
                         {
@@ -747,9 +752,10 @@ namespace ConvertSys
                                     }
                                 }
                             }
-
+                            PB_ConvertProgress.PerformStep();
+                            
                         }
-
+                        
 
                     }
                     MessageBox.Show("OK!");

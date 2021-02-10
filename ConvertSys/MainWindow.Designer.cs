@@ -41,6 +41,7 @@ namespace ConvertSys
             this.BTN_BrowseMainDB = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
+            this.PB_ConvertProgress = new System.Windows.Forms.ProgressBar();
             this.SuspendLayout();
             // 
             // label1
@@ -71,11 +72,11 @@ namespace ConvertSys
             // 
             // BTN_Start
             // 
-            this.BTN_Start.Location = new System.Drawing.Point(631, 102);
+            this.BTN_Start.Location = new System.Drawing.Point(615, 146);
             this.BTN_Start.Name = "BTN_Start";
-            this.BTN_Start.Size = new System.Drawing.Size(158, 23);
+            this.BTN_Start.Size = new System.Drawing.Size(174, 23);
             this.BTN_Start.TabIndex = 3;
-            this.BTN_Start.Text = "Запуск";
+            this.BTN_Start.Text = "Начать перевод данных";
             this.BTN_Start.UseVisualStyleBackColor = true;
             this.BTN_Start.Click += new System.EventHandler(this.BTN_Start_Click);
             // 
@@ -133,7 +134,7 @@ namespace ConvertSys
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(18, 101);
+            this.button1.Location = new System.Drawing.Point(18, 146);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(91, 23);
             this.button1.TabIndex = 10;
@@ -141,11 +142,19 @@ namespace ConvertSys
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // PB_ConvertProgress
+            // 
+            this.PB_ConvertProgress.Location = new System.Drawing.Point(17, 104);
+            this.PB_ConvertProgress.Name = "PB_ConvertProgress";
+            this.PB_ConvertProgress.Size = new System.Drawing.Size(771, 23);
+            this.PB_ConvertProgress.TabIndex = 11;
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 131);
+            this.ClientSize = new System.Drawing.Size(800, 176);
+            this.Controls.Add(this.PB_ConvertProgress);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.BTN_BrowseMainDB);
@@ -179,5 +188,6 @@ namespace ConvertSys
         private System.Windows.Forms.Button BTN_BrowseMainDB;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.ProgressBar PB_ConvertProgress;
     }
 }
