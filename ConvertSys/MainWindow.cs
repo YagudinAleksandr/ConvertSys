@@ -8,6 +8,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
@@ -15,6 +16,7 @@ using Excel = Microsoft.Office.Interop.Excel;
 
 namespace ConvertSys
 {
+    
     public partial class MainWindow : Form
     {
         private OleDbConnection connectionToAccess;
@@ -149,6 +151,12 @@ namespace ConvertSys
                             string sukhostoy = Convert.ToDouble(ds.Tables[0].Rows[i].ItemArray[26]).ToString(CultureInfo.InvariantCulture);//Сухостой
                             string tipLesa = ds.Tables[0].Rows[i].ItemArray[28].ToString();//Тип леса
                             string tlu = ds.Tables[0].Rows[i].ItemArray[29].ToString();//ТЛУ
+                            int pozharKls;//Класс пожарной опасности
+                            if (!int.TryParse(ds.Tables[0].Rows[i].ItemArray[30].ToString(), out pozharKls))
+                                pozharKls = 0;
+                            
+                            
+                            
                             //Ярус 1
                             string sostavIarusaFirst = ds.Tables[0].Rows[i].ItemArray[10].ToString();//Состав яруса
 
@@ -237,66 +245,45 @@ namespace ConvertSys
 
                             if (count == 0)
                             {
-                                command.CommandText = "INSERT INTO TblKvr ([KvrNomK]) VALUES (" + kvartal + ");";
-                                command.ExecuteNonQuery();
-
-                                command.CommandText = "SELECT NomZ FROM TblKvr WHERE KvrNomK =" + kvartal;
-                                int nomZ = (int)command.ExecuteScalar();
-
+                                
+                                int nomZ = CreateKvartal(command, kvartal);
 
                                 if (scBonitet != 0)
                                 {
-                                    command.CommandText = @"INSERT INTO TblVyd([NomSoed],[KvrNom],[VydNom],[KatZem],[Bonitet],[VydPls]) VALUES (" + nomZ + "," + kvartal + "," + vydel + "," + scLandCat +
-                                        "," + scBonitet + "," + square + ");";
-                                    command.ExecuteNonQuery();
-                                    command.CommandText = "SELECT @@IDENTITY";
-                                    int lastID = Convert.ToInt32(command.ExecuteScalar());
+                                    //Код здесь
+                                    
+                                    int lastID = CreateVyd(command,nomZ,kvartal,vydel,scLandCat,scBonitet,square);
 
                                     if (scHozSection != 0)
-                                    {
-                                        command.CommandText = @"UPDATE TblVyd SET HozSek = " + scHozSection + " WHERE NomZ=" + lastID + ";";
-                                        command.ExecuteNonQuery();
-                                    }
+                                        UpdateVydel(command, scHozSection, lastID, "HozSek");
+
                                     if (scPreoblPrd != 0)
-                                    {
-                                        command.CommandText = @"UPDATE TblVyd SET PorodaPrb = " + scHozSection + " WHERE NomZ=" + lastID + ";";
-                                        command.ExecuteNonQuery();
-                                    }
+                                        UpdateVydel(command, scPreoblPrd, lastID, "PorodaPrb");
+                                    
                                     if (scGroupAge != 0)
-                                    {
-                                        command.CommandText = @"UPDATE TblVyd SET VozGrpVyd = " + scGroupAge + " WHERE NomZ=" + lastID + ";";
-                                        command.ExecuteNonQuery();
-                                    }
+                                        UpdateVydel(command, scGroupAge, lastID, "VozGrpVyd");
+                                        
                                     if (ageClass != 0)
-                                    {
-                                        command.CommandText = @"UPDATE TblVyd SET VozKls = " + ageClass + " WHERE NomZ=" + lastID + ";";
-                                        command.ExecuteNonQuery();
-                                    }
+                                        UpdateVydel(command, ageClass, lastID, "VozKls");
+                                        
                                     if (zapazNaVydel != "" && zapazNaVydel != "0")
-                                    {
-                                        command.CommandText = @"UPDATE TblVyd SET ZapasVyd = " + zapazNaVydel + " WHERE NomZ=" + lastID + ";";
-                                        command.ExecuteNonQuery();
-                                    }
+                                        UpdateVydel(command, zapazNaVydel, lastID, "ZapasVyd");
+                                        
                                     if (zakhlamlennost != "" && zakhlamlennost != "0")
-                                    {
-                                        command.CommandText = @"UPDATE TblVyd SET ZapasZah = " + zakhlamlennost + " WHERE NomZ=" + lastID + ";";
-                                        command.ExecuteNonQuery();
-                                    }
+                                        UpdateVydel(command, zakhlamlennost, lastID, "ZapasZah");
+                                       
                                     if (sukhostoy != "" && sukhostoy != "0")
-                                    {
-                                        command.CommandText = @"UPDATE TblVyd SET ZapasSuh = " + sukhostoy + " WHERE NomZ=" + lastID + ";";
-                                        command.ExecuteNonQuery();
-                                    }
+                                        UpdateVydel(command, sukhostoy, lastID, "ZapasSuh");
+                                     
                                     if (scTipLesa != 0)
-                                    {
-                                        command.CommandText = @"UPDATE TblVyd SET TipLesa = " + scTipLesa + " WHERE NomZ=" + lastID + ";";
-                                        command.ExecuteNonQuery();
-                                    }
+                                        UpdateVydel(command, scTipLesa, lastID, "TipLesa");
+                                        
                                     if (scTlu != 0)
-                                    {
-                                        command.CommandText = @"UPDATE TblVyd SET TLU = " + scTlu + " WHERE NomZ=" + lastID + ";";
-                                        command.ExecuteNonQuery();
-                                    }
+                                        UpdateVydel(command, scTlu, lastID, "TLU");
+                                    
+                                    if(pozharKls!=0)
+                                        UpdateVydel(command, pozharKls, lastID, "PozharKlsVyd");
+                                    
                                     //Внесение данных по ярусу
                                     if(sostavIarusaFirst != "")
                                     {
@@ -368,6 +355,55 @@ namespace ConvertSys
                                         command.CommandText = @"INSERT INTO TblVydIarus([NomSoed],[Iarus],[Sostav]) VALUES (" + lastID + "," + klsIarusNom + ",'" + sostavIarusaThirtieth + "');";
                                         command.ExecuteNonQuery();
                                     }
+                                    //Макеты
+
+                                    //Макет 12
+                                    if (ds.Tables[0].Rows[i].ItemArray[33].ToString() != "")
+                                    {
+                                        command.CommandText = "INSERT INTO TblVydDopMaket([NomSoed],[Maket]) VALUES (" + lastID + ",12);";
+                                        command.ExecuteNonQuery();
+                                        command.CommandText = "SELECT @@IDENTITY";
+                                        int lastIDPovrejdeniya = Convert.ToInt32(command.ExecuteScalar());
+
+                                        int danniye;
+
+                                        string povrejd = ds.Tables[0].Rows[i].ItemArray[33].ToString();
+
+                                        string[] values = Regex.Split(povrejd,@"(?=[А-Я])");
+
+                                        List<string> valuesList = new List<string>();
+
+                                        for (int j = 0; j < values.Count(); j++) 
+                                        {
+                                            if (values[j] != "")
+                                                valuesList.Add(values[j]);
+                                        }
+                                            
+                                        foreach(string n in valuesList)
+                                        {
+                                            commandNSI.CommandText = "SELECT KL FROM KlsNasPovr WHERE TX='" + n + "'";
+                                            var obj = commandNSI.ExecuteScalar();
+                                            if (obj != null)
+                                            {
+                                                danniye = Convert.ToInt32(obj);
+                                                command.CommandText = @"INSERT INTO TblVydDopParam([NomSoed],[ParamId],[Parametr]) VALUES (" + lastIDPovrejdeniya + ",1201,'" + danniye + "')";
+                                                command.ExecuteNonQuery();
+
+                                            }
+                                            else
+                                            {
+                                                commandNSI.CommandText = "SELECT KL FROM KlsVreditel WHERE TX='" + n + "'";
+                                                obj = command.ExecuteScalar();
+                                                if (obj != null)
+                                                {
+                                                    danniye = Convert.ToInt32(obj);
+                                                    command.CommandText = @"INSERT INTO TblVydDopParam([NomSoed],[ParamId],[Parametr]) VALUES (" + lastIDPovrejdeniya + ",1204,'" + danniye + "')";
+                                                    command.ExecuteNonQuery();
+
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                                 else
                                 {
@@ -420,6 +456,11 @@ namespace ConvertSys
                                     if (scTlu != 0)
                                     {
                                         command.CommandText = @"UPDATE TblVyd SET TLU = " + scTlu + " WHERE NomZ=" + lastID + ";";
+                                        command.ExecuteNonQuery();
+                                    }
+                                    if (pozharKls != 0)
+                                    {
+                                        command.CommandText = @"UPDATE TblVyd SET PozharKlsVyd = " + pozharKls + " WHERE NomZ=" + lastID + ";";
                                         command.ExecuteNonQuery();
                                     }
                                     //Внесение данных по ярусу
@@ -492,68 +533,97 @@ namespace ConvertSys
                                         //Внесение значения в ярус
                                         command.CommandText = @"INSERT INTO TblVydIarus([NomSoed],[Iarus],[Sostav]) VALUES (" + lastID + "," + klsIarusNom + ",'" + sostavIarusaThirtieth + "');";
                                         command.ExecuteNonQuery();
+                                    }
+                                    //Макеты
+
+                                    //Макет 12
+                                    if (ds.Tables[0].Rows[i].ItemArray[33].ToString() != "")
+                                    {
+                                        command.CommandText = "INSERT INTO TblVydDopMaket([NomSoed],[Maket]) VALUES (" + lastID + ",12);";
+                                        command.ExecuteNonQuery();
+                                        command.CommandText = "SELECT @@IDENTITY";
+                                        int lastIDPovrejdeniya = Convert.ToInt32(command.ExecuteScalar());
+
+                                        int danniye;
+
+                                        string povrejd = ds.Tables[0].Rows[i].ItemArray[33].ToString();
+
+                                        string[] values = Regex.Split(povrejd, @"(?=[А-Я])");
+
+                                        List<string> valuesList = new List<string>();
+
+                                        for (int j = 0; j < values.Count(); j++)
+                                        {
+                                            if (values[j] != "")
+                                                valuesList.Add(values[j]);
+                                        }
+
+                                        foreach (string n in valuesList)
+                                        {
+                                            commandNSI.CommandText = "SELECT KL FROM KlsNasPovr WHERE TX='" + n + "'";
+                                            var obj = commandNSI.ExecuteScalar();
+                                            if (obj != null)
+                                            {
+                                                danniye = Convert.ToInt32(obj);
+                                                command.CommandText = @"INSERT INTO TblVydDopParam([NomSoed],[ParamId],[Parametr]) VALUES (" + lastIDPovrejdeniya + ",1201,'" + danniye + "')";
+                                                command.ExecuteNonQuery();
+
+                                            }
+                                            else
+                                            {
+                                                commandNSI.CommandText = "SELECT KL FROM KlsVreditel WHERE TX='" + n + "'";
+                                                obj = command.ExecuteScalar();
+                                                if (obj != null)
+                                                {
+                                                    danniye = Convert.ToInt32(obj);
+                                                    command.CommandText = @"INSERT INTO TblVydDopParam([NomSoed],[ParamId],[Parametr]) VALUES (" + lastIDPovrejdeniya + ",1204,'" + danniye + "')";
+                                                    command.ExecuteNonQuery();
+
+                                                }
+                                            }
+                                        }
                                     }
                                 }
 
                             }
                             else
                             {
-                                command.CommandText = "SELECT NomZ FROM TblKvr WHERE KvrNomK =" + kvartal;
-                                int nomZ = (int)command.ExecuteScalar();
+
+                                int nomZ = GetKvartal(command, kvartal);
 
                                 if (scBonitet != 0)
                                 {
-                                    command.CommandText = @"INSERT INTO TblVyd([NomSoed],[KvrNom],[VydNom],[KatZem],[Bonitet],[VydPls]) VALUES (" + nomZ + "," + kvartal + "," + vydel + "," + scLandCat +
-                                       "," + scBonitet + "," + square + ");";
-                                    command.ExecuteNonQuery();
-                                    command.CommandText = "SELECT @@IDENTITY";
-                                    int lastID = Convert.ToInt32(command.ExecuteScalar());
+                                    int lastID = CreateVyd(command, nomZ, kvartal, vydel, scLandCat, scBonitet, square);
 
                                     if (scHozSection != 0)
-                                    {
-                                        command.CommandText = @"UPDATE TblVyd SET HozSek = " + scHozSection + " WHERE NomZ=" + lastID + ";";
-                                        command.ExecuteNonQuery();
-                                    }
+                                        UpdateVydel(command, scHozSection, lastID, "HozSek");
+
                                     if (scPreoblPrd != 0)
-                                    {
-                                        command.CommandText = @"UPDATE TblVyd SET PorodaPrb = " + scPreoblPrd + " WHERE NomZ=" + lastID + ";";
-                                        command.ExecuteNonQuery();
-                                    }
+                                        UpdateVydel(command, scPreoblPrd, lastID, "PorodaPrb");
+
                                     if (scGroupAge != 0)
-                                    {
-                                        command.CommandText = @"UPDATE TblVyd SET VozGrpVyd = " + scGroupAge + " WHERE NomZ=" + lastID + ";";
-                                        command.ExecuteNonQuery();
-                                    }
+                                        UpdateVydel(command, scGroupAge, lastID, "VozGrpVyd");
+
                                     if (ageClass != 0)
-                                    {
-                                        command.CommandText = @"UPDATE TblVyd SET VozKls = " + ageClass + " WHERE NomZ=" + lastID + ";";
-                                        command.ExecuteNonQuery();
-                                    }
+                                        UpdateVydel(command, ageClass, lastID, "VozKls");
+
                                     if (zapazNaVydel != "" && zapazNaVydel != "0")
-                                    {
-                                        command.CommandText = @"UPDATE TblVyd SET ZapasVyd = " + zapazNaVydel + " WHERE NomZ=" + lastID + ";";
-                                        command.ExecuteNonQuery();
-                                    }
+                                        UpdateVydel(command, zapazNaVydel, lastID, "ZapasVyd");
+
                                     if (zakhlamlennost != "" && zakhlamlennost != "0")
-                                    {
-                                        command.CommandText = @"UPDATE TblVyd SET ZapasZah = " + zakhlamlennost + " WHERE NomZ=" + lastID + ";";
-                                        command.ExecuteNonQuery();
-                                    }
+                                        UpdateVydel(command, zakhlamlennost, lastID, "ZapasZah");
+
                                     if (sukhostoy != "" && sukhostoy != "0")
-                                    {
-                                        command.CommandText = @"UPDATE TblVyd SET ZapasSuh = " + sukhostoy + " WHERE NomZ=" + lastID + ";";
-                                        command.ExecuteNonQuery();
-                                    }
+                                        UpdateVydel(command, sukhostoy, lastID, "ZapasSuh");
+
                                     if (scTipLesa != 0)
-                                    {
-                                        command.CommandText = @"UPDATE TblVyd SET TipLesa = " + scTipLesa + " WHERE NomZ=" + lastID + ";";
-                                        command.ExecuteNonQuery();
-                                    }
+                                        UpdateVydel(command, scTipLesa, lastID, "TipLesa");
+
                                     if (scTlu != 0)
-                                    {
-                                        command.CommandText = @"UPDATE TblVyd SET TLU = " + scTlu + " WHERE NomZ=" + lastID + ";";
-                                        command.ExecuteNonQuery();
-                                    }
+                                        UpdateVydel(command, scTlu, lastID, "TLU");
+
+                                    if (pozharKls != 0)
+                                        UpdateVydel(command, pozharKls, lastID, "PozharKlsVyd");
                                     //Внесение данных по ярусу
                                     if (sostavIarusaFirst != "")
                                     {
@@ -624,61 +694,91 @@ namespace ConvertSys
                                         //Внесение значения в ярус
                                         command.CommandText = @"INSERT INTO TblVydIarus([NomSoed],[Iarus],[Sostav]) VALUES (" + lastID + "," + klsIarusNom + ",'" + sostavIarusaThirtieth + "');";
                                         command.ExecuteNonQuery();
+                                    }
+                                    //Макеты
+
+                                    //Макет 12
+                                    if (ds.Tables[0].Rows[i].ItemArray[33].ToString() != "")
+                                    {
+                                        command.CommandText = "INSERT INTO TblVydDopMaket([NomSoed],[Maket]) VALUES (" + lastID + ",12);";
+                                        command.ExecuteNonQuery();
+                                        command.CommandText = "SELECT @@IDENTITY";
+                                        int lastIDPovrejdeniya = Convert.ToInt32(command.ExecuteScalar());
+
+                                        int danniye;
+
+                                        string povrejd = ds.Tables[0].Rows[i].ItemArray[33].ToString();
+
+                                        string[] values = Regex.Split(povrejd, @"(?=[А-Я])");
+
+                                        List<string> valuesList = new List<string>();
+
+                                        for (int j = 0; j < values.Count(); j++)
+                                        {
+                                            if (values[j] != "")
+                                                valuesList.Add(values[j]);
+                                        }
+
+                                        foreach (string n in valuesList)
+                                        {
+                                            commandNSI.CommandText = "SELECT KL FROM KlsNasPovr WHERE TX='" + n + "'";
+                                            var obj = commandNSI.ExecuteScalar();
+                                            if (obj != null)
+                                            {
+                                                danniye = Convert.ToInt32(obj);
+                                                command.CommandText = @"INSERT INTO TblVydDopParam([NomSoed],[ParamId],[Parametr]) VALUES (" + lastIDPovrejdeniya + ",1201,'" + danniye + "')";
+                                                command.ExecuteNonQuery();
+
+                                            }
+                                            else
+                                            {
+                                                commandNSI.CommandText = "SELECT KL FROM KlsVreditel WHERE TX='" + n + "'";
+                                                obj = command.ExecuteScalar();
+                                                if (obj != null)
+                                                {
+                                                    danniye = Convert.ToInt32(obj);
+                                                    command.CommandText = @"INSERT INTO TblVydDopParam([NomSoed],[ParamId],[Parametr]) VALUES (" + lastIDPovrejdeniya + ",1204,'" + danniye + "')";
+                                                    command.ExecuteNonQuery();
+
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                                 else
                                 {
-                                    command.CommandText = @"INSERT INTO TblVyd([NomSoed],[KvrNom],[VydNom],[KatZem],[VydPls]) VALUES (" + nomZ + "," + kvartal + ","
-                                        + vydel + "," + scLandCat + "," + square + ");";
-                                    command.ExecuteNonQuery();
-                                    command.CommandText = "SELECT @@IDENTITY";
-                                    int lastID = Convert.ToInt32(command.ExecuteScalar());
+                                    int lastID = CreateVyd(command, nomZ, kvartal, vydel, scLandCat, scBonitet, square);
 
                                     if (scHozSection != 0)
-                                    {
-                                        command.CommandText = @"UPDATE TblVyd SET HozSek = " + scHozSection + " WHERE NomZ=" + lastID + ";";
-                                        command.ExecuteNonQuery();
-                                    }
+                                        UpdateVydel(command, scHozSection, lastID, "HozSek");
+
                                     if (scPreoblPrd != 0)
-                                    {
-                                        command.CommandText = @"UPDATE TblVyd SET PorodaPrb = " + scPreoblPrd + " WHERE NomZ=" + lastID + ";";
-                                        command.ExecuteNonQuery();
-                                    }
+                                        UpdateVydel(command, scPreoblPrd, lastID, "PorodaPrb");
+
                                     if (scGroupAge != 0)
-                                    {
-                                        command.CommandText = @"UPDATE TblVyd SET VozGrpVyd = " + scGroupAge + " WHERE NomZ=" + lastID + ";";
-                                        command.ExecuteNonQuery();
-                                    }
+                                        UpdateVydel(command, scGroupAge, lastID, "VozGrpVyd");
+
                                     if (ageClass != 0)
-                                    {
-                                        command.CommandText = @"UPDATE TblVyd SET VozKls = " + ageClass + " WHERE NomZ=" + lastID + ";";
-                                        command.ExecuteNonQuery();
-                                    }
+                                        UpdateVydel(command, ageClass, lastID, "VozKls");
+
                                     if (zapazNaVydel != "" && zapazNaVydel != "0")
-                                    {
-                                        command.CommandText = @"UPDATE TblVyd SET ZapasVyd = " + zapazNaVydel + " WHERE NomZ=" + lastID + ";";
-                                        command.ExecuteNonQuery();
-                                    }
+                                        UpdateVydel(command, zapazNaVydel, lastID, "ZapasVyd");
+
                                     if (zakhlamlennost != "" && zakhlamlennost != "0")
-                                    {
-                                        command.CommandText = @"UPDATE TblVyd SET ZapasZah = " + zakhlamlennost + " WHERE NomZ=" + lastID + ";";
-                                        command.ExecuteNonQuery();
-                                    }
+                                        UpdateVydel(command, zakhlamlennost, lastID, "ZapasZah");
+
                                     if (sukhostoy != "" && sukhostoy != "0")
-                                    {
-                                        command.CommandText = @"UPDATE TblVyd SET ZapasSuh = " + sukhostoy + " WHERE NomZ=" + lastID + ";";
-                                        command.ExecuteNonQuery();
-                                    }
+                                        UpdateVydel(command, sukhostoy, lastID, "ZapasSuh");
+
                                     if (scTipLesa != 0)
-                                    {
-                                        command.CommandText = @"UPDATE TblVyd SET TipLesa = " + scTipLesa + " WHERE NomZ=" + lastID + ";";
-                                        command.ExecuteNonQuery();
-                                    }
+                                        UpdateVydel(command, scTipLesa, lastID, "TipLesa");
+
                                     if (scTlu != 0)
-                                    {
-                                        command.CommandText = @"UPDATE TblVyd SET TLU = " + scTlu + " WHERE NomZ=" + lastID + ";";
-                                        command.ExecuteNonQuery();
-                                    }
+                                        UpdateVydel(command, scTlu, lastID, "TLU");
+
+                                    if (pozharKls != 0)
+                                        UpdateVydel(command, pozharKls, lastID, "PozharKlsVyd");
+
                                     //Внесение данных по ярусу
                                     if (sostavIarusaFirst != "")
                                     {
@@ -749,6 +849,55 @@ namespace ConvertSys
                                         //Внесение значения в ярус
                                         command.CommandText = @"INSERT INTO TblVydIarus([NomSoed],[Iarus],[Sostav]) VALUES (" + lastID + "," + klsIarusNom + ",'" + sostavIarusaThirtieth + "');";
                                         command.ExecuteNonQuery();
+                                    }
+                                    //Макеты
+
+                                    //Макет 12
+                                    if (ds.Tables[0].Rows[i].ItemArray[33].ToString() != "")
+                                    {
+                                        command.CommandText = "INSERT INTO TblVydDopMaket([NomSoed],[Maket]) VALUES (" + lastID + ",12);";
+                                        command.ExecuteNonQuery();
+                                        command.CommandText = "SELECT @@IDENTITY";
+                                        int lastIDPovrejdeniya = Convert.ToInt32(command.ExecuteScalar());
+
+                                        int danniye;
+
+                                        string povrejd = ds.Tables[0].Rows[i].ItemArray[33].ToString();
+
+                                        string[] values = Regex.Split(povrejd, @"(?=[А-Я])");
+
+                                        List<string> valuesList = new List<string>();
+
+                                        for (int j = 0; j < values.Count(); j++)
+                                        {
+                                            if (values[j] != "")
+                                                valuesList.Add(values[j]);
+                                        }
+
+                                        foreach (string n in valuesList)
+                                        {
+                                            commandNSI.CommandText = "SELECT KL FROM KlsNasPovr WHERE TX='" + n + "'";
+                                            var obj = commandNSI.ExecuteScalar();
+                                            if (obj != null)
+                                            {
+                                                danniye = Convert.ToInt32(obj);
+                                                command.CommandText = @"INSERT INTO TblVydDopParam([NomSoed],[ParamId],[Parametr]) VALUES (" + lastIDPovrejdeniya + ",1201,'" + danniye + "')";
+                                                command.ExecuteNonQuery();
+
+                                            }
+                                            else
+                                            {
+                                                commandNSI.CommandText = "SELECT KL FROM KlsVreditel WHERE TX='" + n + "'";
+                                                obj = command.ExecuteScalar();
+                                                if (obj != null)
+                                                {
+                                                    danniye = Convert.ToInt32(obj);
+                                                    command.CommandText = @"INSERT INTO TblVydDopParam([NomSoed],[ParamId],[Parametr]) VALUES (" + lastIDPovrejdeniya + ",1204,'" + danniye + "')";
+                                                    command.ExecuteNonQuery();
+
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -758,7 +907,7 @@ namespace ConvertSys
                         
 
                     }
-                    MessageBox.Show("OK!");
+                    MessageBox.Show("Данные внесены успешно!");
                 }
                 catch(Exception ex)
                 {
@@ -808,6 +957,47 @@ namespace ConvertSys
             databaseCreation = null;
             */
             CreateAccessDB.CreateNiewAccessDatabase();
+        }
+
+
+
+        //Private Section
+
+        //Создание квартала
+        private int CreateKvartal(OleDbCommand command, int kvartal)
+        {
+            command.CommandText = "INSERT INTO TblKvr ([KvrNomK]) VALUES (" + kvartal + ");";
+            command.ExecuteNonQuery();
+
+            return GetKvartal(command, kvartal);
+        }
+        //Получение ID квартала
+        private int GetKvartal(OleDbCommand command, int kvartal)
+        {
+            command.CommandText = "SELECT NomZ FROM TblKvr WHERE KvrNomK =" + kvartal;
+            return (int)command.ExecuteScalar();
+        }
+
+        //Выделы
+        //Создание выдела
+        private int CreateVyd(OleDbCommand command, int nomZ, int kvartal,int vydel,int scLandCat,int scBonitet,string square)
+        {
+            command.CommandText = @"INSERT INTO TblVyd([NomSoed],[KvrNom],[VydNom],[KatZem],[Bonitet],[VydPls]) VALUES (" + nomZ + "," + kvartal + "," + vydel + "," + scLandCat +
+                                        "," + scBonitet + "," + square + ");";
+            command.ExecuteNonQuery();
+            command.CommandText = "SELECT @@IDENTITY";
+            return Convert.ToInt32(command.ExecuteScalar());
+        }
+        //Выдел обновление данных
+        private void UpdateVydel(OleDbCommand command, int danniye, int lastID, string cell)
+        {
+            command.CommandText = @"UPDATE TblVyd SET " + cell + " = " + danniye + " WHERE NomZ=" + lastID + ";";
+            command.ExecuteNonQuery();
+        }
+        private void UpdateVydel(OleDbCommand command, string danniye, int lastID, string cell)
+        {
+            command.CommandText = @"UPDATE TblVyd SET " + cell + " = " + danniye + " WHERE NomZ=" + lastID + ";";
+            command.ExecuteNonQuery();
         }
     }
 }
