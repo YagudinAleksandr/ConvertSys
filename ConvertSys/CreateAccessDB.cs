@@ -125,28 +125,28 @@ namespace ConvertSys
                     oleDbCommand.ExecuteNonQuery();
 
                     oleDbCommand.CommandText = @"CREATE TABLE TblVydDopMaket(" +
-                            "Maket SmallInt NOT NULL DEFAULT 0," +
-                            "NomSoed Long NOT NULL," +
                             "NomZ AutoIncrement," +
+                            "NomSoed Long NOT NULL," +
                             "Vybor0 SmallInt DEFAULT 0," +
+                            "Maket SmallInt NOT NULL DEFAULT 0," +
                             "CONSTRAINT PrimaryKey PRIMARY KEY(NomZ)" +
                         ");";
                     oleDbCommand.ExecuteNonQuery();
 
                     oleDbCommand.CommandText = @"CREATE TABLE TblVydDopParam(" +
-                            "NomSoed Long NOT NULL," +
                             "NomZ AutoIncrement," +
-                            "Parametr Text(32) NOT NULL DEFAULT ''," +
+                            "NomSoed Long NOT NULL," +
                             "ParamId SmallInt NOT NULL DEFAULT 0," +
+                            "Parametr Text(32) NOT NULL DEFAULT ''," +
                             "CONSTRAINT PrimaryKey PRIMARY KEY(NomZ)" +
                         ");";
                     oleDbCommand.ExecuteNonQuery();
 
                     oleDbCommand.CommandText = @"CREATE TABLE TblOshibki(" +
-                            "IndZnaka SmallInt DEFAULT 0," +
-                            "NomSoed Long NOT NULL," +
                             "NomZ AutoIncrement," +
+                            "NomSoed Long NOT NULL," +
                             "Oshibka Long NOT NULL DEFAULT 0," +
+                            "IndZnaka SmallInt DEFAULT 0," +
                             "CONSTRAINT PrimaryKey PRIMARY KEY(NomZ)" +
                         ");";
                     oleDbCommand.ExecuteNonQuery();
@@ -177,14 +177,14 @@ namespace ConvertSys
                     oleDbCommand.ExecuteNonQuery();
 
                     oleDbCommand.CommandText = @"CREATE TABLE TblVydMer(" +
-                        "Info Memo DEFAULT ''," +
-                        "MerKl Long NOT NULL DEFAULT 0," +
+                        "NomZ AutoIncrement," +
+                        "NomSoed Long NOT NULL," +
+                        "Vybor0 SmallInt NOT NULL DEFAULT 0," +
                         "MerNom SmallInt NOT NULL," +
+                        "MerKl Long NOT NULL DEFAULT 0," +
                         "MerProcent SmallInt NOT NULL DEFAULT 0," +
                         "MerRTK Long NOT NULL DEFAULT 0," +
-                        "NomSoed Long NOT NULL," +
-                        "NomZ AutoIncrement," +
-                        "Vybor0 SmallInt NOT NULL DEFAULT 0," +
+                        "Info Memo DEFAULT ''," +
                         "CONSTRAINT PrimaryKey PRIMARY KEY(NomZ)" +
                     ");";
                     oleDbCommand.ExecuteNonQuery();
