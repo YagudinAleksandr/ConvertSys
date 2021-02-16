@@ -15,6 +15,7 @@ namespace ConvertSys
     {
         private OleDbConnection connectionToAccess;
         private OleDbConnection connectionToNSIAccess;
+        private List<string> errorsList = new List<string>();
         public MainWindow()
         {
             InitializeComponent();
@@ -65,6 +66,7 @@ namespace ConvertSys
             {
                 string connectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + TB_MainDB.Text;
                 string connectionToNSIDb = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + TB_DataBaseDirectory.Text;
+
 
                 try
                 {
@@ -250,7 +252,7 @@ namespace ConvertSys
                                     int lastID = CreateVyd(command,nomZ,kvartal,vydel,scLandCat,scBonitet,square);
 
                                     if (scHozSection != 0)
-                                        CreateHozMer(command, lastID, scHozSection);
+                                        UpdateVydel(command, scHozSection, lastID, "HozSek");
 
                                     if (scPreoblPrd != 0)
                                         UpdateVydel(command, scPreoblPrd, lastID, "PorodaPrb");
@@ -383,13 +385,42 @@ namespace ConvertSys
                                             }
                                         }
                                     }
+
+
+                                    //Хозяйственные мероприятия
+                                    if (ds.Tables[0].Rows[i].ItemArray[31].ToString() != "")
+                                    {
+                                        string[] values = Regex.Split(ds.Tables[0].Rows[i].ItemArray[31].ToString(), @"(?=[А-Я])");
+                                        List<string> valuesList = new List<string>();
+
+                                        for (int j = 0; j < values.Count(); j++)
+                                        {
+                                            if (values[j] != "")
+                                                valuesList.Add(values[j]);
+                                        }
+                                        foreach (string n in valuesList)
+                                        {
+                                            object hozMerop = CreateHozMer(command, commandNSI, lastID, n);
+
+                                            if (hozMerop != null)
+                                            {
+                                                if (ds.Tables[0].Rows[i].ItemArray[32].ToString() != "" || ds.Tables[0].Rows[i].ItemArray[32].ToString() != "0")
+                                                    UpdateHozMer(command, (int)hozMerop, "MerProcent", ds.Tables[0].Rows[i].ItemArray[32].ToString());
+                                            }
+                                            else
+                                            {
+                                                errorsList.Add($"Ошибка! Строка:{i}. Значение '{n}' не найдено в НСИ");
+                                            }
+                                        }
+
+                                    }
                                 }
                                 else
                                 {
                                     int lastID = CreateVyd(command, nomZ, kvartal, vydel, scLandCat, scBonitet, square);
 
                                     if (scHozSection != 0)
-                                        CreateHozMer(command, lastID, scHozSection);
+                                        UpdateVydel(command, scHozSection, lastID, "HozSek");
 
                                     if (scPreoblPrd != 0)
                                         UpdateVydel(command, scPreoblPrd, lastID, "PorodaPrb");
@@ -523,6 +554,34 @@ namespace ConvertSys
                                             }
                                         }
                                     }
+
+                                    //Хозяйственные мероприятия
+                                    if (ds.Tables[0].Rows[i].ItemArray[31].ToString() != "")
+                                    {
+                                        string[] values = Regex.Split(ds.Tables[0].Rows[i].ItemArray[31].ToString(), @"(?=[А-Я])");
+                                        List<string> valuesList = new List<string>();
+
+                                        for (int j = 0; j < values.Count(); j++)
+                                        {
+                                            if (values[j] != "")
+                                                valuesList.Add(values[j]);
+                                        }
+                                        foreach (string n in valuesList)
+                                        {
+                                            object hozMerop = CreateHozMer(command, commandNSI, lastID, n);
+
+                                            if (hozMerop != null)
+                                            {
+                                                if (ds.Tables[0].Rows[i].ItemArray[32].ToString() != "" || ds.Tables[0].Rows[i].ItemArray[32].ToString() != "0")
+                                                    UpdateHozMer(command, (int)hozMerop, "MerProcent", ds.Tables[0].Rows[i].ItemArray[32].ToString());
+                                            }
+                                            else
+                                            {
+                                                errorsList.Add($"Ошибка! Строка:{i}. Значение '{n}' не найдено в НСИ");
+                                            }
+                                        }
+
+                                    }
                                 }
 
                             }
@@ -536,7 +595,7 @@ namespace ConvertSys
                                     int lastID = CreateVyd(command, nomZ, kvartal, vydel, scLandCat, scBonitet, square);
 
                                     if (scHozSection != 0)
-                                        CreateHozMer(command, lastID, scHozSection);
+                                        UpdateVydel(command, scHozSection, lastID, "HozSek");
 
                                     if (scPreoblPrd != 0)
                                         UpdateVydel(command, scPreoblPrd, lastID, "PorodaPrb");
@@ -668,14 +727,41 @@ namespace ConvertSys
                                             }
                                         }
                                     }
+                                    //Хозяйственные мероприятия
+                                    if (ds.Tables[0].Rows[i].ItemArray[31].ToString() != "")
+                                    {
+                                        string[] values = Regex.Split(ds.Tables[0].Rows[i].ItemArray[31].ToString(), @"(?=[А-Я])");
+                                        List<string> valuesList = new List<string>();
+
+                                        for (int j = 0; j < values.Count(); j++)
+                                        {
+                                            if (values[j] != "")
+                                                valuesList.Add(values[j]);
+                                        }
+                                        foreach(string n in valuesList)
+                                        {
+                                            object hozMerop = CreateHozMer(command, commandNSI, lastID, n);
+
+                                            if (hozMerop != null)
+                                            {
+                                                if (ds.Tables[0].Rows[i].ItemArray[32].ToString() != "" || ds.Tables[0].Rows[i].ItemArray[32].ToString() != "0")
+                                                    UpdateHozMer(command, (int)hozMerop, "MerProcent", ds.Tables[0].Rows[i].ItemArray[32].ToString());
+                                            }
+                                            else
+                                            {
+                                                errorsList.Add($"Ошибка! Строка:{i}. Значение '{n}' не найдено в НСИ");
+                                            }
+                                        }
+                                        
+                                    }
                                 }
                                 else
                                 {
                                     int lastID = CreateVyd(command, nomZ, kvartal, vydel, scLandCat, scBonitet, square);
 
                                     if (scHozSection != 0)
-                                        CreateHozMer(command, lastID, scHozSection);
-                                       
+                                        UpdateVydel(command, scHozSection, lastID, "HozSek");
+
                                     if (scPreoblPrd != 0)
                                         UpdateVydel(command, scPreoblPrd, lastID, "PorodaPrb");
 
@@ -808,6 +894,36 @@ namespace ConvertSys
                                             }
                                         }
                                     }
+
+
+                                    //Хозяйственные мероприятия
+                                    if (ds.Tables[0].Rows[i].ItemArray[31].ToString() != "")
+                                    {
+                                        string[] values = Regex.Split(ds.Tables[0].Rows[i].ItemArray[31].ToString(), @"(?=[А-Я])");
+                                        List<string> valuesList = new List<string>();
+
+                                        for (int j = 0; j < values.Count(); j++)
+                                        {
+                                            if (values[j] != "")
+                                                valuesList.Add(values[j]);
+                                        }
+                                        foreach (string n in valuesList)
+                                        {
+                                            object hozMerop = CreateHozMer(command, commandNSI, lastID, n);
+
+                                            if (hozMerop != null)
+                                            {
+                                                if (ds.Tables[0].Rows[i].ItemArray[32].ToString() != "" || ds.Tables[0].Rows[i].ItemArray[32].ToString() != "0")
+                                                    UpdateHozMer(command, (int)hozMerop, "MerProcent", ds.Tables[0].Rows[i].ItemArray[32].ToString());
+                                            }
+                                            else
+                                            {
+                                                errorsList.Add($"Ошибка! Строка:{i}. Значение '{n}' не найдено в НСИ");
+                                            }
+                                        }
+
+                                    }
+
                                 }
                             }
                             PB_ConvertProgress.PerformStep();
@@ -816,7 +932,9 @@ namespace ConvertSys
 
                         
                     }
-                    MessageBox.Show("Данные внесены успешно!");
+                    //MessageBox.Show("Данные внесены успешно!");
+                    ErrorList windowErrorList = new ErrorList(errorsList);
+                    windowErrorList.ShowDialog();
                     
                     ds.Clear();
                 }
@@ -869,9 +987,9 @@ namespace ConvertSys
 
         //Private Section
         //Получение ключа из NSI
-        private object GetKLFromNsi(OleDbCommand commandNSI,string cell, string param)
+        private object GetKLFromNsi(OleDbCommand commandNSI,string table, string param)
         {
-            commandNSI.CommandText = "SELECT KL FROM "+cell+" WHERE TX='" + param + "'";
+            commandNSI.CommandText = "SELECT KL FROM " + table + " WHERE TX='" + param + "'";
             return commandNSI.ExecuteScalar();
         }
 
@@ -929,9 +1047,22 @@ namespace ConvertSys
         }
 
         //Хоз.мероприятия
-        private void CreateHozMer(OleDbCommand command, int lastID, int danniye)
+        private object CreateHozMer(OleDbCommand command,OleDbCommand commandNSI, int lastID, string danniye)
         {
-            command.CommandText = "INSERT INTO TblVydMer([NomSoed],[MerKl],[MerNom]) VALUES (" + lastID + "," + danniye + ",1);";
+            object KL = GetKLFromNsi(commandNSI, "KlsMer", danniye);
+            if (KL != null)
+            {
+                command.CommandText = "INSERT INTO TblVydMer([NomSoed],[MerKl],[MerNom]) VALUES (" + lastID + "," + (int)KL + ",1);";
+                command.ExecuteNonQuery();
+                command.CommandText = "SELECT @@IDENTITY";
+                return command.ExecuteScalar();
+            }
+            else return null;
+            
+        }
+        private void UpdateHozMer(OleDbCommand command, int hozMerId, string cell, string inform)
+        {
+            command.CommandText = @"UPDATE TblVydMer SET " + cell + " = '" + inform + "' WHERE NomZ=" + hozMerId + ";";
             command.ExecuteNonQuery();
         }
 
