@@ -47,6 +47,7 @@ namespace ConvertSys
             this.ClientSize = new System.Drawing.Size(693, 296);
             this.Controls.Add(this.richTextBox1);
             this.Name = "ErrorList";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Результат";
             this.ResumeLayout(false);
 

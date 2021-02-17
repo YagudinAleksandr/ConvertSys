@@ -192,8 +192,9 @@ namespace ConvertSys
 
                             //Запрос на запись категории земель
                             commandNSI.Connection = connectionToNSIAccess;
-                            commandNSI.CommandText = "SELECT KL FROM KlsKatZem WHERE TX = '" + landCat + "'";
-                            int scLandCat = (int)commandNSI.ExecuteScalar();
+
+                            int scLandCat = (int)GetKLFromNsi(commandNSI, "KlsKatZem", landCat);
+                            
 
                             //Запись бонитета
                             int scBonitet = 0;
@@ -247,342 +248,182 @@ namespace ConvertSys
                                 
                                 int nomZ = CreateKvartal(command, kvartal);
 
-                                if (scBonitet != 0)
+                                int lastID = CreateVyd(command, nomZ, kvartal, vydel, scLandCat, scBonitet, square);
+
+                                if (scHozSection != 0)
+                                    UpdateVydel(command, scHozSection, lastID, "HozSek");
+
+                                if (scPreoblPrd != 0)
+                                    UpdateVydel(command, scPreoblPrd, lastID, "PorodaPrb");
+
+                                if (scGroupAge != 0)
+                                    UpdateVydel(command, scGroupAge, lastID, "VozGrpVyd");
+
+                                if (ageClass != 0)
+                                    UpdateVydel(command, ageClass, lastID, "VozKls");
+
+                                if (zapazNaVydel != "" && zapazNaVydel != "0")
+                                    UpdateVydel(command, zapazNaVydel, lastID, "ZapasVyd");
+
+                                if (zakhlamlennost != "" && zakhlamlennost != "0")
+                                    UpdateVydel(command, zakhlamlennost, lastID, "ZapasZah");
+
+                                if (sukhostoy != "" && sukhostoy != "0")
+                                    UpdateVydel(command, sukhostoy, lastID, "ZapasSuh");
+
+                                if (scTipLesa != 0)
+                                    UpdateVydel(command, scTipLesa, lastID, "TipLesa");
+
+                                if (scTlu != 0)
+                                    UpdateVydel(command, scTlu, lastID, "TLU");
+
+                                if (pozharKls != 0)
+                                    UpdateVydel(command, pozharKls, lastID, "PozharKlsVyd");
+
+                                
+
+                                //Внесение данных по ярусу
+                                if (sostavIarusaFirst != "")
                                 {
-                                    int lastID = CreateVyd(command,nomZ,kvartal,vydel,scLandCat,scBonitet,square);
+                                    //Получение типа яруса изНСИ
+                                    commandNSI.CommandText = "SELECT KL FROM KlsIarus WHERE Kod = '1'";
+                                    int klsIarusNom = (int)commandNSI.ExecuteScalar();
 
-                                    if (scHozSection != 0)
-                                        UpdateVydel(command, scHozSection, lastID, "HozSek");
+                                    int lastIarusID = CreateIarus(command, lastID, klsIarusNom, sostavIarusaFirst);
 
-                                    if (scPreoblPrd != 0)
-                                        UpdateVydel(command, scPreoblPrd, lastID, "PorodaPrb");
-                                    
-                                    if (scGroupAge != 0)
-                                        UpdateVydel(command, scGroupAge, lastID, "VozGrpVyd");
-                                        
-                                    if (ageClass != 0)
-                                        UpdateVydel(command, ageClass, lastID, "VozKls");
-                                        
-                                    if (zapazNaVydel != "" && zapazNaVydel != "0")
-                                        UpdateVydel(command, zapazNaVydel, lastID, "ZapasVyd");
-                                        
-                                    if (zakhlamlennost != "" && zakhlamlennost != "0")
-                                        UpdateVydel(command, zakhlamlennost, lastID, "ZapasZah");
-                                       
-                                    if (sukhostoy != "" && sukhostoy != "0")
-                                        UpdateVydel(command, sukhostoy, lastID, "ZapasSuh");
-                                     
-                                    if (scTipLesa != 0)
-                                        UpdateVydel(command, scTipLesa, lastID, "TipLesa");
-                                        
-                                    if (scTlu != 0)
-                                        UpdateVydel(command, scTlu, lastID, "TLU");
-                                    
-                                    if(pozharKls!=0)
-                                        UpdateVydel(command, pozharKls, lastID, "PozharKlsVyd");
-
-                                    //Внесение данных по ярусу
-                                    if (sostavIarusaFirst != "")
+                                    //Возраст яруса
+                                    if (vozrastIarusaFirst != 0)
                                     {
-                                        //Получение типа яруса изНСИ
-                                        commandNSI.CommandText = "SELECT KL FROM KlsIarus WHERE Kod = '1'";
-                                        int klsIarusNom = (int)commandNSI.ExecuteScalar();
-
-                                        int lastIarusID = CreateIarus(command, lastID, klsIarusNom, sostavIarusaFirst);
-
-                                        //Возраст яруса
-                                        if (vozrastIarusaFirst != 0)
-                                        {
-                                            command.CommandText = @"UPDATE TblVydIarus SET VozrastIar=" + vozrastIarusaFirst + " WHERE NomZ=" + lastIarusID + ";";
-                                            command.ExecuteNonQuery();
-                                        }
-                                        //Высота яруса
-                                        if (visotaIarusFirst != 0)
-                                        {
-                                            command.CommandText = @"UPDATE TblVydIarus SET VysotaIar='" + visotaIarusFirst + "' WHERE NomZ=" + lastIarusID + ";";
-                                            command.ExecuteNonQuery();
-                                        }
-                                        //Диаметр яруса
-                                        if (diametrIarusaFirst != 0)
-                                        {
-                                            command.CommandText = @"UPDATE TblVydIarus SET DiamIar='" + diametrIarusaFirst + "' WHERE NomZ=" + lastIarusID + ";";
-                                            command.ExecuteNonQuery();
-                                        }
-                                        //Происхождение яруса
-                                        if (proishozdeniyeIarusa != 0)
-                                        {
-                                            command.CommandText = @"UPDATE TblVydIarus SET Prois=" + proishozdeniyeIarusa + " WHERE NomZ=" + lastIarusID + ";";
-                                            command.ExecuteNonQuery();
-                                        }
-                                        //Полнота яруса
-                                        if (polnotaIarusa != 0)
-                                        {
-                                            command.CommandText = @"UPDATE TblVydIarus SET Polnota='" + polnotaIarusa + "' WHERE NomZ=" + lastIarusID + ";";
-                                            command.ExecuteNonQuery();
-                                        }
+                                        command.CommandText = @"UPDATE TblVydIarus SET VozrastIar=" + vozrastIarusaFirst + " WHERE NomZ=" + lastIarusID + ";";
+                                        command.ExecuteNonQuery();
                                     }
-                                    if (sostavIarusaSecond != "")
+                                    //Высота яруса
+                                    if (visotaIarusFirst != 0)
                                     {
-                                        //Получение типа яруса изНСИ
-                                        commandNSI.CommandText = "SELECT KL FROM KlsIarus WHERE Kod = '2'";
-                                        int klsIarusNom = (int)commandNSI.ExecuteScalar();
-
-                                        CreateIarus(command, lastID, klsIarusNom, sostavIarusaSecond);
+                                        command.CommandText = @"UPDATE TblVydIarus SET VysotaIar='" + visotaIarusFirst + "' WHERE NomZ=" + lastIarusID + ";";
+                                        command.ExecuteNonQuery();
                                     }
-                                    if (sostavIarusaNineth != "")
+                                    //Диаметр яруса
+                                    if (diametrIarusaFirst != 0)
                                     {
-                                        //Получение типа яруса изНСИ
-                                        commandNSI.CommandText = "SELECT KL FROM KlsIarus WHERE Kod = '9'";
-                                        int klsIarusNom = (int)commandNSI.ExecuteScalar();
-
-                                        CreateIarus(command, lastID, klsIarusNom, sostavIarusaNineth);
+                                        command.CommandText = @"UPDATE TblVydIarus SET DiamIar='" + diametrIarusaFirst + "' WHERE NomZ=" + lastIarusID + ";";
+                                        command.ExecuteNonQuery();
                                     }
-                                    if (sostavIarusaThirtieth != "")
+                                    //Происхождение яруса
+                                    if (proishozdeniyeIarusa != 0)
                                     {
-                                        //Получение типа яруса изНСИ
-                                        commandNSI.CommandText = "SELECT KL FROM KlsIarus WHERE Kod = '30'";
-                                        int klsIarusNom = (int)commandNSI.ExecuteScalar();
-
-                                        CreateIarus(command, lastID, klsIarusNom, sostavIarusaThirtieth);
+                                        command.CommandText = @"UPDATE TblVydIarus SET Prois=" + proishozdeniyeIarusa + " WHERE NomZ=" + lastIarusID + ";";
+                                        command.ExecuteNonQuery();
                                     }
-                                    //Макеты
-
-                                    //Макет 12
-                                    if (ds.Tables[0].Rows[i].ItemArray[33].ToString() != "")
+                                    //Полнота яруса
+                                    if (polnotaIarusa != 0)
                                     {
-                                        int lastIDPovrejdeniya = CreateMaket(command, lastID, 12);
+                                        command.CommandText = @"UPDATE TblVydIarus SET Polnota='" + polnotaIarusa + "' WHERE NomZ=" + lastIarusID + ";";
+                                        command.ExecuteNonQuery();
+                                    }
+                                }
+                                if (sostavIarusaSecond != "")
+                                {
+                                    //Получение типа яруса изНСИ
+                                    commandNSI.CommandText = "SELECT KL FROM KlsIarus WHERE Kod = '2'";
+                                    int klsIarusNom = (int)commandNSI.ExecuteScalar();
 
-                                        int danniye;
+                                    CreateIarus(command, lastID, klsIarusNom, sostavIarusaSecond);
+                                }
+                                if (sostavIarusaNineth != "")
+                                {
+                                    //Получение типа яруса изНСИ
+                                    commandNSI.CommandText = "SELECT KL FROM KlsIarus WHERE Kod = '9'";
+                                    int klsIarusNom = (int)commandNSI.ExecuteScalar();
 
-                                        string povrejd = ds.Tables[0].Rows[i].ItemArray[33].ToString();
+                                    CreateIarus(command, lastID, klsIarusNom, sostavIarusaNineth);
+                                }
+                                if (sostavIarusaThirtieth != "")
+                                {
+                                    //Получение типа яруса изНСИ
+                                    commandNSI.CommandText = "SELECT KL FROM KlsIarus WHERE Kod = '30'";
+                                    int klsIarusNom = (int)commandNSI.ExecuteScalar();
 
-                                        string[] values = Regex.Split(povrejd,@"(?=[А-Я])");
+                                    CreateIarus(command, lastID, klsIarusNom, sostavIarusaThirtieth);
+                                }
+                                //Макеты
 
-                                        List<string> valuesList = new List<string>();
+                                //Макет 12
+                                if (ds.Tables[0].Rows[i].ItemArray[33].ToString() != "")
+                                {
+                                    int lastIDPovrejdeniya = CreateMaket(command, lastID, 12);
 
-                                        for (int j = 0; j < values.Count(); j++) 
+                                    int danniye;
+
+                                    string povrejd = ds.Tables[0].Rows[i].ItemArray[33].ToString();
+
+                                    string[] values = Regex.Split(povrejd, @"(?=[А-Я])");
+
+                                    List<string> valuesList = new List<string>();
+
+                                    for (int j = 0; j < values.Count(); j++)
+                                    {
+                                        if (values[j] != "")
+                                            valuesList.Add(values[j]);
+                                    }
+
+                                    foreach (string n in valuesList)
+                                    {
+                                        var obj = GetKLFromNsi(commandNSI, "KlsNasPovr", n);
+                                        if (obj != null)
                                         {
-                                            if (values[j] != "")
-                                                valuesList.Add(values[j]);
+                                            danniye = Convert.ToInt32(obj);
+                                            CreateDopMaketParam(command, lastIDPovrejdeniya, danniye, 1201);
                                         }
-                                            
-                                        foreach(string n in valuesList)
+                                        else
                                         {
-                                            var obj = GetKLFromNsi(commandNSI,"KlsNasPovr",n);
+                                            obj = GetKLFromNsi(commandNSI, "KlsVreditel", n);
                                             if (obj != null)
                                             {
                                                 danniye = Convert.ToInt32(obj);
-                                                CreateDopMaketParam(command, lastIDPovrejdeniya, danniye, 1201);
-                                            }
-                                            else
-                                            {
-                                                obj = GetKLFromNsi(commandNSI, "KlsVreditel",n);
-                                                if (obj != null)
-                                                {
-                                                    danniye = Convert.ToInt32(obj);
-                                                    CreateDopMaketParam(command, lastIDPovrejdeniya, danniye, 1204);
-                                                }
+                                                CreateDopMaketParam(command, lastIDPovrejdeniya, danniye, 1204);
                                             }
                                         }
                                     }
+                                }
 
 
-                                    //Хозяйственные мероприятия
-                                    if (ds.Tables[0].Rows[i].ItemArray[31].ToString() != "")
+                                //Хозяйственные мероприятия
+                                if (ds.Tables[0].Rows[i].ItemArray[31].ToString() != "")
+                                {
+                                    string[] values = Regex.Split(ds.Tables[0].Rows[i].ItemArray[31].ToString(), @"(?=[А-Я])");
+                                    List<string> valuesList = new List<string>();
+
+                                    for (int j = 0; j < values.Count(); j++)
                                     {
-                                        string[] values = Regex.Split(ds.Tables[0].Rows[i].ItemArray[31].ToString(), @"(?=[А-Я])");
-                                        List<string> valuesList = new List<string>();
+                                        if (values[j] != "")
+                                            valuesList.Add(values[j]);
+                                    }
+                                    int preor = 1;
+                                    foreach (string n in valuesList)
+                                    {
+                                        object hozMerop = CreateHozMer(command, commandNSI, lastID, n, preor);
 
-                                        for (int j = 0; j < values.Count(); j++)
+                                        if (hozMerop != null)
                                         {
-                                            if (values[j] != "")
-                                                valuesList.Add(values[j]);
-                                        }
-                                        foreach (string n in valuesList)
-                                        {
-                                            object hozMerop = CreateHozMer(command, commandNSI, lastID, n);
-
-                                            if (hozMerop != null)
+                                            if (preor == 1)
                                             {
                                                 if (ds.Tables[0].Rows[i].ItemArray[32].ToString() != "" || ds.Tables[0].Rows[i].ItemArray[32].ToString() != "0")
                                                     UpdateHozMer(command, (int)hozMerop, "MerProcent", ds.Tables[0].Rows[i].ItemArray[32].ToString());
                                             }
-                                            else
-                                            {
-                                                errorsList.Add($"Ошибка! Строка:{i}. Значение '{n}' не найдено в НСИ");
-                                            }
-                                        }
 
+                                            preor++;
+                                        }
+                                        else
+                                        {
+                                            errorsList.Add($"Ошибка! Строка:{i}. Значение '{n}' не найдено в НСИ");
+                                        }
                                     }
+
                                 }
-                                else
-                                {
-                                    int lastID = CreateVyd(command, nomZ, kvartal, vydel, scLandCat, scBonitet, square);
 
-                                    if (scHozSection != 0)
-                                        UpdateVydel(command, scHozSection, lastID, "HozSek");
 
-                                    if (scPreoblPrd != 0)
-                                        UpdateVydel(command, scPreoblPrd, lastID, "PorodaPrb");
 
-                                    if (scGroupAge != 0)
-                                        UpdateVydel(command, scGroupAge, lastID, "VozGrpVyd");
-
-                                    if (ageClass != 0)
-                                        UpdateVydel(command, ageClass, lastID, "VozKls");
-
-                                    if (zapazNaVydel != "" && zapazNaVydel != "0")
-                                        UpdateVydel(command, zapazNaVydel, lastID, "ZapasVyd");
-
-                                    if (zakhlamlennost != "" && zakhlamlennost != "0")
-                                        UpdateVydel(command, zakhlamlennost, lastID, "ZapasZah");
-
-                                    if (sukhostoy != "" && sukhostoy != "0")
-                                        UpdateVydel(command, sukhostoy, lastID, "ZapasSuh");
-
-                                    if (scTipLesa != 0)
-                                        UpdateVydel(command, scTipLesa, lastID, "TipLesa");
-
-                                    if (scTlu != 0)
-                                        UpdateVydel(command, scTlu, lastID, "TLU");
-
-                                    if (pozharKls != 0)
-                                        UpdateVydel(command, pozharKls, lastID, "PozharKlsVyd");
-
-                                    //Внесение данных по ярусу
-                                    if (sostavIarusaFirst != "")
-                                    {
-                                        //Получение типа яруса изНСИ
-                                        commandNSI.CommandText = "SELECT KL FROM KlsIarus WHERE Kod = '1'";
-                                        int klsIarusNom = (int)commandNSI.ExecuteScalar();
-
-                                        int lastIarusID = CreateIarus(command, lastID, klsIarusNom, sostavIarusaFirst);
-
-                                        //Возраст яруса
-                                        if (vozrastIarusaFirst != 0)
-                                        {
-                                            command.CommandText = @"UPDATE TblVydIarus SET VozrastIar=" + vozrastIarusaFirst + " WHERE NomZ=" + lastIarusID + ";";
-                                            command.ExecuteNonQuery();
-                                        }
-                                        //Высота яруса
-                                        if (visotaIarusFirst != 0)
-                                        {
-                                            command.CommandText = @"UPDATE TblVydIarus SET VysotaIar='" + visotaIarusFirst + "' WHERE NomZ=" + lastIarusID + ";";
-                                            command.ExecuteNonQuery();
-                                        }
-                                        //Диаметр яруса
-                                        if (diametrIarusaFirst != 0)
-                                        {
-                                            command.CommandText = @"UPDATE TblVydIarus SET DiamIar='" + diametrIarusaFirst + "' WHERE NomZ=" + lastIarusID + ";";
-                                            command.ExecuteNonQuery();
-                                        }
-                                        //Происхождение яруса
-                                        if (proishozdeniyeIarusa != 0)
-                                        {
-                                            command.CommandText = @"UPDATE TblVydIarus SET Prois=" + proishozdeniyeIarusa + " WHERE NomZ=" + lastIarusID + ";";
-                                            command.ExecuteNonQuery();
-                                        }
-                                        //Полнота яруса
-                                        if (polnotaIarusa != 0)
-                                        {
-                                            command.CommandText = @"UPDATE TblVydIarus SET Polnota='" + polnotaIarusa + "' WHERE NomZ=" + lastIarusID + ";";
-                                            command.ExecuteNonQuery();
-                                        }
-                                    }
-                                    if (sostavIarusaSecond != "")
-                                    {
-                                        //Получение типа яруса изНСИ
-                                        commandNSI.CommandText = "SELECT KL FROM KlsIarus WHERE Kod = '2'";
-                                        int klsIarusNom = (int)commandNSI.ExecuteScalar();
-
-                                        CreateIarus(command, lastID, klsIarusNom, sostavIarusaSecond);
-                                    }
-                                    if (sostavIarusaNineth != "")
-                                    {
-                                        //Получение типа яруса изНСИ
-                                        commandNSI.CommandText = "SELECT KL FROM KlsIarus WHERE Kod = '9'";
-                                        int klsIarusNom = (int)commandNSI.ExecuteScalar();
-
-                                        CreateIarus(command, lastID, klsIarusNom, sostavIarusaNineth);
-                                    }
-                                    if (sostavIarusaThirtieth != "")
-                                    {
-                                        //Получение типа яруса изНСИ
-                                        commandNSI.CommandText = "SELECT KL FROM KlsIarus WHERE Kod = '30'";
-                                        int klsIarusNom = (int)commandNSI.ExecuteScalar();
-
-                                        CreateIarus(command, lastID, klsIarusNom, sostavIarusaThirtieth);
-                                    }
-                                    //Макеты
-
-                                    //Макет 12
-                                    if (ds.Tables[0].Rows[i].ItemArray[33].ToString() != "")
-                                    {
-
-                                        int lastIDPovrejdeniya = CreateMaket(command, lastID, 12);
-
-                                        int danniye;
-
-                                        string povrejd = ds.Tables[0].Rows[i].ItemArray[33].ToString();
-
-                                        string[] values = Regex.Split(povrejd, @"(?=[А-Я])");
-
-                                        List<string> valuesList = new List<string>();
-
-                                        for (int j = 0; j < values.Count(); j++)
-                                        {
-                                            if (values[j] != "")
-                                                valuesList.Add(values[j]);
-                                        }
-
-                                        foreach (string n in valuesList)
-                                        {
-                                            var obj = GetKLFromNsi(commandNSI, "KlsNasPovr", n);
-                                            if (obj != null)
-                                            {
-                                                danniye = Convert.ToInt32(obj);
-                                                CreateDopMaketParam(command, lastIDPovrejdeniya, danniye, 1201);
-                                            }
-                                            else
-                                            {
-                                                obj = GetKLFromNsi(commandNSI, "KlsVreditel", n);
-                                                if (obj != null)
-                                                {
-                                                    danniye = Convert.ToInt32(obj);
-                                                    CreateDopMaketParam(command, lastIDPovrejdeniya, danniye, 1204);
-                                                }
-                                            }
-                                        }
-                                    }
-
-                                    //Хозяйственные мероприятия
-                                    if (ds.Tables[0].Rows[i].ItemArray[31].ToString() != "")
-                                    {
-                                        string[] values = Regex.Split(ds.Tables[0].Rows[i].ItemArray[31].ToString(), @"(?=[А-Я])");
-                                        List<string> valuesList = new List<string>();
-
-                                        for (int j = 0; j < values.Count(); j++)
-                                        {
-                                            if (values[j] != "")
-                                                valuesList.Add(values[j]);
-                                        }
-                                        foreach (string n in valuesList)
-                                        {
-                                            object hozMerop = CreateHozMer(command, commandNSI, lastID, n);
-
-                                            if (hozMerop != null)
-                                            {
-                                                if (ds.Tables[0].Rows[i].ItemArray[32].ToString() != "" || ds.Tables[0].Rows[i].ItemArray[32].ToString() != "0")
-                                                    UpdateHozMer(command, (int)hozMerop, "MerProcent", ds.Tables[0].Rows[i].ItemArray[32].ToString());
-                                            }
-                                            else
-                                            {
-                                                errorsList.Add($"Ошибка! Строка:{i}. Значение '{n}' не найдено в НСИ");
-                                            }
-                                        }
-
-                                    }
-                                }
 
                             }
                             else
@@ -590,341 +431,177 @@ namespace ConvertSys
 
                                 int nomZ = GetKvartal(command, kvartal);
 
-                                if (scBonitet != 0)
+                                int lastID = CreateVyd(command, nomZ, kvartal, vydel, scLandCat, scBonitet, square);
+
+                                if (scHozSection != 0)
+                                    UpdateVydel(command, scHozSection, lastID, "HozSek");
+
+                                if (scPreoblPrd != 0)
+                                    UpdateVydel(command, scPreoblPrd, lastID, "PorodaPrb");
+
+                                if (scGroupAge != 0)
+                                    UpdateVydel(command, scGroupAge, lastID, "VozGrpVyd");
+
+                                if (ageClass != 0)
+                                    UpdateVydel(command, ageClass, lastID, "VozKls");
+
+                                if (zapazNaVydel != "" && zapazNaVydel != "0")
+                                    UpdateVydel(command, zapazNaVydel, lastID, "ZapasVyd");
+
+                                if (zakhlamlennost != "" && zakhlamlennost != "0")
+                                    UpdateVydel(command, zakhlamlennost, lastID, "ZapasZah");
+
+                                if (sukhostoy != "" && sukhostoy != "0")
+                                    UpdateVydel(command, sukhostoy, lastID, "ZapasSuh");
+
+                                if (scTipLesa != 0)
+                                    UpdateVydel(command, scTipLesa, lastID, "TipLesa");
+
+                                if (scTlu != 0)
+                                    UpdateVydel(command, scTlu, lastID, "TLU");
+
+                                if (pozharKls != 0)
+                                    UpdateVydel(command, pozharKls, lastID, "PozharKlsVyd");
+                                //Внесение данных по ярусу
+                                if (sostavIarusaFirst != "")
                                 {
-                                    int lastID = CreateVyd(command, nomZ, kvartal, vydel, scLandCat, scBonitet, square);
+                                    //Получение типа яруса изНСИ
+                                    commandNSI.CommandText = "SELECT KL FROM KlsIarus WHERE Kod = '1'";
+                                    int klsIarusNom = (int)commandNSI.ExecuteScalar();
 
-                                    if (scHozSection != 0)
-                                        UpdateVydel(command, scHozSection, lastID, "HozSek");
+                                    int lastIarusID = CreateIarus(command, lastID, klsIarusNom, sostavIarusaFirst);
 
-                                    if (scPreoblPrd != 0)
-                                        UpdateVydel(command, scPreoblPrd, lastID, "PorodaPrb");
-
-                                    if (scGroupAge != 0)
-                                        UpdateVydel(command, scGroupAge, lastID, "VozGrpVyd");
-
-                                    if (ageClass != 0)
-                                        UpdateVydel(command, ageClass, lastID, "VozKls");
-
-                                    if (zapazNaVydel != "" && zapazNaVydel != "0")
-                                        UpdateVydel(command, zapazNaVydel, lastID, "ZapasVyd");
-
-                                    if (zakhlamlennost != "" && zakhlamlennost != "0")
-                                        UpdateVydel(command, zakhlamlennost, lastID, "ZapasZah");
-
-                                    if (sukhostoy != "" && sukhostoy != "0")
-                                        UpdateVydel(command, sukhostoy, lastID, "ZapasSuh");
-
-                                    if (scTipLesa != 0)
-                                        UpdateVydel(command, scTipLesa, lastID, "TipLesa");
-
-                                    if (scTlu != 0)
-                                        UpdateVydel(command, scTlu, lastID, "TLU");
-
-                                    if (pozharKls != 0)
-                                        UpdateVydel(command, pozharKls, lastID, "PozharKlsVyd");
-                                    //Внесение данных по ярусу
-                                    if (sostavIarusaFirst != "")
+                                    //Возраст яруса
+                                    if (vozrastIarusaFirst != 0)
                                     {
-                                        //Получение типа яруса изНСИ
-                                        commandNSI.CommandText = "SELECT KL FROM KlsIarus WHERE Kod = '1'";
-                                        int klsIarusNom = (int)commandNSI.ExecuteScalar();
-
-                                        int lastIarusID = CreateIarus(command, lastID, klsIarusNom, sostavIarusaFirst);
-
-                                        //Возраст яруса
-                                        if (vozrastIarusaFirst != 0)
-                                        {
-                                            command.CommandText = @"UPDATE TblVydIarus SET VozrastIar=" + vozrastIarusaFirst + " WHERE NomZ=" + lastIarusID + ";";
-                                            command.ExecuteNonQuery();
-                                        }
-                                        //Высота яруса
-                                        if (visotaIarusFirst != 0)
-                                        {
-                                            command.CommandText = @"UPDATE TblVydIarus SET VysotaIar='" + visotaIarusFirst + "' WHERE NomZ=" + lastIarusID + ";";
-                                            command.ExecuteNonQuery();
-                                        }
-                                        //Диаметр яруса
-                                        if (diametrIarusaFirst != 0)
-                                        {
-                                            command.CommandText = @"UPDATE TblVydIarus SET DiamIar='" + diametrIarusaFirst + "' WHERE NomZ=" + lastIarusID + ";";
-                                            command.ExecuteNonQuery();
-                                        }
-                                        //Происхождение яруса
-                                        if (proishozdeniyeIarusa != 0)
-                                        {
-                                            command.CommandText = @"UPDATE TblVydIarus SET Prois=" + proishozdeniyeIarusa + " WHERE NomZ=" + lastIarusID + ";";
-                                            command.ExecuteNonQuery();
-                                        }
-                                        //Полнота яруса
-                                        if (polnotaIarusa != 0)
-                                        {
-                                            command.CommandText = @"UPDATE TblVydIarus SET Polnota='" + polnotaIarusa + "' WHERE NomZ=" + lastIarusID + ";";
-                                            command.ExecuteNonQuery();
-                                        }
+                                        command.CommandText = @"UPDATE TblVydIarus SET VozrastIar=" + vozrastIarusaFirst + " WHERE NomZ=" + lastIarusID + ";";
+                                        command.ExecuteNonQuery();
                                     }
-                                    if (sostavIarusaSecond != "")
+                                    //Высота яруса
+                                    if (visotaIarusFirst != 0)
                                     {
-                                        //Получение типа яруса изНСИ
-                                        commandNSI.CommandText = "SELECT KL FROM KlsIarus WHERE Kod = '2'";
-                                        int klsIarusNom = (int)commandNSI.ExecuteScalar();
-
-                                        CreateIarus(command, lastID, klsIarusNom, sostavIarusaSecond);
+                                        command.CommandText = @"UPDATE TblVydIarus SET VysotaIar='" + visotaIarusFirst + "' WHERE NomZ=" + lastIarusID + ";";
+                                        command.ExecuteNonQuery();
                                     }
-                                    if (sostavIarusaNineth != "")
+                                    //Диаметр яруса
+                                    if (diametrIarusaFirst != 0)
                                     {
-                                        //Получение типа яруса изНСИ
-                                        commandNSI.CommandText = "SELECT KL FROM KlsIarus WHERE Kod = '9'";
-                                        int klsIarusNom = (int)commandNSI.ExecuteScalar();
-
-                                        CreateIarus(command, lastID, klsIarusNom, sostavIarusaNineth);
+                                        command.CommandText = @"UPDATE TblVydIarus SET DiamIar='" + diametrIarusaFirst + "' WHERE NomZ=" + lastIarusID + ";";
+                                        command.ExecuteNonQuery();
                                     }
-                                    if (sostavIarusaThirtieth != "")
+                                    //Происхождение яруса
+                                    if (proishozdeniyeIarusa != 0)
                                     {
-                                        //Получение типа яруса изНСИ
-                                        commandNSI.CommandText = "SELECT KL FROM KlsIarus WHERE Kod = '30'";
-                                        int klsIarusNom = (int)commandNSI.ExecuteScalar();
-
-                                        CreateIarus(command, lastID, klsIarusNom, sostavIarusaThirtieth);
+                                        command.CommandText = @"UPDATE TblVydIarus SET Prois=" + proishozdeniyeIarusa + " WHERE NomZ=" + lastIarusID + ";";
+                                        command.ExecuteNonQuery();
                                     }
-                                    //Макеты
-
-                                    //Макет 12
-                                    if (ds.Tables[0].Rows[i].ItemArray[33].ToString() != "")
+                                    //Полнота яруса
+                                    if (polnotaIarusa != 0)
                                     {
-                                        int lastIDPovrejdeniya = CreateMaket(command, lastID, 12);
+                                        command.CommandText = @"UPDATE TblVydIarus SET Polnota='" + polnotaIarusa + "' WHERE NomZ=" + lastIarusID + ";";
+                                        command.ExecuteNonQuery();
+                                    }
+                                }
+                                if (sostavIarusaSecond != "")
+                                {
+                                    //Получение типа яруса изНСИ
+                                    commandNSI.CommandText = "SELECT KL FROM KlsIarus WHERE Kod = '2'";
+                                    int klsIarusNom = (int)commandNSI.ExecuteScalar();
 
-                                        
+                                    CreateIarus(command, lastID, klsIarusNom, sostavIarusaSecond);
+                                }
+                                if (sostavIarusaNineth != "")
+                                {
+                                    //Получение типа яруса изНСИ
+                                    commandNSI.CommandText = "SELECT KL FROM KlsIarus WHERE Kod = '9'";
+                                    int klsIarusNom = (int)commandNSI.ExecuteScalar();
 
-                                        string povrejd = ds.Tables[0].Rows[i].ItemArray[33].ToString();
-                                        int danniye;
-                                        string[] values = Regex.Split(povrejd, @"(?=[А-Я])");
+                                    CreateIarus(command, lastID, klsIarusNom, sostavIarusaNineth);
+                                }
+                                if (sostavIarusaThirtieth != "")
+                                {
+                                    //Получение типа яруса изНСИ
+                                    commandNSI.CommandText = "SELECT KL FROM KlsIarus WHERE Kod = '30'";
+                                    int klsIarusNom = (int)commandNSI.ExecuteScalar();
 
-                                        List<string> valuesList = new List<string>();
+                                    CreateIarus(command, lastID, klsIarusNom, sostavIarusaThirtieth);
+                                }
+                                //Макеты
 
-                                        for (int j = 0; j < values.Count(); j++)
+                                //Макет 12
+                                if (ds.Tables[0].Rows[i].ItemArray[33].ToString() != "")
+                                {
+                                    int lastIDPovrejdeniya = CreateMaket(command, lastID, 12);
+
+
+
+                                    string povrejd = ds.Tables[0].Rows[i].ItemArray[33].ToString();
+                                    int danniye;
+                                    string[] values = Regex.Split(povrejd, @"(?=[А-Я])");
+
+                                    List<string> valuesList = new List<string>();
+
+                                    for (int j = 0; j < values.Count(); j++)
+                                    {
+                                        if (values[j] != "")
+                                            valuesList.Add(values[j]);
+                                    }
+
+                                    foreach (string n in valuesList)
+                                    {
+                                        var obj = GetKLFromNsi(commandNSI, "KlsNasPovr", n);
+                                        if (obj != null)
                                         {
-                                            if (values[j] != "")
-                                                valuesList.Add(values[j]);
+                                            danniye = Convert.ToInt32(obj);
+                                            CreateDopMaketParam(command, lastIDPovrejdeniya, danniye, 1201);
                                         }
-
-                                        foreach (string n in valuesList)
+                                        else
                                         {
-                                            var obj = GetKLFromNsi(commandNSI, "KlsNasPovr", n);
+                                            obj = GetKLFromNsi(commandNSI, "KlsVreditel", n);
                                             if (obj != null)
                                             {
                                                 danniye = Convert.ToInt32(obj);
-                                                CreateDopMaketParam(command, lastIDPovrejdeniya, danniye, 1201);
-                                            }
-                                            else
-                                            {
-                                                obj = GetKLFromNsi(commandNSI, "KlsVreditel", n);
-                                                if (obj != null)
-                                                {
-                                                    danniye = Convert.ToInt32(obj);
-                                                    CreateDopMaketParam(command, lastIDPovrejdeniya, danniye, 1204);
-                                                }
+                                                CreateDopMaketParam(command, lastIDPovrejdeniya, danniye, 1204);
                                             }
                                         }
                                     }
-                                    //Хозяйственные мероприятия
-                                    if (ds.Tables[0].Rows[i].ItemArray[31].ToString() != "")
+                                }
+
+                                //Хозяйственные мероприятия
+                                if (ds.Tables[0].Rows[i].ItemArray[31].ToString() != "")
+                                {
+                                    string[] values = Regex.Split(ds.Tables[0].Rows[i].ItemArray[31].ToString(), @"(?=[А-Я])");
+                                    List<string> valuesList = new List<string>();
+
+                                    for (int j = 0; j < values.Count(); j++)
                                     {
-                                        string[] values = Regex.Split(ds.Tables[0].Rows[i].ItemArray[31].ToString(), @"(?=[А-Я])");
-                                        List<string> valuesList = new List<string>();
+                                        if (values[j] != "")
+                                            valuesList.Add(values[j]);
+                                    }
+                                    int preor = 1;
+                                    foreach (string n in valuesList)
+                                    {
+                                        object hozMerop = CreateHozMer(command, commandNSI, lastID, n, preor);
 
-                                        for (int j = 0; j < values.Count(); j++)
+                                        if (hozMerop != null)
                                         {
-                                            if (values[j] != "")
-                                                valuesList.Add(values[j]);
-                                        }
-                                        foreach(string n in valuesList)
-                                        {
-                                            object hozMerop = CreateHozMer(command, commandNSI, lastID, n);
-
-                                            if (hozMerop != null)
+                                            if(preor==1)
                                             {
                                                 if (ds.Tables[0].Rows[i].ItemArray[32].ToString() != "" || ds.Tables[0].Rows[i].ItemArray[32].ToString() != "0")
                                                     UpdateHozMer(command, (int)hozMerop, "MerProcent", ds.Tables[0].Rows[i].ItemArray[32].ToString());
                                             }
-                                            else
-                                            {
-                                                errorsList.Add($"Ошибка! Строка:{i}. Значение '{n}' не найдено в НСИ");
-                                            }
+                                            
+                                            preor++;
                                         }
-                                        
-                                    }
-                                }
-                                else
-                                {
-                                    int lastID = CreateVyd(command, nomZ, kvartal, vydel, scLandCat, scBonitet, square);
-
-                                    if (scHozSection != 0)
-                                        UpdateVydel(command, scHozSection, lastID, "HozSek");
-
-                                    if (scPreoblPrd != 0)
-                                        UpdateVydel(command, scPreoblPrd, lastID, "PorodaPrb");
-
-                                    if (scGroupAge != 0)
-                                        UpdateVydel(command, scGroupAge, lastID, "VozGrpVyd");
-
-                                    if (ageClass != 0)
-                                        UpdateVydel(command, ageClass, lastID, "VozKls");
-
-                                    if (zapazNaVydel != "" && zapazNaVydel != "0")
-                                        UpdateVydel(command, zapazNaVydel, lastID, "ZapasVyd");
-
-                                    if (zakhlamlennost != "" && zakhlamlennost != "0")
-                                        UpdateVydel(command, zakhlamlennost, lastID, "ZapasZah");
-
-                                    if (sukhostoy != "" && sukhostoy != "0")
-                                        UpdateVydel(command, sukhostoy, lastID, "ZapasSuh");
-
-                                    if (scTipLesa != 0)
-                                        UpdateVydel(command, scTipLesa, lastID, "TipLesa");
-
-                                    if (scTlu != 0)
-                                        UpdateVydel(command, scTlu, lastID, "TLU");
-
-                                    if (pozharKls != 0)
-                                        UpdateVydel(command, pozharKls, lastID, "PozharKlsVyd");
-
-                                    //Внесение данных по ярусу
-                                    if (sostavIarusaFirst != "")
-                                    {
-                                        //Получение типа яруса изНСИ
-                                        commandNSI.CommandText = "SELECT KL FROM KlsIarus WHERE Kod = '1'";
-                                        int klsIarusNom = (int)commandNSI.ExecuteScalar();
-                                        
-                                        int lastIarusID = CreateIarus(command, lastID, klsIarusNom, sostavIarusaFirst);
-
-                                        //Возраст яруса
-                                        if (vozrastIarusaFirst != 0)
+                                        else
                                         {
-                                            command.CommandText = @"UPDATE TblVydIarus SET VozrastIar=" + vozrastIarusaFirst + " WHERE NomZ=" + lastIarusID + ";";
-                                            command.ExecuteNonQuery();
+                                            errorsList.Add($"Ошибка! Строка:{i}. Значение '{n}' не найдено в НСИ");
                                         }
-                                        //Высота яруса
-                                        if (visotaIarusFirst != 0)
-                                        {
-                                            command.CommandText = @"UPDATE TblVydIarus SET VysotaIar='" + visotaIarusFirst + "' WHERE NomZ=" + lastIarusID + ";";
-                                            command.ExecuteNonQuery();
-                                        }
-                                        //Диаметр яруса
-                                        if (diametrIarusaFirst != 0)
-                                        {
-                                            command.CommandText = @"UPDATE TblVydIarus SET DiamIar='" + diametrIarusaFirst + "' WHERE NomZ=" + lastIarusID + ";";
-                                            command.ExecuteNonQuery();
-                                        }
-                                        //Происхождение яруса
-                                        if (proishozdeniyeIarusa != 0)
-                                        {
-                                            command.CommandText = @"UPDATE TblVydIarus SET Prois=" + proishozdeniyeIarusa + " WHERE NomZ=" + lastIarusID + ";";
-                                            command.ExecuteNonQuery();
-                                        }
-                                        //Полнота яруса
-                                        if (polnotaIarusa != 0)
-                                        {
-                                            command.CommandText = @"UPDATE TblVydIarus SET Polnota='" + polnotaIarusa + "' WHERE NomZ=" + lastIarusID + ";";
-                                            command.ExecuteNonQuery();
-                                        }
-                                    }
-                                    if (sostavIarusaSecond != "")
-                                    {
-                                        //Получение типа яруса изНСИ
-                                        commandNSI.CommandText = "SELECT KL FROM KlsIarus WHERE Kod = '2'";
-                                        int klsIarusNom = (int)commandNSI.ExecuteScalar();
-                                        
-                                        CreateIarus(command, lastID, klsIarusNom, sostavIarusaSecond);
-                                    }
-                                    if (sostavIarusaNineth != "")
-                                    {
-                                        //Получение типа яруса изНСИ
-                                        commandNSI.CommandText = "SELECT KL FROM KlsIarus WHERE Kod = '9'";
-                                        int klsIarusNom = (int)commandNSI.ExecuteScalar();
-                                        
-                                        CreateIarus(command, lastID, klsIarusNom, sostavIarusaNineth);
-                                    }
-                                    if (sostavIarusaThirtieth != "")
-                                    {
-                                        //Получение типа яруса изНСИ
-                                        commandNSI.CommandText = "SELECT KL FROM KlsIarus WHERE Kod = '30'";
-                                        int klsIarusNom = (int)commandNSI.ExecuteScalar();
-                                        
-                                        CreateIarus(command, lastID, klsIarusNom, sostavIarusaThirtieth);
-                                    }
-                                    //Макеты
-
-                                    //Макет 12
-                                    if (ds.Tables[0].Rows[i].ItemArray[33].ToString() != "")
-                                    {
-                                        
-                                        int lastIDPovrejdeniya = CreateMaket(command,lastID,12);
-
-                                        int danniye;
-
-                                        string povrejd = ds.Tables[0].Rows[i].ItemArray[33].ToString();
-
-                                        string[] values = Regex.Split(povrejd, @"(?=[А-Я])");
-
-                                        List<string> valuesList = new List<string>();
-
-                                        for (int j = 0; j < values.Count(); j++)
-                                        {
-                                            if (values[j] != "")
-                                                valuesList.Add(values[j]);
-                                        }
-
-                                        foreach (string n in valuesList)
-                                        {
-                                            var obj = GetKLFromNsi(commandNSI, "KlsNasPovr", n);
-                                            if (obj != null)
-                                            {
-                                                danniye = Convert.ToInt32(obj);
-                                                CreateDopMaketParam(command, lastIDPovrejdeniya, danniye, 1201);
-                                            }
-                                            else
-                                            {
-                                                obj = GetKLFromNsi(commandNSI, "KlsVreditel", n);
-                                                if (obj != null)
-                                                {
-                                                    danniye = Convert.ToInt32(obj);
-                                                    CreateDopMaketParam(command, lastIDPovrejdeniya, danniye, 1204);
-                                                }
-                                            }
-                                        }
-                                    }
-
-
-                                    //Хозяйственные мероприятия
-                                    if (ds.Tables[0].Rows[i].ItemArray[31].ToString() != "")
-                                    {
-                                        string[] values = Regex.Split(ds.Tables[0].Rows[i].ItemArray[31].ToString(), @"(?=[А-Я])");
-                                        List<string> valuesList = new List<string>();
-
-                                        for (int j = 0; j < values.Count(); j++)
-                                        {
-                                            if (values[j] != "")
-                                                valuesList.Add(values[j]);
-                                        }
-                                        foreach (string n in valuesList)
-                                        {
-                                            object hozMerop = CreateHozMer(command, commandNSI, lastID, n);
-
-                                            if (hozMerop != null)
-                                            {
-                                                if (ds.Tables[0].Rows[i].ItemArray[32].ToString() != "" || ds.Tables[0].Rows[i].ItemArray[32].ToString() != "0")
-                                                    UpdateHozMer(command, (int)hozMerop, "MerProcent", ds.Tables[0].Rows[i].ItemArray[32].ToString());
-                                            }
-                                            else
-                                            {
-                                                errorsList.Add($"Ошибка! Строка:{i}. Значение '{n}' не найдено в НСИ");
-                                            }
-                                        }
-
                                     }
 
                                 }
+
+
                             }
                             PB_ConvertProgress.PerformStep();
                             
@@ -1013,8 +690,8 @@ namespace ConvertSys
         //Создание выдела
         private int CreateVyd(OleDbCommand command, int nomZ, int kvartal,int vydel,int scLandCat,int scBonitet,string square)
         {
-            command.CommandText = @"INSERT INTO TblVyd([NomSoed],[KvrNom],[VydNom],[KatZem],[Bonitet],[VydPls]) VALUES (" + nomZ + "," + kvartal + "," + vydel + "," + scLandCat +
-                                        "," + scBonitet + "," + square + ");";
+            command.CommandText = @"INSERT INTO TblVyd([NomSoed],[KvrNom],[VydNom],[KatZem],[Bonitet],[VydPls],[DataIzm]) VALUES (" + nomZ + "," + kvartal + "," + vydel + "," + scLandCat +
+                                        "," + scBonitet + "," + square + ",'" + DateTime.Now + "');";
             command.ExecuteNonQuery();
             command.CommandText = "SELECT @@IDENTITY";
             return Convert.ToInt32(command.ExecuteScalar());
@@ -1047,12 +724,12 @@ namespace ConvertSys
         }
 
         //Хоз.мероприятия
-        private object CreateHozMer(OleDbCommand command,OleDbCommand commandNSI, int lastID, string danniye)
+        private object CreateHozMer(OleDbCommand command,OleDbCommand commandNSI, int lastID, string danniye, int preor)
         {
             object KL = GetKLFromNsi(commandNSI, "KlsMer", danniye);
             if (KL != null)
             {
-                command.CommandText = "INSERT INTO TblVydMer([NomSoed],[MerKl],[MerNom]) VALUES (" + lastID + "," + (int)KL + ",1);";
+                command.CommandText = "INSERT INTO TblVydMer([NomSoed],[MerKl],[MerNom]) VALUES (" + lastID + "," + (int)KL + "," + preor + ");";
                 command.ExecuteNonQuery();
                 command.CommandText = "SELECT @@IDENTITY";
                 return command.ExecuteScalar();
