@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.OleDb;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
-
 namespace ConvertSys
 {
-    
+
     public partial class MainWindow : Form
     {
         private OleDbConnection connectionToAccess;
@@ -61,12 +61,13 @@ namespace ConvertSys
 
         private void BTN_Start_Click(object sender, EventArgs e)
         {
+            Stopwatch sWatch = new Stopwatch();
             
             if(TB_MainDB.Text!="" && TB_DataBaseDirectory.Text!="" && TB_ExcelFileDirectory.Text != "")
             {
                 string connectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + TB_MainDB.Text;
                 string connectionToNSIDb = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + TB_DataBaseDirectory.Text;
-
+                sWatch.Start();//Таймер выполнения операции
 
                 try
                 {
@@ -122,8 +123,7 @@ namespace ConvertSys
                             ds.Tables.Add(dt);
                         }
 
-                        dtSheet.Clear();
-                        connectionToExcel.Close();
+                        
 
                         PB_ConvertProgress.Minimum = 0;//Минимально значение ProgressBar
                         PB_ConvertProgress.Maximum = ds.Tables[0].Rows.Count;//Максимальное значение ProgressBar
@@ -192,13 +192,21 @@ namespace ConvertSys
 
                             //Запрос на запись категории земель
                             commandNSI.Connection = connectionToNSIAccess;
+                            int scLandCat = 0;
 
-                            int scLandCat = (int)GetKLFromNsi(commandNSI, "KlsKatZem", landCat);
+                            object objectZem = GetKLFromNsi(commandNSI, "KlsKatZem", landCat);
+                            if (objectZem == null)
+                            {
+                                errorsList.Add($"В базе НСИ не найдено совпадений в строке №{i+2} - Категория земель:{landCat}");
+                            }
+                            else
+                                scLandCat = (int)objectZem;
+                           
                             
 
                             //Запись бонитета
                             int scBonitet = 0;
-                            if (bonitet != "")
+                            if (bonitet != "") 
                             {
                                 commandNSI.CommandText = "SELECT KL FROM KlsBonitet WHERE TX = '" + bonitet + "'";
                                 scBonitet = (int)commandNSI.ExecuteScalar();
@@ -206,10 +214,16 @@ namespace ConvertSys
 
                             //Хозяйственная часть
                             int scHozSection = 0;
-                            if (hozSection != "")
+                            if (hozSection != "") 
                             {
-                                commandNSI.CommandText = "SELECT KL FROM KlsHozSek WHERE TX = '" + hozSection + "'";
-                                scHozSection = (int)commandNSI.ExecuteScalar();
+                                object obj = GetKLFromNsi(commandNSI, "KlsHozSek", hozSection);
+                                if (obj == null)
+                                {
+                                    errorsList.Add($"В базе НСИ не найдено совпадений в строке №{i+2} - Хозяйственная секция:{hozSection}");
+                                }
+                                else
+                                    scHozSection = (int)obj;
+                                
                             }
 
                             //Преобладающая порода
@@ -232,15 +246,25 @@ namespace ConvertSys
                             int scTipLesa = 0;
                             if (tipLesa != "")
                             {
+                                
                                 commandNSI.CommandText = "SELECT KL FROM KlsTipLesa WHERE Kod = '" + tipLesa + "'";
-                                scTipLesa = (int)commandNSI.ExecuteScalar();
+                                object obj = commandNSI.ExecuteScalar();
+                                if (obj != null)
+                                    scTipLesa = (int)obj;
+                                else
+                                    errorsList.Add($"В базе НСИ не найдено совпадений в строке №{i+2} - Тип леса:{tipLesa}");
                             }
                             //ТЛУ
                             int scTlu = 0;
                             if (tlu != "")
                             {
-                                commandNSI.CommandText = "SELECT KL FROM KlsTLU WHERE Kod = '" + tlu + "'";
-                                scTlu = (int)commandNSI.ExecuteScalar();
+                                
+                                object obj = commandNSI.ExecuteScalar();
+                                if (obj != null)
+                                    scTlu = (int)obj;
+                                else
+                                    errorsList.Add($"В базе НСИ не найдено совпадений в строке №{i+2} - ТЛУ:{tlu}");
+                                
                             }
 
                             if (count == 0)
@@ -416,7 +440,7 @@ namespace ConvertSys
                                         }
                                         else
                                         {
-                                            errorsList.Add($"Ошибка! Строка:{i}. Значение '{n}' не найдено в НСИ");
+                                            errorsList.Add($"Ошибка! Строка:{i+2}. Значение '{n}' не найдено в НСИ");
                                         }
                                     }
 
@@ -595,7 +619,7 @@ namespace ConvertSys
                                         }
                                         else
                                         {
-                                            errorsList.Add($"Ошибка! Строка:{i}. Значение '{n}' не найдено в НСИ");
+                                            errorsList.Add($"Ошибка! Строка:{i+2}. Значение '{n}' не найдено в НСИ");
                                         }
                                     }
 
@@ -609,6 +633,8 @@ namespace ConvertSys
 
                         
                     }
+                    sWatch.Stop();
+                    errorsList.Add($"Время выполнения операции конвертации:{sWatch.Elapsed}. Всего обработано строк: {ds.Tables[0].Rows.Count}");
                     //MessageBox.Show("Данные внесены успешно!");
                     ErrorList windowErrorList = new ErrorList(errorsList);
                     windowErrorList.ShowDialog();
