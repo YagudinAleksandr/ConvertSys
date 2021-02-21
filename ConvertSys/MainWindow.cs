@@ -376,7 +376,34 @@ namespace ConvertSys
                                 CreateIarus(command, lastID, klsIarusNom, sostavIarusaThirtieth, 30);
                             }
                             //Макеты
+                            //Макет 11
+                            if (ds.Tables[0].Rows[i].ItemArray[27].ToString() != "")
+                            {
+                                int lastIdMaket = CreateMaket(command, lastID, 11);
+                                string[] values = Regex.Split(ds.Tables[0].Rows[i].ItemArray[27].ToString(), @"(?=[А-Я])");
+                                List<string> valuesList = new List<string>();
 
+                                for (int j = 0; j < values.Count(); j++)
+                                {
+                                    if (values[j] != "")
+                                        valuesList.Add(values[j]);
+                                }
+                                for(int j=0;j<valuesList.Count();j++)
+                                {
+                                    if(j==0)
+                                    {
+                                        CreateDopMaketParam(command, lastIdMaket, valuesList[j].ToString(), 1101);
+                                        continue;
+                                    }
+                                    var obj = GetKLFromNsi(commandNSI, "KlsKultSost", valuesList[j]);
+                                    if(obj!=null)
+                                    {
+                                        CreateDopMaketParam(command, lastIdMaket, obj.ToString(), 1107);
+                                    }
+                                    else
+                                        errorsList.Add($"В базе НСИ не найдено совпадений в строке №{i + 2} - Лесные культуры:{valuesList[j]}");
+                                }
+                            }
                             //Макет 12
                             if (ds.Tables[0].Rows[i].ItemArray[33].ToString() != "")
                             {
@@ -402,7 +429,7 @@ namespace ConvertSys
                                     if (obj != null)
                                     {
                                         danniye = Convert.ToInt32(obj);
-                                        CreateDopMaketParam(command, lastIDPovrejdeniya, danniye, 1201);
+                                        CreateDopMaketParam(command, lastIDPovrejdeniya, danniye.ToString(), 1201);
                                     }
                                     else
                                     {
@@ -410,7 +437,7 @@ namespace ConvertSys
                                         if (obj != null)
                                         {
                                             danniye = Convert.ToInt32(obj);
-                                            CreateDopMaketParam(command, lastIDPovrejdeniya, danniye, 1204);
+                                            CreateDopMaketParam(command, lastIDPovrejdeniya, danniye.ToString(), 1204);
                                         }
                                         else
                                             errorsList.Add($"В базе НСИ не найдено совпадений в строке №{i + 2} - Повреждения и вредители:{n}");
@@ -464,7 +491,7 @@ namespace ConvertSys
                     //MessageBox.Show("Данные внесены успешно!");
                     ErrorList windowErrorList = new ErrorList(errorsList);
                     windowErrorList.ShowDialog();
-                    
+                    windowErrorList = null;
                     ds.Clear();
                 }
                 catch(Exception ex)
@@ -475,6 +502,8 @@ namespace ConvertSys
                 {
                     connectionToAccess.Close();
                     connectionToNSIAccess.Close();
+                    errorsList = null;
+                    
                 }
                 
                     /*
@@ -604,10 +633,11 @@ namespace ConvertSys
             return Convert.ToInt32(command.ExecuteScalar());
         }
 
-        private void CreateDopMaketParam(OleDbCommand command,int lastIDPovrejdeniya, int danniye, int param)
+        private void CreateDopMaketParam(OleDbCommand command,int lastID, string danniye, int param)
         {
-            command.CommandText = @"INSERT INTO TblVydDopParam([NomSoed],[ParamId],[Parametr]) VALUES (" + lastIDPovrejdeniya + "," + param + ",'" + danniye + "')";
+            command.CommandText = @"INSERT INTO TblVydDopParam([NomSoed],[ParamId],[Parametr]) VALUES (" + lastID + "," + param + ",'" + danniye + "')";
             command.ExecuteNonQuery();
         }
+        
     }
 }
