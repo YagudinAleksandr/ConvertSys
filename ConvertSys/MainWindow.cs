@@ -326,32 +326,27 @@ namespace ConvertSys
                                 //Возраст яруса
                                 if (vozrastIarusaFirst != 0)
                                 {
-                                    command.CommandText = @"UPDATE TblVydIarus SET VozrastIar=" + vozrastIarusaFirst + " WHERE NomZ=" + lastIarusID + ";";
-                                    command.ExecuteNonQuery();
+                                    UpdateIarus(command, lastIarusID, "VozrastIar", vozrastIarusaFirst.ToString());
                                 }
                                 //Высота яруса
                                 if (visotaIarusFirst != 0)
                                 {
-                                    command.CommandText = @"UPDATE TblVydIarus SET VysotaIar='" + visotaIarusFirst + "' WHERE NomZ=" + lastIarusID + ";";
-                                    command.ExecuteNonQuery();
+                                    UpdateIarus(command, lastIarusID, "VysotaIar", visotaIarusFirst.ToString());
                                 }
                                 //Диаметр яруса
                                 if (diametrIarusaFirst != 0)
                                 {
-                                    command.CommandText = @"UPDATE TblVydIarus SET DiamIar='" + diametrIarusaFirst + "' WHERE NomZ=" + lastIarusID + ";";
-                                    command.ExecuteNonQuery();
+                                    UpdateIarus(command, lastIarusID, "DiamIar", diametrIarusaFirst.ToString());
                                 }
                                 //Происхождение яруса
                                 if (proishozdeniyeIarusa != 0)
                                 {
-                                    command.CommandText = @"UPDATE TblVydIarus SET Prois=" + proishozdeniyeIarusa + " WHERE NomZ=" + lastIarusID + ";";
-                                    command.ExecuteNonQuery();
+                                    UpdateIarus(command, lastIarusID, "Prois", proishozdeniyeIarusa.ToString());
                                 }
                                 //Полнота яруса
                                 if (polnotaIarusa != 0)
                                 {
-                                    command.CommandText = @"UPDATE TblVydIarus SET Polnota='" + polnotaIarusa + "' WHERE NomZ=" + lastIarusID + ";";
-                                    command.ExecuteNonQuery();
+                                    UpdateIarus(command, lastIarusID, "Polnota", proishozdeniyeIarusa.ToString());
                                 }
                             }
                             if (sostavIarusaSecond != "")
@@ -602,9 +597,10 @@ namespace ConvertSys
             return Convert.ToInt32(command.ExecuteScalar());
         }
         //Обновление данных яруса
-        private void UpdateIarus(OleDbCommand command, string cell, string param)
+        private void UpdateIarus(OleDbCommand command, int lastId, string cell, string param)
         {
-
+            command.CommandText = @"UPDATE TblVydIarus SET "+cell+"='" + param + "' WHERE NomZ=" + lastId + ";";
+            command.ExecuteNonQuery();
         }
 
         //Хоз.мероприятия
