@@ -190,8 +190,11 @@ namespace ConvertSys
                             command.Connection = connectionToAccess;
                             int count = (int)command.ExecuteScalar();
 
-                            //Запрос на запись категории земель
+                            //Указание строки подключения к НСИ
                             commandNSI.Connection = connectionToNSIAccess;
+
+
+                            //Категория земель
                             int scLandCat = 0;
 
                             object objectZem = GetKLFromNsi(commandNSI, "KlsKatZem", landCat);
