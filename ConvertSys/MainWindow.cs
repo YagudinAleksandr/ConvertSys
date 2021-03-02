@@ -130,15 +130,228 @@ namespace ConvertSys
                         
                         PB_ConvertProgress.Step = 1;
 
+                        commandNSI.Connection = connectionToNSIAccess;//Строка подключения к Access НСИ
+                        command.Connection = connectionToAccess;//Строка подключения к Access
+
                         for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
                         {
-
+                            object obj = null;//Переменная для получения объекта из БД
+                            int nomZ = 0;//Переменная для получения ID
+                            /*=================================================Квартал===================================================*/
                             //Квартал
-                            int kvartal = Convert.ToInt32(ds.Tables[0].Rows[i].ItemArray[2]);//Квартал
+                            int kvartal = Convert.ToInt32(ds.Tables[0].Rows[i].ItemArray[0]);//Квартал
+
+
+                            /*Проверка, существует ли запись в таблице*/
+                            command.CommandText = @"SELECT COUNT(*) FROM TblKvr WHERE KvrNomK = " + kvartal;
+                            int count = (int)command.ExecuteScalar();
+
+                            /*
+                             * Проверка, существует ли в базе квартал с указанным номером
+                             * Если не существует, то создаем квартал и получаем ID
+                             * Если существует, то получаем ID
+                            */
+                            
+
+                            if (count == 0)
+                            {
+                                obj = CRUDSQLAccess.CreateInfo(command, "TblKvr", "KvrNomK", kvartal.ToString());
+                                if (obj != null)
+                                {
+                                    nomZ = (int)obj;
+                                }
+                                else
+                                {
+                                    errorsList.Add($"Не удалось внести в базу данных квартал №{kvartal.ToString()} строка №{i + 2}");
+                                    continue;
+                                }
+                                
+                            }
+                            else
+                            {
+                                obj = CRUDSQLAccess.ReadInfo(command, "TblKvr", "NomZ", "KvrNomK", kvartal);
+                                if (obj != null) 
+                                {
+                                    nomZ = (int)obj;
+                                }
+                                else
+                                {
+                                    errorsList.Add($"Не существует в базе данных квартал №{kvartal.ToString()} строка №{i + 2}");
+                                    continue;
+                                }
+                            }
+
+                            obj = null;//Обнуление переменной объекта
+
+
+                            /*==================================================Выдел====================================================*/
+
                             //Выдел
-                            int vydel = Convert.ToInt32(ds.Tables[0].Rows[i].ItemArray[4]);//Выдел
+                            int vydel = Convert.ToInt32(ds.Tables[0].Rows[i].ItemArray[2]);//Выдел
+                            
+                            obj = CRUDSQLAccess.CreateInfo(command, "TblVyd", "NomSoed],[KvrNom],[VydNom", $"{nomZ.ToString()}','{kvartal.ToString()}','{vydel.ToString()}");
+                            if (obj != null)
+                            {
+                                nomZ = (int)obj;
+                                
+                                string landCat = ds.Tables[0].Rows[i].ItemArray[3].ToString();//Категория земель
+                                if(landCat != "" && landCat != "0")
+                                {
+                                    obj = CRUDSQLAccess.ReadInfo(commandNSI, "KlsKatZem", "KL", "Kod", landCat);
+                                    if (obj != null)
+                                    {
+                                        obj = CRUDSQLAccess.UpdateInfo(command, "TblVyd", "KatZem", obj.ToString(), "NomZ", nomZ.ToString());
+                                        if (obj == null)
+                                            errorsList.Add($"Не удалось внести изменения в выдел №{vydel.ToString()} строка №{i + 2}");
+                                    }
+                                    else
+                                        errorsList.Add($"В базе НСИ не найдено определения категории земель:{landCat}. Строка №{i + 2}");
+                                }
+
+                                string klsZasch = ds.Tables[0].Rows[i].ItemArray[4].ToString();
+                                if(klsZasch != "" && klsZasch !="0")
+                                {
+                                    obj = CRUDSQLAccess.ReadInfo(commandNSI, "KlsKatZasch", "KL", "Kod", klsZasch);
+                                    if (obj != null)
+                                    {
+                                        obj = CRUDSQLAccess.UpdateInfo(command, "TblVyd", "KatZasch", obj.ToString(), "NomZ", nomZ.ToString());
+                                        if (obj == null)
+                                            errorsList.Add($"Не удалось внести изменения в выдел №{vydel.ToString()} строка №{i + 2}");
+                                    }
+                                    else
+                                        errorsList.Add($"В базе НСИ не найдено определения категории защитности:{klsZasch}. Строка №{i + 2}");
+                                }
+
+                                string ozu = ds.Tables[0].Rows[i].ItemArray[5].ToString();
+                                if (ozu != " [0]" && ozu != "" && ozu != "0" && ozu != "[0]") 
+                                {
+                                    obj = CRUDSQLAccess.ReadInfo(commandNSI, "KlsOZU", "KL", "Kod", ozu);
+                                    if (obj != null)
+                                    {
+                                        obj = CRUDSQLAccess.UpdateInfo(command, "TblVyd", "OZU", obj.ToString(), "NomZ", nomZ.ToString());
+                                        if (obj == null)
+                                            errorsList.Add($"Не удалось внести изменения в выдел №{vydel.ToString()} строка №{i + 2}");
+                                    }
+                                    else
+                                        errorsList.Add($"В базе НСИ не найдено определения ОЗУ:{ozu}. Строка №{i + 2}");
+                                }
+
+                                string porodaPrb = ds.Tables[0].Rows[i].ItemArray[6].ToString();
+                                if (porodaPrb != "" && porodaPrb != "0" && porodaPrb != " ")
+                                {
+                                    obj = CRUDSQLAccess.ReadInfo(commandNSI, "KlsPoroda", "KL", "Kod", porodaPrb);
+                                    if (obj != null)
+                                    {
+                                        obj = CRUDSQLAccess.UpdateInfo(command, "TblVyd", "PorodaPrb", obj.ToString(), "NomZ", nomZ.ToString());
+                                        if (obj == null)
+                                            errorsList.Add($"Не удалось внести изменения в выдел №{vydel.ToString()} строка №{i + 2}");
+                                    }
+                                    else
+                                        errorsList.Add($"В базе НСИ не найдено определения ОЗУ:{porodaPrb}. Строка №{i + 2}");
+                                }
+
+                                string bonitet = ds.Tables[0].Rows[i].ItemArray[7].ToString();
+                                if (bonitet != "" && bonitet != "0")
+                                {
+                                    obj = CRUDSQLAccess.ReadInfo(commandNSI, "KlsBonitet", "KL", "Kod", bonitet.ToString());
+                                    if (obj != null)
+                                    {
+                                        obj = CRUDSQLAccess.UpdateInfo(command, "TblVyd", "Bonitet", obj.ToString(), "NomZ", nomZ.ToString());
+                                        if (obj == null)
+                                            errorsList.Add($"Не удалось внести изменения в выдел №{vydel.ToString()} строка №{i + 2}");
+                                    }
+                                    else
+                                        errorsList.Add($"В базе НСИ не найдено определения бонитета:{bonitet}. Строка №{i + 2}");
+                                }
+
+                                string tipLesa = ds.Tables[0].Rows[i].ItemArray[8].ToString();
+                                if (tipLesa != "" && tipLesa != "0" && tipLesa != "-")
+                                {
+                                    obj = CRUDSQLAccess.ReadInfo(commandNSI, "KlsTipLesa", "KL", "Kod", tipLesa);
+                                    if (obj != null)
+                                    {
+                                        obj = CRUDSQLAccess.UpdateInfo(command, "TblVyd", "TipLesa", obj.ToString(), "NomZ", nomZ.ToString());
+                                        if (obj == null)
+                                            errorsList.Add($"Не удалось внести изменения в выдел №{vydel.ToString()} строка №{i + 2}");
+                                    }
+                                    else
+                                        errorsList.Add($"В базе НСИ не найдено определения типа леса:{tipLesa}. Строка №{i + 2}");
+                                }
+
+                                string tlu = ds.Tables[0].Rows[i].ItemArray[9].ToString();
+                                if (tlu != "" && tlu != "[0]" && tlu != "0" && tlu != " [0]")
+                                {
+                                    obj = CRUDSQLAccess.ReadInfo(commandNSI, "KlsTLU", "KL", "Kod", tlu);
+                                    if (obj != null)
+                                    {
+                                        obj = CRUDSQLAccess.UpdateInfo(command, "TblVyd", "TLU", obj.ToString(), "NomZ", nomZ.ToString());
+                                        if (obj == null)
+                                            errorsList.Add($"Не удалось внести изменения в выдел №{vydel.ToString()} строка №{i + 2}");
+                                    }
+                                    else
+                                        errorsList.Add($"В базе НСИ не найдено определения ТЛУ:{tlu}. Строка №{i + 2}");
+                                }
+
+                                string zapZahl = ds.Tables[0].Rows[i].ItemArray[10].ToString();
+                                if(zapZahl!="0")
+                                {
+                                    obj = CRUDSQLAccess.UpdateInfo(command, "TblVyd", "ZapasZah", zapZahl, "NomZ", nomZ.ToString());
+                                    if (obj == null)
+                                        errorsList.Add($"Не удалось внести изменения в выдел №{vydel.ToString()} строка №{i + 2}");
+                                }
+
+                                string zapSuh = ds.Tables[0].Rows[i].ItemArray[11].ToString();
+                                if(zapSuh !="0")
+                                {
+                                    obj = CRUDSQLAccess.UpdateInfo(command, "TblVyd", "ZapasSuh", zapSuh, "NomZ", nomZ.ToString());
+                                    if (obj == null)
+                                        errorsList.Add($"Не удалось внести изменения в выдел №{vydel.ToString()} строка №{i + 2}");
+                                }
+
+                                string ekspozSkln = ds.Tables[0].Rows[i].ItemArray[12].ToString();
+                                if (ekspozSkln != "" && ekspozSkln != "[0]" && ekspozSkln != "0" && ekspozSkln != " [0]")
+                                {
+                                    obj = CRUDSQLAccess.ReadInfo(commandNSI, "KlsSklonEkspoz", "KL", "Kod", ekspozSkln);
+                                    if (obj != null)
+                                    {
+                                        obj = CRUDSQLAccess.UpdateInfo(command, "TblVyd", "SklonEkspoz", obj.ToString(), "NomZ", nomZ.ToString());
+                                        if (obj == null)
+                                            errorsList.Add($"Не удалось внести изменения в выдел №{vydel.ToString()} строка №{i + 2}");
+                                    }
+                                    else
+                                        errorsList.Add($"В базе НСИ не найдено определения Экспозиции склона:{ekspozSkln}. Строка №{i + 2}");
+                                }
+
+                                string ekspozKrutSklon = ds.Tables[0].Rows[i].ItemArray[13].ToString();
+                                if(ekspozKrutSklon != "0")
+                                {
+                                    obj = CRUDSQLAccess.UpdateInfo(command, "TblVyd", "SklonKrut", ekspozKrutSklon, "NomZ", nomZ.ToString());
+                                    if (obj == null)
+                                        errorsList.Add($"Не удалось внести изменения в выдел №{vydel.ToString()} строка №{i + 2}");
+                                }
+
+                                obj = CRUDSQLAccess.UpdateInfo(command, "TblVyd", "DataIzm", DateTime.Now.ToString(), "NomZ", nomZ.ToString());
+                                if(obj == null)
+                                    errorsList.Add($"Не удалось внести изменения в выдел №{vydel.ToString()} строка №{i + 2}");
+                            }
+                            else
+                            {
+                                errorsList.Add($"Не удалось создать выдел №{vydel.ToString()}");
+                                continue;
+                            }
+                            obj = null;//Обнуление 
+
+
+                            /*==================================================Мероприятия===========================================================*/
+
+                            string meropriyatie = ds.Tables[0].Rows[i].ItemArray[14].ToString();
+
+                            /*
+                                command.CommandText = @"INSERT INTO TblVyd([NomSoed],[KvrNom],[VydNom],[KatZem],[Bonitet],[VydPls],[DataIzm]) VALUES (" + nomZ + "," + kvartal + "," + vydel + "," + scLandCat +
+                                        "," + scBonitet + "," + square + ",'" + DateTime.Now + "');";
+                            
                             string point = ds.Tables[0].Rows[i].ItemArray[6].ToString();//Целевое назначение лесов
-                            string landCat = ds.Tables[0].Rows[i].ItemArray[7].ToString();//Категория земель
+                            
                             string bonitet = ds.Tables[0].Rows[i].ItemArray[8].ToString();//Бонитет
                             string square = Convert.ToDouble(ds.Tables[0].Rows[i].ItemArray[9]).ToString(CultureInfo.InvariantCulture);//Площадь
                             string hozSection = ds.Tables[0].Rows[i].ItemArray[19].ToString();//Хозяйственная часть
@@ -185,13 +398,10 @@ namespace ConvertSys
                             //Ярус 30
                             string sostavIarusaThirtieth = ds.Tables[0].Rows[i].ItemArray[18].ToString();//Состав яруса
 
-                            /*Проверка, существует ли запись в таблице*/
-                            command.CommandText = @"SELECT COUNT(*) FROM TblKvr WHERE KvrNomK = " + kvartal;
-                            command.Connection = connectionToAccess;
-                            int count = (int)command.ExecuteScalar();
+                            
 
-                            //Указание строки подключения к НСИ
-                            commandNSI.Connection = connectionToNSIAccess;
+                            
+                            
 
 
                             //Категория земель
@@ -271,12 +481,7 @@ namespace ConvertSys
                             }
 
 
-                            int nomZ = 0;
-
-                            if(count==0)
-                                nomZ = CreateKvartal(command, kvartal);
-                            else
-                                nomZ = GetKvartal(command, kvartal);
+                            
 
 
 
@@ -477,13 +682,14 @@ namespace ConvertSys
                                 }
 
                             }
-                            
+                            */
                             PB_ConvertProgress.PerformStep();
                             
                         }
 
                         
                     }
+                            
                     sWatch.Stop();
                     errorsList.Add($"Время выполнения операции конвертации:{sWatch.Elapsed}. Всего обработано строк: {ds.Tables[0].Rows.Count}");
                     //MessageBox.Show("Данные внесены успешно!");
@@ -550,43 +756,9 @@ namespace ConvertSys
         }
 
 
-        //Создание квартала
-        private int CreateKvartal(OleDbCommand command, int kvartal)
-        {
-            command.CommandText = "INSERT INTO TblKvr ([KvrNomK]) VALUES (" + kvartal + ");";
-            command.ExecuteNonQuery();
+        
 
-            return GetKvartal(command, kvartal);
-        }
-        //Получение ID квартала
-        private int GetKvartal(OleDbCommand command, int kvartal)
-        {
-            command.CommandText = "SELECT NomZ FROM TblKvr WHERE KvrNomK =" + kvartal;
-            return (int)command.ExecuteScalar();
-        }
-
-        //Выделы
-        //Создание выдела
-        private int CreateVyd(OleDbCommand command, int nomZ, int kvartal,int vydel,int scLandCat,int scBonitet,string square)
-        {
-            command.CommandText = @"INSERT INTO TblVyd([NomSoed],[KvrNom],[VydNom],[KatZem],[Bonitet],[VydPls],[DataIzm]) VALUES (" + nomZ + "," + kvartal + "," + vydel + "," + scLandCat +
-                                        "," + scBonitet + "," + square + ",'" + DateTime.Now + "');";
-            command.ExecuteNonQuery();
-            command.CommandText = "SELECT @@IDENTITY";
-            return Convert.ToInt32(command.ExecuteScalar());
-        }
-        //Выдел обновление данных
-        private void UpdateVydel(OleDbCommand command, int danniye, int lastID, string cell)
-        {
-            command.CommandText = @"UPDATE TblVyd SET " + cell + " = " + danniye + " WHERE NomZ=" + lastID + ";";
-            command.ExecuteNonQuery();
-        }
-        private void UpdateVydel(OleDbCommand command, string danniye, int lastID, string cell)
-        {
-            command.CommandText = @"UPDATE TblVyd SET " + cell + " = " + danniye + " WHERE NomZ=" + lastID + ";";
-            command.ExecuteNonQuery();
-        }
-
+        
         //Ярусы
         private int CreateIarus(OleDbCommand command, int lastID,int klsIarusNom, string sostav, int IarusNum)
         {
