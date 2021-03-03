@@ -23,5 +23,20 @@ namespace ConvertSys
             else
                 return null;
         }
+
+        public static object CreatePoroda(OleDbCommand command, OleDbCommand commandNSI, string porodaNumb, string data, string NomSoed)
+        {
+            object obj = CRUDSQLAccess.ReadInfo(commandNSI, "KlsPoroda", "KL", "Kod", data);
+            if (obj != null)
+            {
+                obj = CRUDSQLAccess.CreateInfo(command, "TblVydPoroda", "Poroda],[NomSoed],[PorodaNom", $"{obj.ToString()}','{NomSoed}','{porodaNumb}");
+                if (obj != null)
+                    return obj;
+                else
+                    return null;
+            }
+            else
+                return null;
+        }
     }
 }
