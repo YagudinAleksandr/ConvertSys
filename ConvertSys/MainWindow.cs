@@ -137,6 +137,7 @@ namespace ConvertSys
                         {
                             object obj = null;//Переменная для получения объекта из БД
                             int nomZ = 0;//Переменная для получения ID
+
                             /*=================================================Квартал===================================================*/
                             //Квартал
                             int kvartal = Convert.ToInt32(ds.Tables[0].Rows[i].ItemArray[0]);//Квартал
@@ -339,16 +340,139 @@ namespace ConvertSys
                                 errorsList.Add($"Не удалось создать выдел №{vydel.ToString()}");
                                 continue;
                             }
-                            obj = null;//Обнуление 
+                            obj = null;//Обнуление переменной объекта
 
 
                             /*==================================================Мероприятия===========================================================*/
+                            //Мероприятие № 1
+                            
+                            string meropriyatie = ds.Tables[0].Rows[i].ItemArray[15].ToString();
+                            if(meropriyatie !="" && meropriyatie!="0")
+                            {
+                                obj = CRUDSQLAccess.ReadInfo(commandNSI, "KlsMer", "KL", "Kod", meropriyatie);
+                                if(obj != null)
+                                {
+                                    string nomMeropriyatiya = ds.Tables[0].Rows[i].ItemArray[14].ToString();
+                                    if(nomMeropriyatiya != "" && nomMeropriyatiya != "0")
+                                    {
+                                        obj = CRUDSQLAccess.CreateInfo(command, "TblVydMer", "MerKl],[NomSoed],[MerNom", $"{obj.ToString()}','{nomZ}','{nomMeropriyatiya}");
+                                        if(obj!=null)
+                                        {
+                                            string procentMer = ds.Tables[0].Rows[i].ItemArray[16].ToString();
+                                            if (procentMer != "" && procentMer != "0") 
+                                            {
+                                                obj = CRUDSQLAccess.UpdateInfo(command, "TblVydMer", "MerProcent", procentMer, "nomZ", obj.ToString());
+                                                if(obj==null)
+                                                {
+                                                    errorsList.Add($"Не удалось внести процент мероприятия {procentMer} в строке {i + 2}");
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            errorsList.Add($"Не удалось создать мероприятие {meropriyatie} в строке {i + 2}");
+                                        }
 
-                            string meropriyatie = ds.Tables[0].Rows[i].ItemArray[14].ToString();
+                                        
+                                    }
+                                    else
+                                    {
+                                        errorsList.Add($"Не удалось внести изменения в мероприятия {meropriyatie} строка №{i + 2}");
+                                    }
+                                    
+                                }
+                            }
+
+                            obj = null;//Обнуление переменной объекта
+
+                            //Мероприятие № 2
+
+                            meropriyatie = ds.Tables[0].Rows[i].ItemArray[18].ToString();
+                            if (meropriyatie != "" && meropriyatie != "0")
+                            {
+                                obj = CRUDSQLAccess.ReadInfo(commandNSI, "KlsMer", "KL", "Kod", meropriyatie);
+                                if (obj != null)
+                                {
+                                    string nomMeropriyatiya = ds.Tables[0].Rows[i].ItemArray[17].ToString();
+                                    if (nomMeropriyatiya != "" && nomMeropriyatiya != "0")
+                                    {
+                                        obj = CRUDSQLAccess.CreateInfo(command, "TblVydMer", "MerKl],[NomSoed],[MerNom", $"{obj.ToString()}','{nomZ}','{nomMeropriyatiya}");
+                                        if (obj != null)
+                                        {
+                                            string procentMer = ds.Tables[0].Rows[i].ItemArray[19].ToString();
+                                            if (procentMer != "" && procentMer != "0")
+                                            {
+                                                obj = CRUDSQLAccess.UpdateInfo(command, "TblVydMer", "MerProcent", procentMer, "nomZ", obj.ToString());
+                                                if (obj == null)
+                                                {
+                                                    errorsList.Add($"Не удалось внести процент мероприятия {procentMer} в строке {i + 2}");
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            errorsList.Add($"Не удалось создать мероприятие {meropriyatie} в строке {i + 2}");
+                                        }
+
+
+                                    }
+                                    else
+                                    {
+                                        errorsList.Add($"Не удалось внести изменения в мероприятия {meropriyatie} строка №{i + 2}");
+                                    }
+
+                                }
+                            }
+                            obj = null; //Обнуление переменной объекта
+
+
+                            /*=========================================================Ярусы=====================================================*/
+
+
+                            string iarusNumber = ds.Tables[0].Rows[i].ItemArray[20].ToString();
+                            string polnotaIarusa = ds.Tables[0].Rows[i].ItemArray[21].ToString();
+                            string summaPlsSech = ds.Tables[0].Rows[i].ItemArray[22].ToString();
+                            string zapasNaVydel = ds.Tables[0].Rows[i].ItemArray[23].ToString();
+
+                            object obj2 = null;
+
+                            //Ярус 1
+
+                            if (iarusNumber != "" && iarusNumber != "0") 
+                            {
+                                obj = AdditionalFunctions.CreateIarus(command, commandNSI, iarusNumber, nomZ.ToString());
+                                if (obj != null)
+                                {
+                                    if (polnotaIarusa != "" && polnotaIarusa != "0")
+                                    {
+                                        obj2 = CRUDSQLAccess.UpdateInfo(command, "TblVydIarus", "Polnota", polnotaIarusa, "NomZ", obj.ToString());
+                                        if (obj2 == null)
+                                            errorsList.Add($"Не удалось внести полноту яруса в ярус №{iarusNumber} в строке №{i + 2}");
+                                    }
+                                    if (summaPlsSech != "" && summaPlsSech != "0") 
+                                    {
+                                        obj2 = CRUDSQLAccess.UpdateInfo(command, "TblVydIarus", "SumPlsS", summaPlsSech, "NomZ", obj.ToString());
+                                        if (obj2 == null)
+                                            errorsList.Add($"Не удалось внести сумму площадей сечения яруса в ярус №{iarusNumber} в строке №{i + 2}");
+                                    }
+                                    if (zapasNaVydel != "" && zapasNaVydel != "0")
+                                    {
+                                        obj2 = CRUDSQLAccess.UpdateInfo(command, "TblVydIarus", "ZapasGa", zapasNaVydel, "NomZ", obj.ToString());
+                                        if (obj2 == null)
+                                            errorsList.Add($"Не удалось внести запас на га. яруса в ярус №{iarusNumber} в строке №{i + 2}");
+                                    }
+                                }
+                                else
+                                {
+                                    errorsList.Add($"Не удалось создать ярус №{iarusNumber} в строке №{i + 2}");
+                                }
+                            }
+                            obj = obj2 = null;//Обнуление переменных объектов
+                            
+                            //Ярус №2
 
                             /*
-                                command.CommandText = @"INSERT INTO TblVyd([NomSoed],[KvrNom],[VydNom],[KatZem],[Bonitet],[VydPls],[DataIzm]) VALUES (" + nomZ + "," + kvartal + "," + vydel + "," + scLandCat +
-                                        "," + scBonitet + "," + square + ",'" + DateTime.Now + "');";
+                                
                             
                             string point = ds.Tables[0].Rows[i].ItemArray[6].ToString();//Целевое назначение лесов
                             
@@ -755,6 +879,8 @@ namespace ConvertSys
             return commandNSI.ExecuteScalar();
         }
 
+
+        
 
         
 

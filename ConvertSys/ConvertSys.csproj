@@ -67,6 +67,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdditionalFunctions.cs" />
     <Compile Include="CreateAccessDB.cs" />
     <Compile Include="CRUDSQLAccess.cs" />
     <Compile Include="DatabaseCreation.cs">
