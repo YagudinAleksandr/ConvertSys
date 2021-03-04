@@ -1,9 +1,11 @@
-﻿using System;
+﻿using ExcelDataReader;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.OleDb;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -94,39 +96,18 @@ namespace ConvertSys
                     OleDbCommand commandNSI = new OleDbCommand();
 
 
-                    DataSet ds = new DataSet();
-                    string ExcelConnectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Extended Properties=Excel 12.0 XML;Data Source=" + TB_ExcelFileDirectory.Text;
+                    DataSet ds;
+
                     //Прохождение по строкам и столбцам в Excel таблице
-                    using (System.Data.OleDb.OleDbConnection connectionToExcel = new System.Data.OleDb.OleDbConnection(ExcelConnectionString))
+                    using (FileStream stream = new FileStream(TB_ExcelFileDirectory.Text, FileMode.Open))
                     {
-                        connectionToExcel.Open();
-
-                        command.Connection = connectionToExcel;
-
-                        // Получение всех листов Excel
-                        DataTable dtSheet = connectionToExcel.GetOleDbSchemaTable(System.Data.OleDb.OleDbSchemaGuid.Tables, null);
-
-                        // Прохождение по всем листам Excel
-                        foreach (DataRow dr in dtSheet.Rows)
-                        {
-                            string sheetName = dr["TABLE_NAME"].ToString();
-
-                            // Get all rows from the Sheet
-                            command.CommandText = "SELECT * FROM [" + sheetName + "]";
-
-                            DataTable dt = new DataTable();
-                            dt.TableName = sheetName;
-                            
-
-                            System.Data.OleDb.OleDbDataAdapter da = new System.Data.OleDb.OleDbDataAdapter(command);
-                            da.Fill(dt);
-
-                            ds.Tables.Add(dt);
-                        }
-
                         
 
-                        PB_ConvertProgress.Minimum = 0;//Минимально значение ProgressBar
+                        IExcelDataReader excel = ExcelReaderFactory.CreateOpenXmlReader(stream);
+                        ds = excel.AsDataSet();
+
+                        excel.Close();
+                        PB_ConvertProgress.Minimum = 1;//Минимально значение ProgressBar
                         PB_ConvertProgress.Maximum = ds.Tables[0].Rows.Count;//Максимальное значение ProgressBar
                         
                         PB_ConvertProgress.Step = 1;
@@ -134,7 +115,7 @@ namespace ConvertSys
                         commandNSI.Connection = connectionToNSIAccess;//Строка подключения к Access НСИ
                         command.Connection = connectionToAccess;//Строка подключения к Access
 
-                        for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
+                        for (int i = 1; i < ds.Tables[0].Rows.Count; i++)
                         {
                             object obj = null;//Переменная для получения объекта из БД
                             int nomZ = 0;//Переменная для получения ID
@@ -2586,6 +2567,7 @@ namespace ConvertSys
                     windowErrorList.ShowDialog();
                     windowErrorList = null;
                     ds.Clear();
+                    
                 }
                 catch(Exception ex)
                 {
