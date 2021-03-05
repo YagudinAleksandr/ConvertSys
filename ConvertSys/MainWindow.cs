@@ -429,9 +429,10 @@ namespace ConvertSys
                                 {
                                     if (polnotaIarusa != "" && polnotaIarusa != "0")
                                     {
-                                        obj2 = CRUDSQLAccess.UpdateInfo(command, "TblVydIarus", "Polnota", polnotaIarusa, "NomZ", obj.ToString());
-                                        if (obj2 == null)
-                                            errorsList.Add($"Не удалось внести полноту яруса в ярус №{iarusNumber} в строке №{i + 2}");
+                                        obj2 = CRUDSQLAccess.ReadInfo(commandNSI, "KlsPolnota", "KL", "Kod", polnotaIarusa);
+                                        if (obj2 != null)
+                                            if (CRUDSQLAccess.UpdateInfo(command, "TblVydIarus", "Polnota", obj2.ToString(), "NomZ", obj.ToString()) == null)
+                                                errorsList.Add($"Не удалось внести кол-во подроста в ярус №{iarusNumber} в строке №{i + 2}");
                                     }
                                     if (summaPlsSech != "" && summaPlsSech != "0")
                                     {
@@ -728,9 +729,10 @@ namespace ConvertSys
                                 {
                                     if (polnotaIarusa != "" && polnotaIarusa != "0")
                                     {
-                                        obj2 = CRUDSQLAccess.UpdateInfo(command, "TblVydIarus", "Polnota", polnotaIarusa, "NomZ", obj.ToString());
-                                        if (obj2 == null)
-                                            errorsList.Add($"Не удалось внести полноту яруса в ярус №{iarusNumber} в строке №{i + 2}");
+                                        obj2 = CRUDSQLAccess.ReadInfo(commandNSI, "KlsPolnota", "KL", "Kod", polnotaIarusa);
+                                        if (obj2 != null)
+                                            if (CRUDSQLAccess.UpdateInfo(command, "TblVydIarus", "Polnota", obj2.ToString(), "NomZ", obj.ToString()) == null)
+                                                errorsList.Add($"Не удалось внести кол-во подроста в ярус №{iarusNumber} в строке №{i + 2}");
                                     }
                                     if (summaPlsSech != "" && summaPlsSech != "0")
                                     {
@@ -1027,9 +1029,10 @@ namespace ConvertSys
                                 {
                                     if (polnotaIarusa != "" && polnotaIarusa != "0")
                                     {
-                                        obj2 = CRUDSQLAccess.UpdateInfo(command, "TblVydIarus", "Polnota", polnotaIarusa, "NomZ", obj.ToString());
-                                        if (obj2 == null)
-                                            errorsList.Add($"Не удалось внести полноту яруса в ярус №{iarusNumber} в строке №{i + 2}");
+                                        obj2 = CRUDSQLAccess.ReadInfo(commandNSI, "KlsPolnota", "KL", "Kod", polnotaIarusa);
+                                        if (obj2 != null)
+                                            if (CRUDSQLAccess.UpdateInfo(command, "TblVydIarus", "Polnota", obj2.ToString(), "NomZ", obj.ToString()) == null)
+                                                errorsList.Add($"Не удалось внести кол-во подроста в ярус №{iarusNumber} в строке №{i + 2}");
                                     }
                                     if (summaPlsSech != "" && summaPlsSech != "0")
                                     {
@@ -1326,9 +1329,10 @@ namespace ConvertSys
                                 {
                                     if (polnotaIarusa != "" && polnotaIarusa != "0")
                                     {
-                                        obj2 = CRUDSQLAccess.UpdateInfo(command, "TblVydIarus", "Polnota", polnotaIarusa, "NomZ", obj.ToString());
-                                        if (obj2 == null)
-                                            errorsList.Add($"Не удалось внести полноту яруса в ярус №{iarusNumber} в строке №{i + 2}");
+                                        obj2 = CRUDSQLAccess.ReadInfo(commandNSI, "KlsPolnota", "KL", "Kod", polnotaIarusa);
+                                        if (obj2 != null)
+                                            if (CRUDSQLAccess.UpdateInfo(command, "TblVydIarus", "Polnota", obj2.ToString(), "NomZ", obj.ToString()) == null)
+                                                errorsList.Add($"Не удалось внести кол-во подроста в ярус №{iarusNumber} в строке №{i + 2}");
                                     }
                                     if (summaPlsSech != "" && summaPlsSech != "0")
                                     {
@@ -1625,9 +1629,10 @@ namespace ConvertSys
                                 {
                                     if (polnotaIarusa != "" && polnotaIarusa != "0")
                                     {
-                                        obj2 = CRUDSQLAccess.UpdateInfo(command, "TblVydIarus", "Polnota", polnotaIarusa, "NomZ", obj.ToString());
-                                        if (obj2 == null)
-                                            errorsList.Add($"Не удалось внести полноту яруса в ярус №{iarusNumber} в строке №{i + 2}");
+                                        obj2 = CRUDSQLAccess.ReadInfo(commandNSI, "KlsPolnota", "KL", "Kod", polnotaIarusa);
+                                        if (obj2 != null)
+                                            if (CRUDSQLAccess.UpdateInfo(command, "TblVydIarus", "Polnota", obj2.ToString(), "NomZ", obj.ToString()) == null)
+                                                errorsList.Add($"Не удалось внести кол-во подроста в ярус №{iarusNumber} в строке №{i + 2}");
                                     }
                                     if (summaPlsSech != "" && summaPlsSech != "0")
                                     {
@@ -1924,9 +1929,10 @@ namespace ConvertSys
                                 {
                                     if (polnotaIarusa != "" && polnotaIarusa != "0")
                                     {
-                                        obj2 = CRUDSQLAccess.UpdateInfo(command, "TblVydIarus", "Polnota", polnotaIarusa, "NomZ", obj.ToString());
-                                        if (obj2 == null)
-                                            errorsList.Add($"Не удалось внести полноту яруса в ярус №{iarusNumber} в строке №{i + 2}");
+                                        obj2 = CRUDSQLAccess.ReadInfo(commandNSI, "KlsPolnota", "KL", "Kod", polnotaIarusa);
+                                        if (obj2 != null)
+                                            if (CRUDSQLAccess.UpdateInfo(command, "TblVydIarus", "Polnota", obj2.ToString(), "NomZ", obj.ToString()) == null)
+                                                errorsList.Add($"Не удалось внести кол-во подроста в ярус №{iarusNumber} в строке №{i + 2}");
                                     }
                                     if (summaPlsSech != "" && summaPlsSech != "0")
                                     {
@@ -2211,243 +2217,585 @@ namespace ConvertSys
                             obj = obj2 = null;//Обнуление переменных объектов
 
                             //Ярус 30
+                            iarusNumber = ds.Tables[0].Rows[i].ItemArray[254].ToString();
+                            polnotaIarusa = ds.Tables[0].Rows[i].ItemArray[255].ToString();
+                            summaPlsSech = ds.Tables[0].Rows[i].ItemArray[256].ToString();
+                            zapasNaVydel = ds.Tables[0].Rows[i].ItemArray[257].ToString();
 
-                            
+                            if (iarusNumber != "" && iarusNumber != "0")
+                            {
+                                obj = AdditionalFunctions.CreateIarus(command, commandNSI, iarusNumber, nomZ.ToString());
+                                if (obj != null)
+                                {
+                                    if (polnotaIarusa != "" && polnotaIarusa != "0")
+                                    {
+                                        obj2 = CRUDSQLAccess.ReadInfo(commandNSI, "KlsPolnota", "KL", "Kod", polnotaIarusa);
+                                        if (obj2 != null)
+                                            if (CRUDSQLAccess.UpdateInfo(command, "TblVydIarus", "Polnota", obj2.ToString(), "NomZ", obj.ToString()) == null)
+                                                errorsList.Add($"Не удалось внести кол-во подроста в ярус №{iarusNumber} в строке №{i + 2}");
+                                    }
+                                    if (summaPlsSech != "" && summaPlsSech != "0")
+                                    {
+                                        obj2 = CRUDSQLAccess.UpdateInfo(command, "TblVydIarus", "SumPlsS", summaPlsSech, "NomZ", obj.ToString());
+                                        if (obj2 == null)
+                                            errorsList.Add($"Не удалось внести сумму площадей сечения яруса в ярус №{iarusNumber} в строке №{i + 2}");
+                                    }
+                                    if (zapasNaVydel != "" && zapasNaVydel != "0")
+                                    {
+                                        obj2 = CRUDSQLAccess.UpdateInfo(command, "TblVydIarus", "ZapasGa", zapasNaVydel, "NomZ", obj.ToString());
+                                        if (obj2 == null)
+                                            errorsList.Add($"Не удалось внести запас на га. яруса в ярус №{iarusNumber} в строке №{i + 2}");
+                                    }
+
+                                    /*=============================Порода №1================================*/
+
+                                    string poroda = ds.Tables[0].Rows[i].ItemArray[258].ToString();
+                                    string koefSost = ds.Tables[0].Rows[i].ItemArray[259].ToString();
+                                    string vozrastPorodi = ds.Tables[0].Rows[i].ItemArray[260].ToString();
+                                    string visotaPorodi = ds.Tables[0].Rows[i].ItemArray[261].ToString();
+                                    string diametrPorodi = ds.Tables[0].Rows[i].ItemArray[262].ToString();
+                                    string klassTovara = ds.Tables[0].Rows[i].ItemArray[263].ToString();
+                                    string proishoz = ds.Tables[0].Rows[i].ItemArray[264].ToString();
+
+                                    if (poroda != "" && poroda != "0")
+                                    {
+                                        obj2 = AdditionalFunctions.CreatePoroda(command, commandNSI, "1", poroda, obj.ToString());
+                                        if (obj2 != null)
+                                        {
+                                            if (koefSost != "" && koefSost != "0")
+                                            {
+                                                if (CRUDSQLAccess.UpdateInfo(command, "TblVydPoroda", "KoefSos", koefSost, "NomZ", obj2.ToString()) == null)
+                                                    errorsList.Add($"Не удалось внести коэф.сост породы №1 строка {i + 2}");
+                                            }
+                                            if (vozrastPorodi != "" && vozrastPorodi != "0")
+                                            {
+                                                if (CRUDSQLAccess.UpdateInfo(command, "TblVydPoroda", "VozrastPor", vozrastPorodi, "NomZ", obj2.ToString()) == null)
+                                                    errorsList.Add($"Не удалось внести возраст породы №1 строка {i + 2}");
+                                            }
+                                            if (diametrPorodi != "" && diametrPorodi != "0")
+                                            {
+                                                if (CRUDSQLAccess.UpdateInfo(command, "TblVydPoroda", "DiamPor", diametrPorodi, "NomZ", obj2.ToString()) == null)
+                                                    errorsList.Add($"Не удалось внести диаметр породы №1 строка {i + 2}");
+                                            }
+                                            if (visotaPorodi != "" && visotaPorodi != "0")
+                                            {
+                                                if (CRUDSQLAccess.UpdateInfo(command, "TblVydPoroda", "VysotaPor", visotaPorodi, "NomZ", obj2.ToString()) == null)
+                                                    errorsList.Add($"Не удалось внести диаметр породы №1 строка {i + 2}");
+                                            }
+                                            if (klassTovara != "" && klassTovara != "0")
+                                            {
+                                                if (CRUDSQLAccess.UpdateInfo(command, "TblVydPoroda", "KlsTov", klassTovara, "NomZ", obj2.ToString()) == null)
+                                                    errorsList.Add($"Не удалось внести класс товара породы №1 строка {i + 2}");
+                                            }
+                                            if (proishoz != "" && proishoz != "0")
+                                            {
+                                                if (CRUDSQLAccess.UpdateInfo(command, "TblVydPoroda", "ProisPor", proishoz, "NomZ", obj2.ToString()) == null)
+                                                    errorsList.Add($"Не удалось внести происхождение породы №1 строка {i + 2}");
+                                            }
+                                        }
+                                        else
+                                        {
+                                            errorsList.Add($"Не удалось создать породу №1 в ярусе №{iarusNumber} в строке №{i + 2}");
+                                        }
+                                    }
+
+                                    /*=============================Порода №2================================*/
+
+                                    poroda = ds.Tables[0].Rows[i].ItemArray[265].ToString();
+                                    koefSost = ds.Tables[0].Rows[i].ItemArray[266].ToString();
+                                    vozrastPorodi = ds.Tables[0].Rows[i].ItemArray[267].ToString();
+                                    visotaPorodi = ds.Tables[0].Rows[i].ItemArray[268].ToString();
+                                    diametrPorodi = ds.Tables[0].Rows[i].ItemArray[269].ToString();
+                                    klassTovara = ds.Tables[0].Rows[i].ItemArray[270].ToString();
+                                    proishoz = ds.Tables[0].Rows[i].ItemArray[271].ToString();
+
+                                    if (poroda != "" && poroda != "0")
+                                    {
+                                        obj2 = AdditionalFunctions.CreatePoroda(command, commandNSI, "2", poroda, obj.ToString());
+                                        if (obj2 != null)
+                                        {
+                                            if (koefSost != "" && koefSost != "0")
+                                            {
+                                                if (CRUDSQLAccess.UpdateInfo(command, "TblVydPoroda", "KoefSos", koefSost, "NomZ", obj2.ToString()) == null)
+                                                    errorsList.Add($"Не удалось внести коэф.сост породы №2 строка {i + 2}");
+                                            }
+                                            if (vozrastPorodi != "" && vozrastPorodi != "0")
+                                            {
+                                                if (CRUDSQLAccess.UpdateInfo(command, "TblVydPoroda", "VozrastPor", vozrastPorodi, "NomZ", obj2.ToString()) == null)
+                                                    errorsList.Add($"Не удалось внести возраст породы №2 строка {i + 2}");
+                                            }
+                                            if (diametrPorodi != "" && diametrPorodi != "0")
+                                            {
+                                                if (CRUDSQLAccess.UpdateInfo(command, "TblVydPoroda", "DiamPor", diametrPorodi, "NomZ", obj2.ToString()) == null)
+                                                    errorsList.Add($"Не удалось внести диаметр породы №2 строка {i + 2}");
+                                            }
+                                            if (visotaPorodi != "" && visotaPorodi != "0")
+                                            {
+                                                if (CRUDSQLAccess.UpdateInfo(command, "TblVydPoroda", "VysotaPor", visotaPorodi, "NomZ", obj2.ToString()) == null)
+                                                    errorsList.Add($"Не удалось внести диаметр породы №2 строка {i + 2}");
+                                            }
+                                            if (klassTovara != "" && klassTovara != "0")
+                                            {
+                                                if (CRUDSQLAccess.UpdateInfo(command, "TblVydPoroda", "KlsTov", klassTovara, "NomZ", obj2.ToString()) == null)
+                                                    errorsList.Add($"Не удалось внести класс товара породы №2 строка {i + 2}");
+                                            }
+                                            if (proishoz != "" && proishoz != "0")
+                                            {
+                                                if (CRUDSQLAccess.UpdateInfo(command, "TblVydPoroda", "ProisPor", proishoz, "NomZ", obj2.ToString()) == null)
+                                                    errorsList.Add($"Не удалось внести происхождение породы №2 строка {i + 2}");
+                                            }
+                                        }
+                                        else
+                                        {
+                                            errorsList.Add($"Не удалось создать породу №2 в ярусе №{iarusNumber} в строке №{i + 2}");
+                                        }
+                                    }
+
+                                    /*=============================Порода №3================================*/
+
+                                    poroda = ds.Tables[0].Rows[i].ItemArray[272].ToString();
+                                    koefSost = ds.Tables[0].Rows[i].ItemArray[273].ToString();
+                                    vozrastPorodi = ds.Tables[0].Rows[i].ItemArray[274].ToString();
+                                    visotaPorodi = ds.Tables[0].Rows[i].ItemArray[275].ToString();
+                                    diametrPorodi = ds.Tables[0].Rows[i].ItemArray[276].ToString();
+                                    klassTovara = ds.Tables[0].Rows[i].ItemArray[277].ToString();
+                                    proishoz = ds.Tables[0].Rows[i].ItemArray[278].ToString();
+
+                                    if (poroda != "" && poroda != "0")
+                                    {
+                                        obj2 = AdditionalFunctions.CreatePoroda(command, commandNSI, "3", poroda, obj.ToString());
+                                        if (obj2 != null)
+                                        {
+                                            if (koefSost != "" && koefSost != "0")
+                                            {
+                                                if (CRUDSQLAccess.UpdateInfo(command, "TblVydPoroda", "KoefSos", koefSost, "NomZ", obj2.ToString()) == null)
+                                                    errorsList.Add($"Не удалось внести коэф.сост породы №3 строка {i + 2}");
+                                            }
+                                            if (vozrastPorodi != "" && vozrastPorodi != "0")
+                                            {
+                                                if (CRUDSQLAccess.UpdateInfo(command, "TblVydPoroda", "VozrastPor", vozrastPorodi, "NomZ", obj2.ToString()) == null)
+                                                    errorsList.Add($"Не удалось внести возраст породы №3 строка {i + 2}");
+                                            }
+                                            if (diametrPorodi != "" && diametrPorodi != "0")
+                                            {
+                                                if (CRUDSQLAccess.UpdateInfo(command, "TblVydPoroda", "DiamPor", diametrPorodi, "NomZ", obj2.ToString()) == null)
+                                                    errorsList.Add($"Не удалось внести диаметр породы №3 строка {i + 2}");
+                                            }
+                                            if (visotaPorodi != "" && visotaPorodi != "0")
+                                            {
+                                                if (CRUDSQLAccess.UpdateInfo(command, "TblVydPoroda", "VysotaPor", visotaPorodi, "NomZ", obj2.ToString()) == null)
+                                                    errorsList.Add($"Не удалось внести диаметр породы №3 строка {i + 2}");
+                                            }
+                                            if (klassTovara != "" && klassTovara != "0")
+                                            {
+                                                if (CRUDSQLAccess.UpdateInfo(command, "TblVydPoroda", "KlsTov", klassTovara, "NomZ", obj2.ToString()) == null)
+                                                    errorsList.Add($"Не удалось внести класс товара породы №3 строка {i + 2}");
+                                            }
+                                            if (proishoz != "" && proishoz != "0")
+                                            {
+                                                if (CRUDSQLAccess.UpdateInfo(command, "TblVydPoroda", "ProisPor", proishoz, "NomZ", obj2.ToString()) == null)
+                                                    errorsList.Add($"Не удалось внести происхождение породы №3 строка {i + 2}");
+                                            }
+                                        }
+                                        else
+                                        {
+                                            errorsList.Add($"Не удалось создать породу №3 в ярусе №{iarusNumber} в строке №{i + 2}");
+                                        }
+                                    }
+
+                                    /*=============================Порода №4================================*/
+
+                                    poroda = ds.Tables[0].Rows[i].ItemArray[279].ToString();
+                                    koefSost = ds.Tables[0].Rows[i].ItemArray[280].ToString();
+                                    vozrastPorodi = ds.Tables[0].Rows[i].ItemArray[281].ToString();
+                                    visotaPorodi = ds.Tables[0].Rows[i].ItemArray[282].ToString();
+                                    diametrPorodi = ds.Tables[0].Rows[i].ItemArray[283].ToString();
+                                    klassTovara = ds.Tables[0].Rows[i].ItemArray[284].ToString();
+                                    proishoz = ds.Tables[0].Rows[i].ItemArray[285].ToString();
+
+                                    if (poroda != "" && poroda != "0")
+                                    {
+                                        obj2 = AdditionalFunctions.CreatePoroda(command, commandNSI, "4", poroda, obj.ToString());
+                                        if (obj2 != null)
+                                        {
+                                            if (koefSost != "" && koefSost != "0")
+                                            {
+                                                if (CRUDSQLAccess.UpdateInfo(command, "TblVydPoroda", "KoefSos", koefSost, "NomZ", obj2.ToString()) == null)
+                                                    errorsList.Add($"Не удалось внести коэф.сост породы №4 строка {i + 2}");
+                                            }
+                                            if (vozrastPorodi != "" && vozrastPorodi != "0")
+                                            {
+                                                if (CRUDSQLAccess.UpdateInfo(command, "TblVydPoroda", "VozrastPor", vozrastPorodi, "NomZ", obj2.ToString()) == null)
+                                                    errorsList.Add($"Не удалось внести возраст породы №4 строка {i + 2}");
+                                            }
+                                            if (diametrPorodi != "" && diametrPorodi != "0")
+                                            {
+                                                if (CRUDSQLAccess.UpdateInfo(command, "TblVydPoroda", "DiamPor", diametrPorodi, "NomZ", obj2.ToString()) == null)
+                                                    errorsList.Add($"Не удалось внести диаметр породы №4 строка {i + 2}");
+                                            }
+                                            if (visotaPorodi != "" && visotaPorodi != "0")
+                                            {
+                                                if (CRUDSQLAccess.UpdateInfo(command, "TblVydPoroda", "VysotaPor", visotaPorodi, "NomZ", obj2.ToString()) == null)
+                                                    errorsList.Add($"Не удалось внести диаметр породы №4 строка {i + 2}");
+                                            }
+                                            if (klassTovara != "" && klassTovara != "0")
+                                            {
+                                                if (CRUDSQLAccess.UpdateInfo(command, "TblVydPoroda", "KlsTov", klassTovara, "NomZ", obj2.ToString()) == null)
+                                                    errorsList.Add($"Не удалось внести класс товара породы №4 строка {i + 2}");
+                                            }
+                                            if (proishoz != "" && proishoz != "0")
+                                            {
+                                                if (CRUDSQLAccess.UpdateInfo(command, "TblVydPoroda", "ProisPor", proishoz, "NomZ", obj2.ToString()) == null)
+                                                    errorsList.Add($"Не удалось внести происхождение породы №4 строка {i + 2}");
+                                            }
+                                        }
+                                        else
+                                        {
+                                            errorsList.Add($"Не удалось создать породу №4 в ярусе №{iarusNumber} в строке №{i + 2}");
+                                        }
+                                    }
+
+                                    /*=============================Порода №5================================*/
+
+                                    poroda = ds.Tables[0].Rows[i].ItemArray[286].ToString();
+                                    koefSost = ds.Tables[0].Rows[i].ItemArray[287].ToString();
+                                    vozrastPorodi = ds.Tables[0].Rows[i].ItemArray[288].ToString();
+                                    visotaPorodi = ds.Tables[0].Rows[i].ItemArray[289].ToString();
+                                    diametrPorodi = ds.Tables[0].Rows[i].ItemArray[290].ToString();
+                                    klassTovara = ds.Tables[0].Rows[i].ItemArray[291].ToString();
+                                    proishoz = ds.Tables[0].Rows[i].ItemArray[292].ToString();
+
+                                    if (poroda != "" && poroda != "0")
+                                    {
+                                        obj2 = AdditionalFunctions.CreatePoroda(command, commandNSI, "5", poroda, obj.ToString());
+                                        if (obj2 != null)
+                                        {
+                                            if (koefSost != "" && koefSost != "0")
+                                            {
+                                                if (CRUDSQLAccess.UpdateInfo(command, "TblVydPoroda", "KoefSos", koefSost, "NomZ", obj2.ToString()) == null)
+                                                    errorsList.Add($"Не удалось внести коэф.сост породы №5 строка {i + 2}");
+                                            }
+                                            if (vozrastPorodi != "" && vozrastPorodi != "0")
+                                            {
+                                                if (CRUDSQLAccess.UpdateInfo(command, "TblVydPoroda", "VozrastPor", vozrastPorodi, "NomZ", obj2.ToString()) == null)
+                                                    errorsList.Add($"Не удалось внести возраст породы №5 строка {i + 2}");
+                                            }
+                                            if (diametrPorodi != "" && diametrPorodi != "0")
+                                            {
+                                                if (CRUDSQLAccess.UpdateInfo(command, "TblVydPoroda", "DiamPor", diametrPorodi, "NomZ", obj2.ToString()) == null)
+                                                    errorsList.Add($"Не удалось внести диаметр породы №5 строка {i + 2}");
+                                            }
+                                            if (visotaPorodi != "" && visotaPorodi != "0")
+                                            {
+                                                if (CRUDSQLAccess.UpdateInfo(command, "TblVydPoroda", "VysotaPor", visotaPorodi, "NomZ", obj2.ToString()) == null)
+                                                    errorsList.Add($"Не удалось внести диаметр породы №5 строка {i + 2}");
+                                            }
+                                            if (klassTovara != "" && klassTovara != "0")
+                                            {
+                                                if (CRUDSQLAccess.UpdateInfo(command, "TblVydPoroda", "KlsTov", klassTovara, "NomZ", obj2.ToString()) == null)
+                                                    errorsList.Add($"Не удалось внести класс товара породы №5 строка {i + 2}");
+                                            }
+                                            if (proishoz != "" && proishoz != "0")
+                                            {
+                                                if (CRUDSQLAccess.UpdateInfo(command, "TblVydPoroda", "ProisPor", proishoz, "NomZ", obj2.ToString()) == null)
+                                                    errorsList.Add($"Не удалось внести происхождение породы №5 строка {i + 2}");
+                                            }
+                                        }
+                                        else
+                                        {
+                                            errorsList.Add($"Не удалось создать породу №5 в ярусе №{iarusNumber} в строке №{i + 2}");
+                                        }
+                                    }
+
+                                }
+                                else
+                                {
+                                    errorsList.Add($"Не удалось создать ярус №{iarusNumber} в строке №{i + 2}");
+                                }
+                            }
+
+                            obj = obj2 = null;//Обнуление переменных объектов
+
 
                             //Ярус 17
+
+                            iarusNumber = ds.Tables[0].Rows[i].ItemArray[293].ToString();
+                            polnotaIarusa = ds.Tables[0].Rows[i].ItemArray[294].ToString();
+                            string visotaIarusa = ds.Tables[0].Rows[i].ItemArray[295].ToString();
+                            string vozrastIarusa = ds.Tables[0].Rows[i].ItemArray[296].ToString();
+                            string prizhivaemostIarusa = ds.Tables[0].Rows[i].ItemArray[297].ToString();
+                            string ocenkaIarusa = ds.Tables[0].Rows[i].ItemArray[303].ToString();
+
+                            if (iarusNumber != "" && iarusNumber != "0")
+                            {
+                                obj = AdditionalFunctions.CreateIarus(command, commandNSI, iarusNumber, nomZ.ToString());
+                                if (obj != null)
+                                {
+                                    if (polnotaIarusa != "" && polnotaIarusa != "0")
+                                    {
+                                        obj2 = CRUDSQLAccess.ReadInfo(commandNSI, "KlsPolnota", "KL", "Kod", polnotaIarusa);
+                                        if(obj2!=null)
+                                            if(CRUDSQLAccess.UpdateInfo(command, "TblVydIarus", "Polnota", obj2.ToString(), "NomZ", obj.ToString())==null)
+                                                errorsList.Add($"Не удалось внести кол-во подроста в ярус №{iarusNumber} в строке №{i + 2}");
+                                    }
+                                    if (visotaIarusa != "" && visotaIarusa != "0")
+                                    {
+                                        obj2 = CRUDSQLAccess.UpdateInfo(command, "TblVydIarus", "VysotaIar", visotaIarusa, "NomZ", obj.ToString());
+                                        if (obj2 == null)
+                                            errorsList.Add($"Не удалось внести высоту яруса в ярус №{iarusNumber} в строке №{i + 2}");
+                                    }
+                                    if (vozrastIarusa != "" && vozrastIarusa != "0")
+                                    {
+                                        obj2 = CRUDSQLAccess.UpdateInfo(command, "TblVydIarus", "VozrastIar", vozrastIarusa, "NomZ", obj.ToString());
+                                        if (obj2 == null)
+                                            errorsList.Add($"Не удалось внести возраст яруса в ярус №{iarusNumber} в строке №{i + 2}");
+                                    }
+                                    if (prizhivaemostIarusa != "" && prizhivaemostIarusa != "0")
+                                    {
+                                        obj2 = CRUDSQLAccess.ReadInfo(commandNSI, "KlsProcentPrizh", "KL", "Kod", prizhivaemostIarusa);
+                                        if (obj2 != null)
+                                            if (CRUDSQLAccess.UpdateInfo(command, "TblVydIarus", "ProcentPrizh", obj2.ToString(), "NomZ", obj.ToString()) == null)
+                                                errorsList.Add($"Не удалось внести процент приживаемости яруса в ярус №{iarusNumber} в строке №{i + 2}");
+                                    }
+                                    if (ocenkaIarusa != "" && ocenkaIarusa != "0")
+                                    {
+                                        obj2 = CRUDSQLAccess.ReadInfo(commandNSI, "KlsPodrOcenka", "KL", "Kod", ocenkaIarusa);
+                                        if (obj2 != null)
+                                            if (CRUDSQLAccess.UpdateInfo(command, "TblVydIarus", "Ocenka", obj2.ToString(), "NomZ", obj.ToString()) == null)
+                                                errorsList.Add($"Не удалось внести оценку яруса в ярус №{iarusNumber} в строке №{i + 2}");
+                                    }
+                                    /*=============================Порода №1================================*/
+
+                                    string poroda = ds.Tables[0].Rows[i].ItemArray[298].ToString();
+                                    string koefSost = ds.Tables[0].Rows[i].ItemArray[299].ToString();
+                                    
+
+                                    if (poroda != "" && poroda != "0")
+                                    {
+                                        obj2 = AdditionalFunctions.CreatePoroda(command, commandNSI, "1", poroda, obj.ToString());
+                                        if (obj2 != null)
+                                        {
+                                            if (koefSost != "" && koefSost != "0")
+                                            {
+                                                if (CRUDSQLAccess.UpdateInfo(command, "TblVydPoroda", "KoefSos", koefSost, "NomZ", obj2.ToString()) == null)
+                                                    errorsList.Add($"Не удалось внести коэф.сост породы №1 строка {i + 2}");
+                                            }
+                                            
+                                        }
+                                        else
+                                        {
+                                            errorsList.Add($"Не удалось создать породу №1 в ярусе №{iarusNumber} в строке №{i + 2}");
+                                        }
+                                    }
+
+                                    /*=============================Порода №2================================*/
+
+                                    poroda = ds.Tables[0].Rows[i].ItemArray[300].ToString();
+                                    koefSost = ds.Tables[0].Rows[i].ItemArray[301].ToString();
+                                    
+
+                                    if (poroda != "" && poroda != "0")
+                                    {
+                                        obj2 = AdditionalFunctions.CreatePoroda(command, commandNSI, "2", poroda, obj.ToString());
+                                        if (obj2 != null)
+                                        {
+                                            if (koefSost != "" && koefSost != "0")
+                                            {
+                                                if (CRUDSQLAccess.UpdateInfo(command, "TblVydPoroda", "KoefSos", koefSost, "NomZ", obj2.ToString()) == null)
+                                                    errorsList.Add($"Не удалось внести коэф.сост породы №2 строка {i + 2}");
+                                            }
+                                            
+                                        }
+                                        else
+                                        {
+                                            errorsList.Add($"Не удалось создать породу №2 в ярусе №{iarusNumber} в строке №{i + 2}");
+                                        }
+                                    }
+                                    /*=============================Порода №3================================*/
+
+                                    poroda = ds.Tables[0].Rows[i].ItemArray[302].ToString();
+                                    
+
+
+                                    if (poroda != "" && poroda != "0")
+                                    {
+                                        obj2 = AdditionalFunctions.CreatePoroda(command, commandNSI, "3", poroda, obj.ToString());
+                                        if (obj2 == null)
+                                            errorsList.Add($"Не удалось создать породу №3 в ярусе №{iarusNumber} в строке №{i + 2}");
+                                        
+                                    }
+
+
+                                }
+                                else
+                                {
+                                    errorsList.Add($"Не удалось создать ярус №{iarusNumber} в строке №{i + 2}");
+                                }
+                            }
+
+                            obj = obj2 = null;//Обнуление переменных объектов
+
+                            //Ярус 19
+                            iarusNumber = ds.Tables[0].Rows[i].ItemArray[304].ToString();
+                            string gustotaIarusa = ds.Tables[0].Rows[i].ItemArray[305].ToString();
+
+                            if (iarusNumber != "" && iarusNumber != "0")
+                            {
+                                obj = AdditionalFunctions.CreateIarus(command, commandNSI, iarusNumber, nomZ.ToString());
+                                if (obj != null)
+                                {
+                                    if (gustotaIarusa != "" && gustotaIarusa != "0")
+                                    {
+                                        obj2 = CRUDSQLAccess.ReadInfo(commandNSI, "KlsGustPodl", "KL", "Kod", gustotaIarusa);
+                                        if (obj2 != null)
+                                            if (CRUDSQLAccess.UpdateInfo(command, "TblVydIarus", "Gustota", obj2.ToString(), "NomZ", obj.ToString()) == null)
+                                                errorsList.Add($"Не удалось внести густоту яруса в ярус №{iarusNumber} в строке №{i + 2}");
+                                    }
+                                    
+
+                                    /*=============================Порода №1================================*/
+
+                                    string poroda = ds.Tables[0].Rows[i].ItemArray[306].ToString();
+                                    
+
+                                    if (poroda != "" && poroda != "0")
+                                    {
+                                        obj2 = AdditionalFunctions.CreatePoroda(command, commandNSI, "1", poroda, obj.ToString());
+                                        if (obj2 == null)
+                                            errorsList.Add($"Не удалось создать породу №1 в ярусе №{iarusNumber} в строке №{i + 2}");
+                                        
+                                    }
+
+                                    /*=============================Порода №2================================*/
+
+                                    poroda = ds.Tables[0].Rows[i].ItemArray[307].ToString();
+                                    
+
+                                    if (poroda != "" && poroda != "0")
+                                    {
+                                        obj2 = AdditionalFunctions.CreatePoroda(command, commandNSI, "2", poroda, obj.ToString());
+                                        if (obj2 == null)
+                                            errorsList.Add($"Не удалось создать породу №2 в ярусе №{iarusNumber} в строке №{i + 2}");
+                                        
+                                    }
+
+                                    /*=============================Порода №3================================*/
+
+                                    poroda = ds.Tables[0].Rows[i].ItemArray[308].ToString();
+                                   
+
+                                    if (poroda != "" && poroda != "0")
+                                    {
+                                        obj2 = AdditionalFunctions.CreatePoroda(command, commandNSI, "3", poroda, obj.ToString());
+                                        if (obj2 == null)
+                                            errorsList.Add($"Не удалось создать породу №3 в ярусе №{iarusNumber} в строке №{i + 2}");
+                                        
+                                    }
+
+                                    /*=============================Порода №4================================*/
+
+                                    poroda = ds.Tables[0].Rows[i].ItemArray[309].ToString();
+                                    
+
+                                    if (poroda != "" && poroda != "0")
+                                    {
+                                        obj2 = AdditionalFunctions.CreatePoroda(command, commandNSI, "4", poroda, obj.ToString());
+                                        if (obj2 == null)
+                                            errorsList.Add($"Не удалось создать породу №4 в ярусе №{iarusNumber} в строке №{i + 2}");
+                                        
+                                    }
+                                    /*=============================Порода №5================================*/
+
+                                    poroda = ds.Tables[0].Rows[i].ItemArray[310].ToString();
+
+
+                                    if (poroda != "" && poroda != "0")
+                                    {
+                                        obj2 = AdditionalFunctions.CreatePoroda(command, commandNSI, "5", poroda, obj.ToString());
+                                        if (obj2 == null)
+                                            errorsList.Add($"Не удалось создать породу №4 в ярусе №{iarusNumber} в строке №{i + 2}");
+
+                                    }
+
+                                }
+                                else
+                                {
+                                    errorsList.Add($"Не удалось создать ярус №{iarusNumber} в строке №{i + 2}");
+                                }
+                            }
+
+                            obj = obj2 = null;//Обнуление переменных объектов
+                            
+                                
+                            /*=============================================Макеты========================================================*/
+                            
+                            //Макет 3
+                            string maket3 = ds.Tables[0].Rows[i].ItemArray[311].ToString();
+                            //Макет 11
+                            string maket11 = ds.Tables[0].Rows[i].ItemArray[312].ToString();
+                            //Макет 12
+                            string maket12 = ds.Tables[0].Rows[i].ItemArray[313].ToString();
+
+                            if (maket12 != "" && maket12 != "0")
+                            {
+                                string[] paramWithValues = maket12.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                                    
+                                foreach(string param in paramWithValues)
+                                {
+                                    if(param !=" ")
+                                    {
+                                        obj = CRUDSQLAccess.CreateInfo(command, "TblVydDopMaket", "NomSoed],[Maket", $"{nomZ}','12");
+
+                                        if (obj != null)
+                                        {
+                                            string[] values = param.Split(',');
+                                            foreach (string value in values)
+                                            {
+                                                string[] parts = value.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
+                                                if (parts.Count() == 2)
+                                                {
+                                                    parts[0] = parts[0].Trim();
+                                                    parts[1] = parts[1].Trim();
+                                                    
+                                                    switch(parts[0])
+                                                    {
+                                                        case "тип повреждения":
+                                                            obj2 = AdditionalFunctions.CreateAdditionalParamForTemp(command, commandNSI, (int)obj, 1201, parts[1], "KlsNasPovr");
+                                                            break;
+                                                        case "поврежденная порода":
+                                                            obj2 = AdditionalFunctions.CreateAdditionalParamForTemp(command, commandNSI, (int)obj, 1203, parts[1], "KlsPoroda");
+                                                            break;
+                                                        case "первый вредитель":
+                                                            obj2 = AdditionalFunctions.CreateAdditionalParamForTemp(command, commandNSI, (int)obj, 1204, parts[1], "KlsVreditel");
+                                                            break;
+                                                        case "второй вредитель":
+                                                            obj2 = AdditionalFunctions.CreateAdditionalParamForTemp(command, commandNSI, (int)obj, 1206, parts[1], "KlsVreditel");
+                                                            break;
+                                                        case "степень повреждения":
+                                                            obj2 = AdditionalFunctions.CreateAdditionalParamForTemp(command, commandNSI, (int)obj, 1205, parts[1], "KlsPovrStep");
+                                                            break;
+                                                        case "год":
+                                                            obj2 = AdditionalFunctions.CreateAdditionalParamForTemp(command, commandNSI, (int)obj, 1202, parts[1]);
+                                                            break;
+                                                        default:
+                                                            errorsList.Add($"В конвертере нет определения под макет №12: {parts[0]}");
+                                                            break;
+                                                    }
+                                                    if (obj2 == null)
+                                                        errorsList.Add($"Не удалось создать дополнительный параметр для макета №12:{parts[0]} со значением:{parts[1]} в строке {i + 2}");
+                                                }
+                                            }
+                                        }
+                                        else
+                                            errorsList.Add($"Не удалось создать макет №12 в строке {i + 2}");
+                                        
+                                    }
+                                    
+                                }    
+                                
+                            }
                             
                             /*
-                                
-                            
-                            string point = ds.Tables[0].Rows[i].ItemArray[6].ToString();//Целевое назначение лесов
-                            
-                            string bonitet = ds.Tables[0].Rows[i].ItemArray[8].ToString();//Бонитет
-                            string square = Convert.ToDouble(ds.Tables[0].Rows[i].ItemArray[9]).ToString(CultureInfo.InvariantCulture);//Площадь
-                            string hozSection = ds.Tables[0].Rows[i].ItemArray[19].ToString();//Хозяйственная часть
-                            string preoblPrd = ds.Tables[0].Rows[i].ItemArray[20].ToString();//Преобладающая порода
-                            int groupAge = Convert.ToInt32(ds.Tables[0].Rows[i].ItemArray[21]);//Группа возраста
-                            int ageClass = Convert.ToInt32(ds.Tables[0].Rows[i].ItemArray[23]);//Класс возраста
-                            string zapazNaVydel = Convert.ToDouble(ds.Tables[0].Rows[i].ItemArray[24]).ToString(CultureInfo.InvariantCulture);//Запас на выдел
-                            string zakhlamlennost = Convert.ToDouble(ds.Tables[0].Rows[i].ItemArray[25]).ToString(CultureInfo.InvariantCulture);//Захламленность
-                            string sukhostoy = Convert.ToDouble(ds.Tables[0].Rows[i].ItemArray[26]).ToString(CultureInfo.InvariantCulture);//Сухостой
-                            string tipLesa = ds.Tables[0].Rows[i].ItemArray[28].ToString();//Тип леса
-                            string tlu = ds.Tables[0].Rows[i].ItemArray[29].ToString();//ТЛУ
-                            int pozharKls;//Класс пожарной опасности
-                            if (!int.TryParse(ds.Tables[0].Rows[i].ItemArray[30].ToString(), out pozharKls))
-                                pozharKls = 0;
-                            
-                            
-                            
-                            //Ярус 1
-                            string sostavIarusaFirst = ds.Tables[0].Rows[i].ItemArray[10].ToString();//Состав яруса
-
-                            int vozrastIarusaFirst;//Возраст яруса
-                            if (!int.TryParse(ds.Tables[0].Rows[i].ItemArray[11].ToString(), out vozrastIarusaFirst))
-                                vozrastIarusaFirst = 0;
-
-                            double visotaIarusFirst;//Высота яруса
-                            if (!double.TryParse(ds.Tables[0].Rows[i].ItemArray[12].ToString(), out visotaIarusFirst))
-                                visotaIarusFirst = 0;
-
-                            double diametrIarusaFirst;//Диаметр яруса
-                            if (!double.TryParse(ds.Tables[0].Rows[i].ItemArray[13].ToString(), out diametrIarusaFirst))
-                                diametrIarusaFirst = 0;
-
-                            int proishozdeniyeIarusa;//Происхождение
-                            if (!int.TryParse(ds.Tables[0].Rows[i].ItemArray[14].ToString(), out proishozdeniyeIarusa))
-                                proishozdeniyeIarusa = 0;
-
-                            double polnotaIarusa;//Полнота яруса
-                            if (!double.TryParse(ds.Tables[0].Rows[i].ItemArray[15].ToString(), out polnotaIarusa))
-                                polnotaIarusa = 0;
-                            //Ярус 2
-                            string sostavIarusaSecond = ds.Tables[0].Rows[i].ItemArray[16].ToString();//Состав яруса
-                            //Ярус 9
-                            string sostavIarusaNineth = ds.Tables[0].Rows[i].ItemArray[17].ToString();//Состав яруса
-                            //Ярус 30
-                            string sostavIarusaThirtieth = ds.Tables[0].Rows[i].ItemArray[18].ToString();//Состав яруса
-
-                            
-
-                            
-                            
-
-
-                            //Категория земель
-                            int scLandCat = 0;
-
-                            object objectZem = GetKLFromNsi(commandNSI, "KlsKatZem", landCat);
-                            if (objectZem == null)
-                            {
-                                errorsList.Add($"В базе НСИ не найдено совпадений в строке №{i+2} - Категория земель:{landCat}");
-                            }
-                            else
-                                scLandCat = (int)objectZem;
-                           
-                            
-
-                            //Запись бонитета
-                            int scBonitet = 0;
-                            if (bonitet != "") 
-                            {
-                                commandNSI.CommandText = "SELECT KL FROM KlsBonitet WHERE TX = '" + bonitet + "'";
-                                scBonitet = (int)commandNSI.ExecuteScalar();
-                            }
-
-                            //Хозяйственная часть
-                            int scHozSection = 0;
-                            if (hozSection != "") 
-                            {
-                                object obj = GetKLFromNsi(commandNSI, "KlsHozSek", hozSection);
-                                if (obj == null)
-                                {
-                                    errorsList.Add($"В базе НСИ не найдено совпадений в строке №{i+2} - Хозяйственная секция:{hozSection}");
-                                }
-                                else
-                                    scHozSection = (int)obj;
-                                
-                            }
-
-                            //Преобладающая порода
-                            int scPreoblPrd = 0;
-                            if (preoblPrd != "")
-                            {
-                                commandNSI.CommandText = "SELECT KL FROM KlsPoroda WHERE Tx_s = '" + preoblPrd + "'";
-                                scPreoblPrd = (int)commandNSI.ExecuteScalar();
-                            }
-
-
-                            //Группа возраста
-                            int scGroupAge = 0;
-                            if (groupAge != 0)
-                            {
-                                commandNSI.CommandText = "SELECT KL FROM KlsVozGrp WHERE Kod = '" + groupAge + "'";
-                                scGroupAge = (int)commandNSI.ExecuteScalar();
-                            }
-                            //Тип леса
-                            int scTipLesa = 0;
-                            if (tipLesa != "")
-                            {
-                                
-                                commandNSI.CommandText = "SELECT KL FROM KlsTipLesa WHERE Kod = '" + tipLesa + "'";
-                                object obj = commandNSI.ExecuteScalar();
-                                if (obj != null)
-                                    scTipLesa = (int)obj;
-                                else
-                                    errorsList.Add($"В базе НСИ не найдено совпадений в строке №{i+2} - Тип леса:{tipLesa}");
-                            }
-                            //ТЛУ
-                            int scTlu = 0;
-                            if (tlu != "")
-                            {
-                                
-                                object obj = commandNSI.ExecuteScalar();
-                                if (obj != null)
-                                    scTlu = (int)obj;
-                                else
-                                    errorsList.Add($"В базе НСИ не найдено совпадений в строке №{i+2} - ТЛУ:{tlu}");
-                                
-                            }
-
-
-                            
-
-
-
-                            int lastID = CreateVyd(command, nomZ, kvartal, vydel, scLandCat, scBonitet, square);
-
-                            if (scHozSection != 0)
-                                UpdateVydel(command, scHozSection, lastID, "HozSek");
-
-                            if (scPreoblPrd != 0)
-                                UpdateVydel(command, scPreoblPrd, lastID, "PorodaPrb");
-
-                            if (scGroupAge != 0)
-                                UpdateVydel(command, scGroupAge, lastID, "VozGrpVyd");
-
-                            if (ageClass != 0)
-                                UpdateVydel(command, ageClass, lastID, "VozKls");
-
-                            if (zapazNaVydel != "" && zapazNaVydel != "0")
-                                UpdateVydel(command, zapazNaVydel, lastID, "ZapasVyd");
-
-                            if (zakhlamlennost != "" && zakhlamlennost != "0")
-                                UpdateVydel(command, zakhlamlennost, lastID, "ZapasZah");
-
-                            if (sukhostoy != "" && sukhostoy != "0")
-                                UpdateVydel(command, sukhostoy, lastID, "ZapasSuh");
-
-                            if (scTipLesa != 0)
-                                UpdateVydel(command, scTipLesa, lastID, "TipLesa");
-
-                            if (scTlu != 0)
-                                UpdateVydel(command, scTlu, lastID, "TLU");
-
-                            if (pozharKls != 0)
-                                UpdateVydel(command, pozharKls, lastID, "PozharKlsVyd");
-
-
-
-                            //Внесение данных по ярусу
-                            if (sostavIarusaFirst != "")
-                            {
-                                //Получение типа яруса изНСИ
-                                commandNSI.CommandText = "SELECT KL FROM KlsIarus WHERE Kod = '1'";
-                                int klsIarusNom = (int)commandNSI.ExecuteScalar();
-
-                                int lastIarusID = CreateIarus(command, lastID, klsIarusNom, sostavIarusaFirst, 30);
-
-                                //Возраст яруса
-                                if (vozrastIarusaFirst != 0)
-                                {
-                                    UpdateIarus(command, lastIarusID, "VozrastIar", vozrastIarusaFirst.ToString());
-                                }
-                                //Высота яруса
-                                if (visotaIarusFirst != 0)
-                                {
-                                    UpdateIarus(command, lastIarusID, "VysotaIar", visotaIarusFirst.ToString());
-                                }
-                                //Диаметр яруса
-                                if (diametrIarusaFirst != 0)
-                                {
-                                    UpdateIarus(command, lastIarusID, "DiamIar", diametrIarusaFirst.ToString());
-                                }
-                                //Происхождение яруса
-                                if (proishozdeniyeIarusa != 0)
-                                {
-                                    UpdateIarus(command, lastIarusID, "Prois", proishozdeniyeIarusa.ToString());
-                                }
-                                //Полнота яруса
-                                if (polnotaIarusa != 0)
-                                {
-                                    UpdateIarus(command, lastIarusID, "Polnota", proishozdeniyeIarusa.ToString());
-                                }
-                            }
-                            if (sostavIarusaSecond != "")
-                            {
-                                //Получение типа яруса изНСИ
-                                commandNSI.CommandText = "SELECT KL FROM KlsIarus WHERE Kod = '2'";
-                                int klsIarusNom = (int)commandNSI.ExecuteScalar();
-
-                                CreateIarus(command, lastID, klsIarusNom, sostavIarusaSecond, 2);
-                            }
-                            if (sostavIarusaNineth != "")
-                            {
-                                //Получение типа яруса изНСИ
-                                commandNSI.CommandText = "SELECT KL FROM KlsIarus WHERE Kod = '9'";
-                                int klsIarusNom = (int)commandNSI.ExecuteScalar();
-
-                                CreateIarus(command, lastID, klsIarusNom, sostavIarusaNineth, 9);
-                            }
-                            if (sostavIarusaThirtieth != "")
-                            {
-                                //Получение типа яруса изНСИ
-                                commandNSI.CommandText = "SELECT KL FROM KlsIarus WHERE Kod = '30'";
-                                int klsIarusNom = (int)commandNSI.ExecuteScalar();
-
-                                CreateIarus(command, lastID, klsIarusNom, sostavIarusaThirtieth, 30);
-                            }
-                            //Макеты
                             //Макет 11
                             if (ds.Tables[0].Rows[i].ItemArray[27].ToString() != "")
                             {
@@ -2565,9 +2913,10 @@ namespace ConvertSys
                     //MessageBox.Show("Данные внесены успешно!");
                     ErrorList windowErrorList = new ErrorList(errorsList);
                     windowErrorList.ShowDialog();
-                    windowErrorList = null;
-                    ds.Clear();
-                    
+                    windowErrorList.Dispose();
+                    command.Dispose();
+                    commandNSI.Dispose();
+                    ds.Dispose();
                 }
                 catch(Exception ex)
                 {
@@ -2577,26 +2926,13 @@ namespace ConvertSys
                 {
                     connectionToAccess.Close();
                     connectionToNSIAccess.Close();
-                    errorsList = null;
+                    errorsList=null;
+                    connectionToAccess.Dispose();
+                    connectionToNSIAccess.Dispose();
                     
                 }
                 
-                    /*
-                    string query = "SELECT NomZ,NomSoed,KatZem,GodAkt,PorodaPrb,TipLesa,Tlu,Info FROM TblVyd";
-                    OleDbCommand command = new OleDbCommand(query, connectionToAccess);
-
-                    /*
-                    OleDbDataReader reader = command.ExecuteReader();
                     
-                    while(reader.Read())
-                    {
-                       // RTB_Result.Text += reader[0].ToString() + " " + reader[1].ToString() + " " + reader[2].ToString() + " " + reader[3].ToString() + " "
-                            //+ reader[4].ToString() + " " + reader[5].ToString() + " " + reader[6].ToString() + " " + reader[7].ToString() + "\n";
-                    }
-                    */
-                    //reader.Close();
-                    //RTB_Result.Text = command.ExecuteScalar().ToString();
-
                 
             }
             else
@@ -2626,47 +2962,6 @@ namespace ConvertSys
             return commandNSI.ExecuteScalar();
         }
 
-
-        
-
-        
-
-        
-        //Ярусы
-        private int CreateIarus(OleDbCommand command, int lastID,int klsIarusNom, string sostav, int IarusNum)
-        {
-            command.CommandText = @"INSERT INTO TblVydIarus([NomSoed],[Iarus],[Sostav],[IarusNom]) VALUES (" + lastID + "," + klsIarusNom + ",'" + sostav + "',"+IarusNum+");";
-            command.ExecuteNonQuery();
-            //Получение ID записи яруса в базе
-            command.CommandText = "SELECT @@IDENTITY";
-            return Convert.ToInt32(command.ExecuteScalar());
-        }
-        //Обновление данных яруса
-        private void UpdateIarus(OleDbCommand command, int lastId, string cell, string param)
-        {
-            command.CommandText = @"UPDATE TblVydIarus SET "+cell+"='" + param + "' WHERE NomZ=" + lastId + ";";
-            command.ExecuteNonQuery();
-        }
-
-        //Хоз.мероприятия
-        private object CreateHozMer(OleDbCommand command,OleDbCommand commandNSI, int lastID, string danniye, int preor)
-        {
-            object KL = GetKLFromNsi(commandNSI, "KlsMer", danniye);
-            if (KL != null)
-            {
-                command.CommandText = "INSERT INTO TblVydMer([NomSoed],[MerKl],[MerNom]) VALUES (" + lastID + "," + (int)KL + "," + preor + ");";
-                command.ExecuteNonQuery();
-                command.CommandText = "SELECT @@IDENTITY";
-                return command.ExecuteScalar();
-            }
-            else return null;
-            
-        }
-        private void UpdateHozMer(OleDbCommand command, int hozMerId, string cell, string inform)
-        {
-            command.CommandText = @"UPDATE TblVydMer SET " + cell + " = '" + inform + "' WHERE NomZ=" + hozMerId + ";";
-            command.ExecuteNonQuery();
-        }
 
         //Макет
         private int CreateMaket(OleDbCommand command, int lastID, int maketNumb)

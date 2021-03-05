@@ -4,6 +4,7 @@ using System.Data.OleDb;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace ConvertSys
 {
@@ -37,6 +38,41 @@ namespace ConvertSys
             }
             else
                 return null;
+        }
+
+        public static object CreateAdditionalParamForTemp(OleDbCommand command,OleDbCommand commandNSI,int nomMaket, int paramId, string data, string table = null)
+        {
+            if(table!=null)
+            {
+                try
+                {
+                    object obj = CRUDSQLAccess.ReadInfo(commandNSI, table, "KL", "Kod", data);
+                    if (obj != null)
+                    {
+                        object obj2 = CRUDSQLAccess.CreateInfo(command, "TblVydDopParam", "NomSoed],[Parametr],[ParamId", $"{nomMaket.ToString()}','{obj.ToString()}','{paramId.ToString()}");
+                        if (obj2 != null)
+                            return obj2;
+                        else
+                            return null;
+                    }
+                    else
+                        return null;
+                }
+                catch(Exception e)
+                {
+                    MessageBox.Show(e.Message);
+                    return null;
+                }
+            }
+            else
+            {
+                object obj = CRUDSQLAccess.CreateInfo(command, "TblVydDopParam", "NomSoed],[Parametr],[ParamId", $"{nomMaket.ToString()}','{paramId.ToString()}','{data}");
+                if (obj != null)
+                    return obj;
+                else
+                    return null;
+            }
+            
         }
     }
 }
