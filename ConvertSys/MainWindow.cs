@@ -2794,7 +2794,184 @@ namespace ConvertSys
                                 }    
                                 
                             }
-                            
+                            //Макет 13
+                            string maket13 = ds.Tables[0].Rows[i].ItemArray[314].ToString();
+                            if(maket13!=""&& maket13!="0")
+                            {
+                                string[] paramWithValues = maket13.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+
+                                foreach (string param in paramWithValues)
+                                {
+                                    if (param != " ")
+                                    {
+                                        obj = CRUDSQLAccess.CreateInfo(command, "TblVydDopMaket", "NomSoed],[Maket", $"{nomZ}','13");
+
+                                        if (obj != null)
+                                        {
+                                            string[] values = param.Split(',');
+                                            foreach (string value in values)
+                                            {
+                                                string[] parts = value.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
+                                                if (parts.Count() == 2)
+                                                {
+                                                    parts[0] = parts[0].Trim();
+                                                    parts[1] = parts[1].Trim();
+
+                                                    switch (parts[0])
+                                                    {
+                                                        case "протяженность":
+                                                            obj2 = AdditionalFunctions.CreateAdditionalParamForTemp(command, commandNSI, (int)obj, 1302, parts[1]);
+                                                            break;
+                                                        case "ширина":
+                                                            obj2 = AdditionalFunctions.CreateAdditionalParamForTemp(command, commandNSI, (int)obj, 1301, parts[1]);
+                                                            break;
+                                                        default:
+                                                            errorsList.Add($"В конвертере нет определения под макет №13: {parts[0]}");
+                                                            break;
+                                                    }
+                                                    if (obj2 == null)
+                                                        errorsList.Add($"Не удалось создать дополнительный параметр для макета №13:{parts[0]} со значением:{parts[1]} в строке {i + 2}");
+                                                }
+                                            }
+                                        }
+                                        else
+                                            errorsList.Add($"Не удалось создать макет №13 в строке {i + 2}");
+
+                                    }
+
+                                }
+                            }
+                            //Макет 14
+                            string maket14 = ds.Tables[0].Rows[i].ItemArray[315].ToString();
+                            if(maket14!=""&&maket14!="0")
+                            {
+                                string[] paramWithValues = maket14.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+
+                                foreach (string param in paramWithValues)
+                                {
+                                    if (param != " ")
+                                    {
+                                        obj = CRUDSQLAccess.CreateInfo(command, "TblVydDopMaket", "NomSoed],[Maket", $"{nomZ}','14");
+
+                                        if (obj != null)
+                                        {
+                                            string[] values = param.Split(',');
+                                            foreach (string value in values)
+                                            {
+                                                string[] parts = value.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
+                                                if (parts.Count() == 2)
+                                                {
+                                                    parts[0] = parts[0].Trim();
+                                                    parts[1] = parts[1].Trim();
+
+                                                    switch (parts[0])
+                                                    {
+                                                        case "учетная категория":
+                                                            obj2 = AdditionalFunctions.CreateAdditionalParamForTemp(command, commandNSI, (int)obj, 1401, parts[1], "KlsUchasKat");
+                                                            break;
+                                                        case "первый вид":
+                                                            obj2 = AdditionalFunctions.CreateAdditionalParamForTemp(command, commandNSI, (int)obj, 1402, parts[1], "KlsPokrovTrav");
+                                                            break;
+                                                        case "второй вид":
+                                                            obj2 = AdditionalFunctions.CreateAdditionalParamForTemp(command, commandNSI, (int)obj, 1404, parts[1], "KlsPokrovTrav");
+                                                            break;
+                                                        case "третий вид":
+                                                            obj2 = AdditionalFunctions.CreateAdditionalParamForTemp(command, commandNSI, (int)obj, 1406, parts[1], "KlsPokrovTrav");
+                                                            break;
+                                                        case "% покрытия":
+                                                            obj2 = AdditionalFunctions.CreateAdditionalParamForTemp(command, commandNSI, (int)obj, 1403, parts[1]);
+                                                            break;
+                                                        default:
+                                                            errorsList.Add($"В конвертере нет определения под макет №14: {parts[0]}");
+                                                            break;
+                                                    }
+                                                    if (obj2 == null)
+                                                        errorsList.Add($"Не удалось создать дополнительный параметр для макета №14:{parts[0]} со значением:{parts[1]} в строке {i + 2}");
+                                                }
+                                            }
+                                        }
+                                        else
+                                            errorsList.Add($"Не удалось создать макет №13 в строке {i + 2}");
+
+                                    }
+
+                                }
+                            }
+                            //Макет 15
+                            string maket15 = ds.Tables[0].Rows[i].ItemArray[316].ToString();
+                            //Макет 16
+                            string maket16 = ds.Tables[0].Rows[i].ItemArray[317].ToString();
+                            //Макет 17
+                            string maket17 = ds.Tables[0].Rows[i].ItemArray[318].ToString();
+                            //Макет 18
+                            string maket18 = ds.Tables[0].Rows[i].ItemArray[319].ToString();
+                            //Макет 19
+                            string maket19 = ds.Tables[0].Rows[i].ItemArray[320].ToString();
+                            //Макет 20
+                            string maket20 = ds.Tables[0].Rows[i].ItemArray[321].ToString();
+                            //Макет 21
+                            string maket21 = ds.Tables[0].Rows[i].ItemArray[322].ToString();
+                            if (maket21 != "" && maket21 != "0")
+                            {
+                                string[] paramWithValues = maket21.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+
+                                foreach (string param in paramWithValues)
+                                {
+                                    if (param != " ")
+                                    {
+                                        obj = CRUDSQLAccess.CreateInfo(command, "TblVydDopMaket", "NomSoed],[Maket", $"{nomZ}','21");
+
+                                        if (obj != null)
+                                        {
+                                            string[] values = param.Split(',');
+                                            foreach (string value in values)
+                                            {
+                                                string[] parts = value.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
+                                                if (parts.Count() == 2)
+                                                {
+                                                    parts[0] = parts[0].Trim();
+                                                    parts[1] = parts[1].Trim();
+
+                                                    switch (parts[0])
+                                                    {
+                                                        case "тип ландшафта":
+                                                            obj2 = AdditionalFunctions.CreateAdditionalParamForTemp(command, commandNSI, (int)obj, 2101, parts[1], "KlsLandTip");
+                                                            break;
+                                                        case "эстетическая оценка":
+                                                            obj2 = AdditionalFunctions.CreateAdditionalParamForTemp(command, commandNSI, (int)obj, 2102, parts[1]);
+                                                            break;
+                                                        case "рекреационная оценка":
+                                                            obj2 = AdditionalFunctions.CreateAdditionalParamForTemp(command, commandNSI, (int)obj, 2103, parts[1], "KlsRekrOcen");
+                                                            break;
+                                                        case "устойчивость":
+                                                            obj2 = AdditionalFunctions.CreateAdditionalParamForTemp(command, commandNSI, (int)obj, 2104, parts[1], "KlsNasUst");
+                                                            break;
+                                                        case "проходимость":
+                                                            obj2 = AdditionalFunctions.CreateAdditionalParamForTemp(command, commandNSI, (int)obj, 2105, parts[1], "KlsProhod");
+                                                            break;
+                                                        case "просматриваемость":
+                                                            obj2 = AdditionalFunctions.CreateAdditionalParamForTemp(command, commandNSI, (int)obj, 2106, parts[1], "KlsProhod");
+                                                            break;
+                                                        case "стадия дигресии":
+                                                            obj2 = AdditionalFunctions.CreateAdditionalParamForTemp(command, commandNSI, (int)obj, 2107, parts[1], "KlsDigresStad");
+                                                            break;
+                                                        default:
+                                                            errorsList.Add($"В конвертере нет определения под макет №21: {parts[0]}");
+                                                            break;
+                                                    }
+                                                    if (obj2 == null)
+                                                        errorsList.Add($"Не удалось создать дополнительный параметр для макета №21:{parts[0]} со значением:{parts[1]} в строке {i + 2}");
+                                                }
+                                            }
+                                        }
+                                        else
+                                            errorsList.Add($"Не удалось создать макет №12 в строке {i + 2}");
+
+                                    }
+
+                                }
+
+                            }
                             /*
                             //Макет 11
                             if (ds.Tables[0].Rows[i].ItemArray[27].ToString() != "")

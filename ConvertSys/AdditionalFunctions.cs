@@ -66,7 +66,7 @@ namespace ConvertSys
             }
             else
             {
-                object obj = CRUDSQLAccess.CreateInfo(command, "TblVydDopParam", "NomSoed],[Parametr],[ParamId", $"{nomMaket.ToString()}','{paramId.ToString()}','{data}");
+                object obj = CRUDSQLAccess.CreateInfo(command, "TblVydDopParam", "NomSoed],[Parametr],[ParamId", $"{nomMaket.ToString()}','{data}','{paramId.ToString()}");
                 if (obj != null)
                     return obj;
                 else
