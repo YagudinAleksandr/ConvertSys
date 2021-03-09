@@ -157,6 +157,7 @@ namespace ConvSys__WinPLP_
             this.button1.TabIndex = 12;
             this.button1.Text = "Конвертировать";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // Form1
             // 
@@ -178,6 +179,7 @@ namespace ConvSys__WinPLP_
             this.Controls.Add(this.label1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "ConvSys (WinPLP)";
             this.ResumeLayout(false);
             this.PerformLayout();

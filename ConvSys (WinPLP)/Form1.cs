@@ -68,5 +68,35 @@ namespace ConvSys__WinPLP_
                 }
             }
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if(TB_KWRDB.Text == "" || TB_KWRDB.Text==" ")
+            {
+                MessageBox.Show("Не выбрана база кварталов в формате DBF");
+                return;
+            }
+
+            if(TB_VYDDB.Text==""||TB_VYDDB.Text==" ")
+            {
+                MessageBox.Show("Не выбрана база выделов в формате DBF");
+                return;
+            }
+
+            if(TB_NSI.Text==""||TB_NSI.Text==" ")
+            {
+                MessageBox.Show("Не выбрана база НСИ");
+                return;
+            }
+
+            if(TB_OutDB.Text==""||TB_OutDB.Text==" ")
+            {
+                MessageBox.Show("Не выбрана база для перевода значений в ЛесИС");
+                return;
+            }
+
+            ConvertForm convertForm = new ConvertForm();
+            convertForm.ShowDialog();
+        }
     }
 }

@@ -429,9 +429,7 @@ namespace ConvertSys
                                 {
                                     if (polnotaIarusa != "" && polnotaIarusa != "0")
                                     {
-                                        obj2 = CRUDSQLAccess.ReadInfo(commandNSI, "KlsPolnota", "KL", "Kod", polnotaIarusa);
-                                        if (obj2 != null)
-                                            if (CRUDSQLAccess.UpdateInfo(command, "TblVydIarus", "Polnota", obj2.ToString(), "NomZ", obj.ToString()) == null)
+                                        if (CRUDSQLAccess.UpdateInfo(command, "TblVydIarus", "Polnota", polnotaIarusa, "NomZ", obj.ToString()) == null)
                                                 errorsList.Add($"Не удалось внести кол-во подроста в ярус №{iarusNumber} в строке №{i + 2}");
                                     }
                                     if (summaPlsSech != "" && summaPlsSech != "0")
@@ -729,9 +727,7 @@ namespace ConvertSys
                                 {
                                     if (polnotaIarusa != "" && polnotaIarusa != "0")
                                     {
-                                        obj2 = CRUDSQLAccess.ReadInfo(commandNSI, "KlsPolnota", "KL", "Kod", polnotaIarusa);
-                                        if (obj2 != null)
-                                            if (CRUDSQLAccess.UpdateInfo(command, "TblVydIarus", "Polnota", obj2.ToString(), "NomZ", obj.ToString()) == null)
+                                        if (CRUDSQLAccess.UpdateInfo(command, "TblVydIarus", "Polnota", polnotaIarusa, "NomZ", obj.ToString()) == null)
                                                 errorsList.Add($"Не удалось внести кол-во подроста в ярус №{iarusNumber} в строке №{i + 2}");
                                     }
                                     if (summaPlsSech != "" && summaPlsSech != "0")
@@ -1029,9 +1025,7 @@ namespace ConvertSys
                                 {
                                     if (polnotaIarusa != "" && polnotaIarusa != "0")
                                     {
-                                        obj2 = CRUDSQLAccess.ReadInfo(commandNSI, "KlsPolnota", "KL", "Kod", polnotaIarusa);
-                                        if (obj2 != null)
-                                            if (CRUDSQLAccess.UpdateInfo(command, "TblVydIarus", "Polnota", obj2.ToString(), "NomZ", obj.ToString()) == null)
+                                        if (CRUDSQLAccess.UpdateInfo(command, "TblVydIarus", "Polnota", polnotaIarusa, "NomZ", obj.ToString()) == null)
                                                 errorsList.Add($"Не удалось внести кол-во подроста в ярус №{iarusNumber} в строке №{i + 2}");
                                     }
                                     if (summaPlsSech != "" && summaPlsSech != "0")
@@ -1329,9 +1323,7 @@ namespace ConvertSys
                                 {
                                     if (polnotaIarusa != "" && polnotaIarusa != "0")
                                     {
-                                        obj2 = CRUDSQLAccess.ReadInfo(commandNSI, "KlsPolnota", "KL", "Kod", polnotaIarusa);
-                                        if (obj2 != null)
-                                            if (CRUDSQLAccess.UpdateInfo(command, "TblVydIarus", "Polnota", obj2.ToString(), "NomZ", obj.ToString()) == null)
+                                        if (CRUDSQLAccess.UpdateInfo(command, "TblVydIarus", "Polnota", polnotaIarusa, "NomZ", obj.ToString()) == null)
                                                 errorsList.Add($"Не удалось внести кол-во подроста в ярус №{iarusNumber} в строке №{i + 2}");
                                     }
                                     if (summaPlsSech != "" && summaPlsSech != "0")
@@ -1629,9 +1621,7 @@ namespace ConvertSys
                                 {
                                     if (polnotaIarusa != "" && polnotaIarusa != "0")
                                     {
-                                        obj2 = CRUDSQLAccess.ReadInfo(commandNSI, "KlsPolnota", "KL", "Kod", polnotaIarusa);
-                                        if (obj2 != null)
-                                            if (CRUDSQLAccess.UpdateInfo(command, "TblVydIarus", "Polnota", obj2.ToString(), "NomZ", obj.ToString()) == null)
+                                        if (CRUDSQLAccess.UpdateInfo(command, "TblVydIarus", "Polnota", polnotaIarusa, "NomZ", obj.ToString()) == null)
                                                 errorsList.Add($"Не удалось внести кол-во подроста в ярус №{iarusNumber} в строке №{i + 2}");
                                     }
                                     if (summaPlsSech != "" && summaPlsSech != "0")
@@ -1929,10 +1919,8 @@ namespace ConvertSys
                                 {
                                     if (polnotaIarusa != "" && polnotaIarusa != "0")
                                     {
-                                        obj2 = CRUDSQLAccess.ReadInfo(commandNSI, "KlsPolnota", "KL", "Kod", polnotaIarusa);
-                                        if (obj2 != null)
-                                            if (CRUDSQLAccess.UpdateInfo(command, "TblVydIarus", "Polnota", obj2.ToString(), "NomZ", obj.ToString()) == null)
-                                                errorsList.Add($"Не удалось внести кол-во подроста в ярус №{iarusNumber} в строке №{i + 2}");
+                                        if (CRUDSQLAccess.UpdateInfo(command, "TblVydIarus", "Polnota", polnotaIarusa, "NomZ", obj.ToString()) == null)
+                                             errorsList.Add($"Не удалось внести кол-во подроста в ярус №{iarusNumber} в строке №{i + 2}");
                                     }
                                     if (summaPlsSech != "" && summaPlsSech != "0")
                                     {
@@ -2229,9 +2217,7 @@ namespace ConvertSys
                                 {
                                     if (polnotaIarusa != "" && polnotaIarusa != "0")
                                     {
-                                        obj2 = CRUDSQLAccess.ReadInfo(commandNSI, "KlsPolnota", "KL", "Kod", polnotaIarusa);
-                                        if (obj2 != null)
-                                            if (CRUDSQLAccess.UpdateInfo(command, "TblVydIarus", "Polnota", obj2.ToString(), "NomZ", obj.ToString()) == null)
+                                        if (CRUDSQLAccess.UpdateInfo(command, "TblVydIarus", "Polnota", polnotaIarusa, "NomZ", obj.ToString()) == null)
                                                 errorsList.Add($"Не удалось внести кол-во подроста в ярус №{iarusNumber} в строке №{i + 2}");
                                     }
                                     if (summaPlsSech != "" && summaPlsSech != "0")
@@ -2533,9 +2519,7 @@ namespace ConvertSys
                                 {
                                     if (polnotaIarusa != "" && polnotaIarusa != "0")
                                     {
-                                        obj2 = CRUDSQLAccess.ReadInfo(commandNSI, "KlsPolnota", "KL", "Kod", polnotaIarusa);
-                                        if(obj2!=null)
-                                            if(CRUDSQLAccess.UpdateInfo(command, "TblVydIarus", "Polnota", obj2.ToString(), "NomZ", obj.ToString())==null)
+                                        if(CRUDSQLAccess.UpdateInfo(command, "TblVydIarus", "KolStvol", polnotaIarusa, "NomZ", obj.ToString())==null)
                                                 errorsList.Add($"Не удалось внести кол-во подроста в ярус №{iarusNumber} в строке №{i + 2}");
                                     }
                                     if (visotaIarusa != "" && visotaIarusa != "0")
