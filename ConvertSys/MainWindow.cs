@@ -2640,14 +2640,14 @@ namespace ConvertSys
                                     /*=============================Порода №1================================*/
 
                                     string poroda = ds.Tables[0].Rows[i].ItemArray[306].ToString();
-                                    
+                                    string sostav = "";
 
                                     if (poroda != "" && poroda != "0")
                                     {
                                         obj2 = AdditionalFunctions.CreatePoroda(command, commandNSI, "1", poroda, obj.ToString());
                                         if (obj2 == null)
                                             errorsList.Add($"Не удалось создать породу №1 в ярусе №{iarusNumber} в строке №{i + 2}");
-                                        
+                                        sostav += poroda;
                                     }
 
                                     /*=============================Порода №2================================*/
@@ -2660,7 +2660,8 @@ namespace ConvertSys
                                         obj2 = AdditionalFunctions.CreatePoroda(command, commandNSI, "2", poroda, obj.ToString());
                                         if (obj2 == null)
                                             errorsList.Add($"Не удалось создать породу №2 в ярусе №{iarusNumber} в строке №{i + 2}");
-                                        
+                                        else
+                                            sostav += ", " + poroda;
                                     }
 
                                     /*=============================Порода №3================================*/
@@ -2673,7 +2674,8 @@ namespace ConvertSys
                                         obj2 = AdditionalFunctions.CreatePoroda(command, commandNSI, "3", poroda, obj.ToString());
                                         if (obj2 == null)
                                             errorsList.Add($"Не удалось создать породу №3 в ярусе №{iarusNumber} в строке №{i + 2}");
-                                        
+                                        else
+                                            sostav += ", " + poroda;
                                     }
 
                                     /*=============================Порода №4================================*/
@@ -2686,7 +2688,9 @@ namespace ConvertSys
                                         obj2 = AdditionalFunctions.CreatePoroda(command, commandNSI, "4", poroda, obj.ToString());
                                         if (obj2 == null)
                                             errorsList.Add($"Не удалось создать породу №4 в ярусе №{iarusNumber} в строке №{i + 2}");
-                                        
+                                        else
+                                            sostav += ", " + poroda;
+
                                     }
                                     /*=============================Порода №5================================*/
 
@@ -2698,9 +2702,15 @@ namespace ConvertSys
                                         obj2 = AdditionalFunctions.CreatePoroda(command, commandNSI, "5", poroda, obj.ToString());
                                         if (obj2 == null)
                                             errorsList.Add($"Не удалось создать породу №4 в ярусе №{iarusNumber} в строке №{i + 2}");
-
+                                        else
+                                            sostav += ", " + poroda;
+                                        
                                     }
 
+                                    //Внесение состава яруса
+                                    if (sostav != "")
+                                        if (CRUDSQLAccess.UpdateInfo(command, "TblVydIarus", "Sostav", sostav, "NomZ", obj.ToString()) == null)
+                                            errorsList.Add($"Не удалось внести состав яруса 19 в строке {i + 1}");
                                 }
                                 else
                                 {

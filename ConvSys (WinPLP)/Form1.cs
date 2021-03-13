@@ -12,6 +12,7 @@ namespace ConvSys__WinPLP_
 {
     public partial class Form1 : Form
     {
+        Dictionary<string, string> openWith = new Dictionary<string, string>();
         public Form1()
         {
             InitializeComponent();
@@ -25,7 +26,16 @@ namespace ConvSys__WinPLP_
 
                 if (openDatabaseDirectory.ShowDialog() == DialogResult.OK)
                 {
+                    var filePath = openDatabaseDirectory.FileName;
                     TB_KWRDB.Text = openDatabaseDirectory.FileName;
+
+                    string oPath = filePath.Remove(filePath.LastIndexOf("\\"));
+                    string oName = filePath.Substring(filePath.LastIndexOf("\\") + 1).Replace(".DBF", "");
+                    string oFullName = filePath.Substring(filePath.LastIndexOf("\\") + 1);
+
+                    openWith.Add("oPath", oPath);
+                    openWith.Add("oName", oName);
+                    openWith.Add("oFullName", oFullName);
                 }
             }
         }
@@ -38,7 +48,16 @@ namespace ConvSys__WinPLP_
 
                 if (openDatabaseDirectory.ShowDialog() == DialogResult.OK)
                 {
+                    var filePath = openDatabaseDirectory.FileName;
                     TB_VYDDB.Text = openDatabaseDirectory.FileName;
+
+                    string oPath = filePath.Remove(filePath.LastIndexOf("\\"));
+                    string oName = filePath.Substring(filePath.LastIndexOf("\\") + 1).Replace(".DBF", "");
+                    string oFullName = filePath.Substring(filePath.LastIndexOf("\\") + 1);
+
+                    openWith.Add("oPathVY", oPath);
+                    openWith.Add("oNameVY", oName);
+                    openWith.Add("oFullNameVY", oFullName);
                 }
             }
         }
@@ -52,6 +71,7 @@ namespace ConvSys__WinPLP_
                 if (openDatabaseDirectory.ShowDialog() == DialogResult.OK)
                 {
                     TB_NSI.Text = openDatabaseDirectory.FileName;
+                    openWith.Add("oPathNSI", TB_NSI.Text);
                 }
             }
         }
@@ -65,6 +85,7 @@ namespace ConvSys__WinPLP_
                 if (openDatabaseDirectory.ShowDialog() == DialogResult.OK)
                 {
                     TB_OutDB.Text = openDatabaseDirectory.FileName;
+                    openWith.Add("oPathOutDB", TB_OutDB.Text);
                 }
             }
         }
@@ -95,7 +116,9 @@ namespace ConvSys__WinPLP_
                 return;
             }
 
-            ConvertForm convertForm = new ConvertForm();
+            
+
+            ConvertForm convertForm = new ConvertForm(openWith);
             convertForm.ShowDialog();
         }
     }
