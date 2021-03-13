@@ -35,6 +35,7 @@ namespace ConvSys__WinPLP_
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.LB_Inform = new System.Windows.Forms.ListBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // PB_Kwrt
@@ -72,16 +73,26 @@ namespace ConvSys__WinPLP_
             // LB_Inform
             // 
             this.LB_Inform.FormattingEnabled = true;
-            this.LB_Inform.Location = new System.Drawing.Point(16, 132);
+            this.LB_Inform.Location = new System.Drawing.Point(16, 145);
             this.LB_Inform.Name = "LB_Inform";
-            this.LB_Inform.Size = new System.Drawing.Size(772, 381);
+            this.LB_Inform.Size = new System.Drawing.Size(772, 368);
             this.LB_Inform.TabIndex = 4;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(14, 118);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(185, 13);
+            this.label3.TabIndex = 5;
+            this.label3.Text = "Информация по конвертированию:";
             // 
             // ConvertForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 541);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.LB_Inform);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -104,5 +115,6 @@ namespace ConvSys__WinPLP_
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ListBox LB_Inform;
+        private System.Windows.Forms.Label label3;
     }
 }

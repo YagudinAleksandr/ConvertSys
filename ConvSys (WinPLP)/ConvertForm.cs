@@ -26,6 +26,18 @@ namespace ConvSys__WinPLP_
 
         private void ConvertForm_Shown(object sender, EventArgs e)
         {
+            
+            StartConvert();
+            MessageBox.Show("Конвертирование закончено!");
+        }
+
+
+        private void StartConvert()
+        {
+            //Секундомер
+            Stopwatch sWatch = new Stopwatch();
+            sWatch.Start();//Таймер выполнения операции
+
             //==================================================
             // ******** Блок подключения к базам данных ********
             //==================================================
@@ -61,8 +73,7 @@ namespace ConvSys__WinPLP_
 
             try
             {
-                //Секундомер
-                Stopwatch sWatch = new Stopwatch();
+
 
                 //Присваиваем значение таблиц обращения к командам
                 commandToKW = connectionToKwDBF.CreateCommand();
@@ -107,15 +118,55 @@ namespace ConvSys__WinPLP_
                             if (CRUDClass.Update(commandToOUTDB, "TblKvr", "KvrPls", tableKW.Rows[i].ItemArray[10].ToString(), "NomZ", objectInform.ToString()) == null)
                                 LB_Inform.Items.Add($"Не удалось внести площадь квартала в квартал №{tableKW.Rows[i].ItemArray[1]}");
 
+                        //==============================================
+                        //************* Создание выделов ***************
+                        //==============================================
 
                         //Получаем данные из таблицы выделов
                         commandToVYD.CommandText = @"SELECT * FROM " + _inform["oNameVY"] + " WHERE vvodid=" + tableKW.Rows[i].ItemArray[0].ToString();
                         tabbleVYD.Load(commandToVYD.ExecuteReader());
+
+                        //Значения для ProgressBar выделов
+                        PB_Vydel.Minimum = 0;
+                        PB_Vydel.Maximum = tabbleVYD.Rows.Count;
+                        PB_Vydel.Step = 1;
+
                         //Проходим по таблице выделов
-                        for (int j = 0; j < tabbleVYD.Rows.Count; j++) 
+
+                        for (int j = 0; j < tabbleVYD.Rows.Count; j++)
                         {
-                            
+                            object informVydel = CRUDClass.Create(commandToOUTDB, "TblVyd", "[NomSoed],[KvrNom],[VydNom]", $"'{objectInform.ToString()}','{tableKW.Rows[i].ItemArray[1]}','{tabbleVYD.Rows[j].ItemArray[1]}'");
+                            if (informVydel != null)
+                            {
+                                //Работа с макетами
+                                char[] filters = { '\n', '\r' };//Первый фильтр 
+                                string[] templates = tabbleVYD.Rows[j].ItemArray[3].ToString().Split(filters);//Разделение строки по фильтрам
+                                //Прохождение по строкам
+                                foreach(string template in templates)
+                                {
+                                    string[] informationString = template.Split(')');
+                                    
+                                    switch(informationString[0])
+                                    {
+                                        case "01":
+                                            AdditiaonalFunctions.CreateMaketVydel(commandToOUTDB, commandToNSI, informationString[1],informVydel.ToString());
+                                            break;
+                                        default:
+                                            LB_Inform.Items.Add($"Макет №{informationString[0]} не задан в программе. Выдел №{tabbleVYD.Rows[j].ItemArray[1]} квартал №{tableKW.Rows[i].ItemArray[1]}");
+                                            break;
+                                    }
+                                }
+
+
+                                if (CRUDClass.Update(commandToOUTDB, "TblVyd", "DataIzm", DateTime.Now.ToString(), "NomZ", informVydel.ToString()) == null)
+                                    LB_Inform.Items.Add($"Не удалось внести год в выдел №{tabbleVYD.Rows[j].ItemArray[1]} Квартала №{tableKW.Rows[i].ItemArray[1]}");
+                            }
+                            else
+                                LB_Inform.Items.Add($"Не удалось создать выдел №{tabbleVYD.Rows[j].ItemArray[1]}, квартал №{tableKW.Rows[i].ItemArray[1]}");
+
+                            PB_Vydel.PerformStep();
                         }
+
                         tabbleVYD.Clear();
                     }
                     else
@@ -132,6 +183,7 @@ namespace ConvSys__WinPLP_
 
                 //Очистка данных таблицы кварталов
                 tableKW.Dispose();
+                tabbleVYD.Dispose();
 
             }
             catch (Exception ex)
@@ -147,7 +199,6 @@ namespace ConvSys__WinPLP_
                 connectionToVydDBF.Close();
                 connectionToOutDB.Close();
             }
-            
         }
     }
 }

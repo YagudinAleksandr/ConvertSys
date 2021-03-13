@@ -26,6 +26,10 @@ namespace ConvSys__WinPLP_
 
                 if (openDatabaseDirectory.ShowDialog() == DialogResult.OK)
                 {
+                    openWith.Remove("oPath");
+                    openWith.Remove("oName");
+                    openWith.Remove("oFullName");
+
                     var filePath = openDatabaseDirectory.FileName;
                     TB_KWRDB.Text = openDatabaseDirectory.FileName;
 
@@ -48,6 +52,10 @@ namespace ConvSys__WinPLP_
 
                 if (openDatabaseDirectory.ShowDialog() == DialogResult.OK)
                 {
+                    openWith.Remove("oPathVY");
+                    openWith.Remove("oNameVY");
+                    openWith.Remove("oFullNameVY");
+
                     var filePath = openDatabaseDirectory.FileName;
                     TB_VYDDB.Text = openDatabaseDirectory.FileName;
 
@@ -70,6 +78,8 @@ namespace ConvSys__WinPLP_
 
                 if (openDatabaseDirectory.ShowDialog() == DialogResult.OK)
                 {
+                    openWith.Remove("oPathNSI");
+
                     TB_NSI.Text = openDatabaseDirectory.FileName;
                     openWith.Add("oPathNSI", TB_NSI.Text);
                 }
@@ -84,6 +94,8 @@ namespace ConvSys__WinPLP_
 
                 if (openDatabaseDirectory.ShowDialog() == DialogResult.OK)
                 {
+                    openWith.Remove("oPathOutDB");
+
                     TB_OutDB.Text = openDatabaseDirectory.FileName;
                     openWith.Add("oPathOutDB", TB_OutDB.Text);
                 }
