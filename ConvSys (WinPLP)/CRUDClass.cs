@@ -17,7 +17,7 @@ namespace ConvSys__WinPLP_
         /// <param name="tableName">Название таблицы</param>
         /// <param name="tableCells">Ячейки для заполнения</param>
         /// <param name="data">Данные для заполнения</param>
-        /// <returns></returns>
+        /// <returns>Возвращает переменнуб типаобъект (null) или ID созданной записи</returns>
         public static object Create(OleDbCommand command, string tableName, string tableCells, string data)
         {
             try
@@ -37,9 +37,29 @@ namespace ConvSys__WinPLP_
         {
             return null;
         }
-        public static object Update()
+        /// <summary>
+        /// Метод для обновления ячейки в таблице
+        /// </summary>
+        /// <param name="command">Переменная для обращения к определенной БД</param>
+        /// <param name="tableName">Название таблицы</param>
+        /// <param name="cellForUpdate">Ячейка для обновления</param>
+        /// <param name="data">Данные</param>
+        /// <param name="cellWhere">Ячейка по которой происходит поиск</param>
+        /// <param name="param">Параметр поиска</param>
+        /// <returns>Возвращает объект типа true или false</returns>
+        public static object Update(OleDbCommand command,string tableName, string cellForUpdate, string data, string cellWhere, string param)
         {
-            return null;
+            try
+            {
+                command.CommandText = @"UPDATE " + tableName + " SET " + cellForUpdate + "='" + data + "' WHERE " + cellWhere + "=" + param + ";";
+                command.ExecuteNonQuery();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Возникла проблема при работе с базой данных! {ex.Message}");
+                return false;
+            }
         }
     }
 }

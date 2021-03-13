@@ -34,7 +34,7 @@ namespace ConvSys__WinPLP_
             this.PB_Vydel = new System.Windows.Forms.ProgressBar();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.LB_Inform = new System.Windows.Forms.ListBox();
             this.SuspendLayout();
             // 
             // PB_Kwrt
@@ -69,20 +69,20 @@ namespace ConvSys__WinPLP_
             this.label2.TabIndex = 3;
             this.label2.Text = "Выделы";
             // 
-            // listBox1
+            // LB_Inform
             // 
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.Location = new System.Drawing.Point(16, 132);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(772, 381);
-            this.listBox1.TabIndex = 4;
+            this.LB_Inform.FormattingEnabled = true;
+            this.LB_Inform.Location = new System.Drawing.Point(16, 132);
+            this.LB_Inform.Name = "LB_Inform";
+            this.LB_Inform.Size = new System.Drawing.Size(772, 381);
+            this.LB_Inform.TabIndex = 4;
             // 
             // ConvertForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 541);
-            this.Controls.Add(this.listBox1);
+            this.Controls.Add(this.LB_Inform);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.PB_Vydel);
@@ -91,7 +91,7 @@ namespace ConvSys__WinPLP_
             this.Name = "ConvertForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Конвертирование";
-            this.Load += new System.EventHandler(this.ConvertForm_Load);
+            this.Shown += new System.EventHandler(this.ConvertForm_Shown);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -103,6 +103,6 @@ namespace ConvSys__WinPLP_
         private System.Windows.Forms.ProgressBar PB_Vydel;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.ListBox LB_Inform;
     }
 }
