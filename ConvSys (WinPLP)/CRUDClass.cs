@@ -33,9 +33,28 @@ namespace ConvSys__WinPLP_
                 return null;
             }
         }
-        public static object Read()
+        /// <summary>
+        /// Метод получения нужной ячейки из БД по параметру
+        /// </summary>
+        /// <param name="command">Переменная для обращения к определенной БД</param>
+        /// <param name="tableName">Название таблицы</param>
+        /// <param name="tableCellWhat">Какой столбец нужно получить</param>
+        /// <param name="paramCell">Ячейка параметра</param>
+        /// <param name="data">Параметр</param>
+        /// <returns></returns>
+        public static object Read(OleDbCommand command,string tableName,string tableCellWhat,string paramCell,string data)
         {
-            return null;
+            try
+            {
+                command.CommandText = @"SELECT " + tableCellWhat + " FROM " + tableName + " WHERE " + paramCell + "='" + data + "'";
+
+                return command.ExecuteScalar();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Возникла проблема при работе с базой данных! {ex.Message}");
+                return null;
+            }
         }
         /// <summary>
         /// Метод для обновления ячейки в таблице

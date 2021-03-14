@@ -145,11 +145,26 @@ namespace ConvSys__WinPLP_
                                 foreach(string template in templates)
                                 {
                                     string[] informationString = template.Split(')');
-                                    
+
+                                    List<string> informationForListBox = new List<string>();
+
                                     switch(informationString[0])
                                     {
-                                        case "01":
-                                            AdditiaonalFunctions.CreateMaketVydel(commandToOUTDB, commandToNSI, informationString[1],informVydel.ToString());
+                                        case "01"://Информация по выделу
+                                            informationForListBox = AdditiaonalFunctions.CreateMaketVydel(commandToOUTDB, commandToNSI, informationString[1], informVydel.ToString());
+                                            foreach(string error in informationForListBox)
+                                            {
+                                                LB_Inform.Items.Add(error);
+                                            }
+                                            informationForListBox.Clear();
+                                            break;
+                                        case "02"://Хоз.мероприятия
+                                            informationForListBox = AdditiaonalFunctions.CreateHozMerVydel(commandToOUTDB, commandToNSI, informationString[1], informVydel.ToString());
+                                            foreach (string error in informationForListBox)
+                                            {
+                                                LB_Inform.Items.Add(error);
+                                            }
+                                            informationForListBox.Clear();
                                             break;
                                         default:
                                             LB_Inform.Items.Add($"Макет №{informationString[0]} не задан в программе. Выдел №{tabbleVYD.Rows[j].ItemArray[1]} квартал №{tableKW.Rows[i].ItemArray[1]}");
@@ -184,7 +199,11 @@ namespace ConvSys__WinPLP_
                 //Очистка данных таблицы кварталов
                 tableKW.Dispose();
                 tabbleVYD.Dispose();
-
+                //Очистка команд
+                commandToKW.Dispose();
+                commandToNSI.Dispose();
+                commandToOUTDB.Dispose();
+                commandToVYD.Dispose();
             }
             catch (Exception ex)
             {
@@ -198,6 +217,11 @@ namespace ConvSys__WinPLP_
                 connectionToNSIDB.Close();
                 connectionToVydDBF.Close();
                 connectionToOutDB.Close();
+                //Очистка всех данных подключения к БД
+                connectionToKwDBF.Dispose();
+                connectionToNSIDB.Dispose();
+                connectionToOutDB.Dispose();
+                connectionToVydDBF.Dispose();
             }
         }
     }
