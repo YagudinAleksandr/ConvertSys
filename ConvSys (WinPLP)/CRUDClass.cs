@@ -41,7 +41,7 @@ namespace ConvSys__WinPLP_
         /// <param name="tableCellWhat">Какой столбец нужно получить</param>
         /// <param name="paramCell">Ячейка параметра</param>
         /// <param name="data">Параметр</param>
-        /// <returns></returns>
+        /// <returns>Возвращает значение требуемого столбца</returns>
         public static object Read(OleDbCommand command,string tableName,string tableCellWhat,string paramCell,string data)
         {
             try

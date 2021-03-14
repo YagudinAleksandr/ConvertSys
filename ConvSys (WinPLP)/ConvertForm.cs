@@ -26,7 +26,7 @@ namespace ConvSys__WinPLP_
 
         private void ConvertForm_Shown(object sender, EventArgs e)
         {
-            
+            MessageBox.Show("Нажмите ОК");
             StartConvert();
             MessageBox.Show("Конвертирование закончено!");
         }
@@ -165,6 +165,19 @@ namespace ConvSys__WinPLP_
                                                 LB_Inform.Items.Add(error);
                                             }
                                             informationForListBox.Clear();
+                                            break;
+                                        case "03"://Информация по выделу
+                                            informationForListBox = AdditiaonalFunctions.CreateMaketDopInform(commandToOUTDB, commandToNSI, informationString[1], informVydel.ToString());
+                                            foreach (string error in informationForListBox)
+                                            {
+                                                LB_Inform.Items.Add(error);
+                                            }
+                                            informationForListBox.Clear();
+                                            break;
+                                        case "04":
+                                        case "10":
+                                        case "31":
+                                        case "32":
                                             break;
                                         default:
                                             LB_Inform.Items.Add($"Макет №{informationString[0]} не задан в программе. Выдел №{tabbleVYD.Rows[j].ItemArray[1]} квартал №{tableKW.Rows[i].ItemArray[1]}");
