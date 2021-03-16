@@ -141,9 +141,14 @@ namespace ConvSys__WinPLP_
                                 //Работа с макетами
                                 char[] filters = { '\n', '\r' };//Первый фильтр 
                                 string[] templates = tabbleVYD.Rows[j].ItemArray[3].ToString().Split(filters);//Разделение строки по фильтрам
+                                
+                                int iarusNom, porodaCounter;
+                                iarusNom = porodaCounter = 0;
+
                                 //Прохождение по строкам
-                                foreach(string template in templates)
+                                foreach (string template in templates)
                                 {
+                                    
                                     string[] informationString = template.Split(')');
 
                                     List<string> informationForListBox = new List<string>();
@@ -167,7 +172,7 @@ namespace ConvSys__WinPLP_
                                             informationForListBox.Clear();
                                             break;
                                         case "03"://Информация по выделу
-                                            informationForListBox = AdditiaonalFunctions.CreateMaketDopInform(commandToOUTDB, commandToNSI, informationString[1], informVydel.ToString());
+                                            informationForListBox = AdditiaonalFunctions.CreateMaketDopInformT3(commandToOUTDB, commandToNSI, informationString[1], informVydel.ToString());
                                             foreach (string error in informationForListBox)
                                             {
                                                 LB_Inform.Items.Add(error);
@@ -175,8 +180,29 @@ namespace ConvSys__WinPLP_
                                             informationForListBox.Clear();
                                             break;
                                         case "04":
+                                            informationForListBox = AdditiaonalFunctions.CreateMaketDopInformT4(commandToOUTDB, commandToNSI, informationString[1], informVydel.ToString());
+                                            foreach (string error in informationForListBox)
+                                            {
+                                                LB_Inform.Items.Add(error);
+                                            }
+                                            informationForListBox.Clear();
+                                            break;
                                         case "10":
+                                            informationForListBox = AdditiaonalFunctions.CreateIarus(commandToOUTDB, commandToNSI, informationString[1], informVydel.ToString(), ref iarusNom, ref porodaCounter);
+                                            foreach (string error in informationForListBox)
+                                            {
+                                                LB_Inform.Items.Add(error);
+                                            }
+                                            informationForListBox.Clear();
+                                            break;
                                         case "31":
+                                            informationForListBox = AdditiaonalFunctions.CreatePodrost(commandToOUTDB, commandToNSI, informationString[1], informVydel.ToString());
+                                            foreach (string error in informationForListBox)
+                                            {
+                                                LB_Inform.Items.Add(error);
+                                            }
+                                            informationForListBox.Clear();
+                                            break;
                                         case "32":
                                             break;
                                         default:
