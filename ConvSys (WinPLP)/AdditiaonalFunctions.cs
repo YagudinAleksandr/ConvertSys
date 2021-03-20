@@ -552,13 +552,47 @@ namespace ConvSys__WinPLP_
 
             return returnListOfInformation;
         }
-
-
-        ///-------------------------------------------------------------------------------------------------------------
-        public static List<string> CreatePodrost(OleDbCommand command, OleDbCommand commandToNSI, string data, string nomVyd, ref int iarusNom, ref int porodaCounte)
+        
+        private static List<string> CreatePoroda(OleDbCommand command, OleDbCommand commandToNSI, int iarusNom,string koef, string poroda, int counter)
         {
             List<string> returnListOfInformation = new List<string>();
-            Dictionary<string, string> porodaInformation = new Dictionary<string, string>();//Данные породы
+
+            object objPoroda = CRUDClass.Read(commandToNSI, "KlsPoroda", "KL", "Kod", poroda);
+            if (objPoroda != null)
+            {
+                objPoroda = CRUDClass.Create(command, "TblVydPoroda", "[NomSoed],[PorodaNom],[Poroda]", $"'{iarusNom}','{counter}','{objPoroda.ToString()}'");
+                if (objPoroda != null && koef!="")
+                {
+                    if (CRUDClass.Update(command, "TblVydPoroda", "KoefSos", koef.Replace('.', ','), "NomZ", objPoroda.ToString()) == null)
+                        returnListOfInformation.Add($"Не удалось внести возраст породы {koef}");
+                }
+            }
+            else
+                returnListOfInformation.Add($"Не найдено совпадений в НСИ породы {poroda}");
+
+            return returnListOfInformation;
+        }
+        private static List<string> CreatePoroda(OleDbCommand command, OleDbCommand commandToNSI, int iarusNom, string poroda, int counter)
+        {
+            List<string> returnListOfInformation = new List<string>();
+            object objPoroda = CRUDClass.Read(commandToNSI, "KlsPoroda", "KL", "Kod", poroda);
+
+            if (objPoroda != null)
+            {
+                if (CRUDClass.Create(command, "TblVydPoroda", "[NomSoed],[PorodaNom],[Poroda]", $"'{iarusNom}','{counter}','{objPoroda.ToString()}'") == null)
+                    returnListOfInformation.Add($"Не удалось добавить породу {poroda}");
+            }
+            else
+                returnListOfInformation.Add($"Не найдено совпадений в НСИ по породе {poroda}");
+
+            return returnListOfInformation;
+        }
+
+        ///-------------------------------------------------------------------------------------------------------------
+        public static List<string> CreatePodrost(OleDbCommand command, OleDbCommand commandToNSI, string data, string nomVyd)
+        {
+            List<string> returnListOfInformation = new List<string>();
+            int porodaCounter = 0;
             string[] information = new string[10];
             /*
              * information[0] - Подрост
@@ -568,10 +602,9 @@ namespace ConvSys__WinPLP_
              * information[4] - Порода
              * information[5] - Коэф
              * information[6] - Порода
-             * information[7] - Вид
-             * information[8] - Коэф
-             * information[9] - Порода
-             * information[10] - Оценка
+             * information[7] - Коэф
+             * information[8] - Порода
+             * information[9] - Оценка
              */
             string[] dataFromBD = data.Split(',');
 
@@ -589,37 +622,59 @@ namespace ConvSys__WinPLP_
                 informFromNSI = CRUDClass.Read(commandToNSI, "KlsIarus", "KL", "Kod", "17");
                 if (informFromNSI != null)
                 {
-                    info = CRUDClass.Create(command, "TblVydIarus", "[NomSoed],[Iarus],[IarusNom]", $"'{nomVyd}','{informFromNSI.ToString()}','{information[0]}'");
+                    info = CRUDClass.Create(command, "TblVydIarus", "[NomSoed],[Iarus],[IarusNom]", $"'{nomVyd}','{informFromNSI.ToString()}','17'");
                     if (info != null)
                     {
-                        iarusNom = (int)info;
-                        porodaCounte = 0;
-
-                        porodaInformation.Add("Koef", information[1]);
-                        porodaInformation.Add("Poroda", information[2]);
-                        porodaInformation.Add("Vozrast", information[3]);
-                        porodaInformation.Add("Visota", information[4]);
-                        porodaInformation.Add("Diametr", information[5]);
-                        porodaInformation.Add("KlsTovar", information[6]);
-
-                        returnListOfInformation = CreatePoroda(command, commandToNSI, iarusNom, porodaInformation, ref porodaCounte);
-
-                        porodaInformation.Clear();
-
-                        if (information[8] != "" && information[8] != null)
+                        if (information[0] != "" && information[0] != null)
                         {
-                            if (CRUDClass.Update(command, "TblVydIarus", "Polnota", information[8].Replace('.', ','), "NomZ", info.ToString()) == null)
-                                returnListOfInformation.Add($"Не удалось внести полноту яруса {information[0]}");
+                            if (CRUDClass.Update(command, "TblVydIarus", "KolStvol", information[0].Replace('.', ','), "NomZ", info.ToString()) == null)
+                                returnListOfInformation.Add($"Не удалось внести подрост яруса {information[0]}");
+                        }
+                        if (information[1] != "" && information[1] != null)
+                        {
+                            if (CRUDClass.Update(command, "TblVydIarus", "VysotaIar", information[1].Replace('.', ','), "NomZ", info.ToString()) == null)
+                                returnListOfInformation.Add($"Не удалось внести высоту яруса {information[1]}");
+                        }
+                        if (information[2] != "" && information[2] != null)
+                        {
+                            if (CRUDClass.Update(command, "TblVydIarus", "VozrastIar", information[2].Replace('.', ','), "NomZ", info.ToString()) == null)
+                                returnListOfInformation.Add($"Не удалось внести полноту яруса {information[2]}");
                         }
                         if (information[9] != "" && information[9] != null)
                         {
-                            if (CRUDClass.Update(command, "TblVydIarus", "Prois", information[9].Replace('.', ','), "NomZ", info.ToString()) == null)
-                                returnListOfInformation.Add($"Не удалось внести полноту яруса {information[0]}");
+                            object obj = CRUDClass.Read(commandToNSI, "KlsPodrOcenka", "KL", "Kod", information[9]);
+                            if (obj != null)
+                            {
+                                if (CRUDClass.Update(command, "TblVydIarus", "Ocenka", obj.ToString(), "NomZ", info.ToString()) == null)
+                                    returnListOfInformation.Add($"Не удалось внести полноту яруса {information[9]}");
+                            }
+                            else
+                                returnListOfInformation.Add($"Не найдено совпадений по оценке подроста {information[9]}");
                         }
-                        if (information[10] != "" && information[10] != null)
+
+                        if(information[4]!=null && information[4] != "")
                         {
-                            if (CRUDClass.Update(command, "TblVydIarus", "ZapasGa", information[10].Replace('.', ','), "NomZ", info.ToString()) == null)
-                                returnListOfInformation.Add($"Не удалось внести полноту яруса {information[0]}");
+                            porodaCounter++;
+                            if (information[3] != null && information[3] != "")
+                                returnListOfInformation = CreatePoroda(command, commandToNSI, (int)info, information[3],information[4], porodaCounter);
+                            else
+                                returnListOfInformation = CreatePoroda(command, commandToNSI, (int)info, "", information[4], porodaCounter);
+                        }
+                        if (information[6] != null && information[6] != "")
+                        {
+                            porodaCounter++;
+                            if (information[5] != null && information[5] != "")
+                                returnListOfInformation = CreatePoroda(command, commandToNSI, (int)info, information[5], information[6], porodaCounter);
+                            else
+                                returnListOfInformation = CreatePoroda(command, commandToNSI, (int)info, "", information[6], porodaCounter);
+                        }
+                        if (information[8] != null && information[8] != "")
+                        {
+                            porodaCounter++;
+                            if (information[7] != null && information[7] != "")
+                                returnListOfInformation = CreatePoroda(command, commandToNSI, (int)info, information[7], information[8], porodaCounter);
+                            else
+                                returnListOfInformation = CreatePoroda(command, commandToNSI, (int)info, "", information[8], porodaCounter);
                         }
                     }
                 }
@@ -627,17 +682,163 @@ namespace ConvSys__WinPLP_
                     returnListOfInformation.Add($"Не найдено совпадений в НСИ по ярусу №{information[0]}");
             }
             else
+                returnListOfInformation.Add("Не удалось создать ярус подроста!");
+
+
+            return returnListOfInformation;
+        }
+        public static List<string> CreatePodlesok(OleDbCommand command, OleDbCommand commandToNSI, string data, string nomVyd)
+        {
+            List<string> returnListOfInformation = new List<string>();
+            int porodaCounter = 0;
+            string[] information = new string[4];
+            /*
+             * information[0] - густота
+             * information[1] - порода
+             * information[2] - порода
+             * information[3] - порода
+             */
+            string[] dataFromBD = data.Split(',');
+
+            for (int i = 0; i < dataFromBD.Count(); i++)
             {
-                porodaInformation.Add("Koef", information[1]);
-                porodaInformation.Add("Poroda", information[2]);
-                porodaInformation.Add("Vozrast", information[3]);
-                porodaInformation.Add("Visota", information[4]);
-                porodaInformation.Add("Diametr", information[5]);
-                porodaInformation.Add("KlsTovar", information[6]);
-                CreatePoroda(command, commandToNSI, iarusNom, porodaInformation, ref porodaCounte);
-                porodaInformation.Clear();
+                if (dataFromBD[i] != "")
+                    information[i] = dataFromBD[i];
             }
 
+            object infoIarus = CRUDClass.Read(commandToNSI, "KlsIarus", "KL", "Kod", "19");
+            if(infoIarus != null)
+            {
+                infoIarus = CRUDClass.Create(command, "TblVydIarus", "[NomSoed],[Iarus],[IarusNom]", $"'{nomVyd}','{infoIarus.ToString()}','19'");
+
+                if(information[0]!= null && information[0]!="")
+                {
+                    if (CRUDClass.Update(command, "TblVydIarus", "Gustota", information[0], "NomZ", infoIarus.ToString()) == null)
+                        returnListOfInformation.Add($"Не удалось внести значение густоты {information[0]}");
+                }
+
+                if(information[1]!=null && information[1] != "")
+                {
+                    porodaCounter++;
+                    returnListOfInformation = CreatePoroda(command, commandToNSI, (int)infoIarus, information[1], porodaCounter);
+                }
+                if (information[2] != null && information[2] != "")
+                {
+                    porodaCounter++;
+                    returnListOfInformation = CreatePoroda(command, commandToNSI, (int)infoIarus, information[2], porodaCounter);
+                }
+                if (information[3] != null && information[3] != "")
+                {
+                    porodaCounter++;
+                    returnListOfInformation = CreatePoroda(command, commandToNSI, (int)infoIarus, information[3], porodaCounter);
+                }
+
+            }
+
+            return returnListOfInformation;
+        }
+
+
+
+
+
+
+
+        public static List<string> CreateTemplate11(OleDbCommand command,OleDbCommand commandToNSI, string data, string nomVyd)
+        {
+            List<string> returnListOfInformation = new List<string>();
+            
+            string[] information = new string[8];
+            /*
+             * information[0] - год создания Л/К
+             * information[1] - обработка почвы
+             * information[2] - способ создания
+             * information[3] - расстояние между рядами
+             * information[4] - расстояние в ряду
+             * information[5] - количество
+             * information[6] - состояние
+             * information[7] - причина гибели
+             */
+            string[] dataFromBD = data.Split(',');
+
+            for (int i = 0; i < dataFromBD.Count(); i++)
+            {
+                if (dataFromBD[i] != "")
+                    information[i] = dataFromBD[i];
+            }
+
+            object objMaket = CreateTemplate(command, nomVyd, 11);
+
+            if (objMaket != null)
+            {
+                if (information[0] != null && information[0] != "")
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 1101, information[0], objMaket));
+                if (information[1] != null && information[1] != "")
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 1102, information[1], objMaket, "KlsMer"));
+                if (information[2] != null && information[2] != "")
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 1103, information[2], objMaket, "KlsSozdanSp"));
+                if (information[3] != null && information[3] != "")
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 1104, information[3], objMaket));
+                if (information[4] != null && information[4] != "")
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 1105, information[4], objMaket));
+                if (information[5] != null && information[5] != "")
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 1106, information[5], objMaket));
+                if (information[6] != null && information[6] != "")
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 1107, information[6], objMaket, "KlsKultSost"));
+                if (information[7] != null && information[7] != "")
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 1108, information[7], objMaket, "KlsNasPovr"));
+            }
+            else
+                returnListOfInformation.Add($"Не удалось создать макет №11");
+
+            return returnListOfInformation;
+        }
+        public static List<string> CreateTemplate12(OleDbCommand command,OleDbCommand commandToNSI,string data, string nomVyd)
+        {
+            List<string> returnListOfInformation = new List<string>();
+
+            string[] information = new string[8];
+            /*
+             * information[0] - тип повреждения
+             * information[1] - год
+             * information[2] - поврежденная порода
+             * information[3] - первый вредитель
+             * information[4] - степень повреждения
+             * information[5] - второй вредитель
+             * information[6] - степень повреждения
+             * information[7] - источник вредного воздействия
+             */
+            string[] dataFromBD = data.Split(',');
+
+            for (int i = 0; i < dataFromBD.Count(); i++)
+            {
+                if (dataFromBD[i] != "")
+                    information[i] = dataFromBD[i];
+            }
+
+            object objMaket = CreateTemplate(command, nomVyd, 12);
+
+            if (objMaket != null)
+            {
+                if (information[0] != null && information[0] != "")
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 1201, information[0], objMaket, "KlsNasPovr"));
+                if (information[1] != null && information[1] != "")
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 1202, information[1], objMaket));
+                if (information[2] != null && information[2] != "")
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 1203, information[2], objMaket, "KlsPoroda"));
+                if (information[3] != null && information[3] != "")
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 1204, information[3], objMaket, "KlsVreditel"));
+                if (information[4] != null && information[4] != "")
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 1205, information[4], objMaket, "KlsPovrStep"));
+                if (information[5] != null && information[5] != "")
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 1206, information[5], objMaket, "KlsVreditel"));
+                if (information[6] != null && information[6] != "")
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 1207, information[6], objMaket, "KlsPovrStep"));
+                if (information[7] != null && information[7] != "")
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 1208, information[7], objMaket));
+            }
+            else
+                returnListOfInformation.Add($"Не удалось создать макет №12");
 
             return returnListOfInformation;
         }

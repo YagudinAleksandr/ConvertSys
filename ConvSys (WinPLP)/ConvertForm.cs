@@ -204,6 +204,29 @@ namespace ConvSys__WinPLP_
                                             informationForListBox.Clear();
                                             break;
                                         case "32":
+                                            informationForListBox = AdditiaonalFunctions.CreatePodlesok(commandToOUTDB, commandToNSI, informationString[1], informVydel.ToString());
+                                            foreach (string error in informationForListBox)
+                                            {
+                                                LB_Inform.Items.Add(error);
+                                            }
+                                            informationForListBox.Clear();
+                                            break;
+                                        case "11":
+                                            informationForListBox = AdditiaonalFunctions.CreateTemplate11(commandToOUTDB, commandToNSI, informationString[1], informVydel.ToString());
+                                            foreach (string error in informationForListBox)
+                                            {
+                                                LB_Inform.Items.Add(error);
+                                            }
+                                            informationForListBox.Clear();
+                                            break;
+                                        case "12":
+                                            informationForListBox = AdditiaonalFunctions.CreateTemplate12(commandToOUTDB, commandToNSI, informationString[1], informVydel.ToString());
+                                            foreach (string error in informationForListBox)
+                                            {
+                                                LB_Inform.Items.Add(error);
+                                            }
+                                            break;
+                                        case "":
                                             break;
                                         default:
                                             LB_Inform.Items.Add($"Макет №{informationString[0]} не задан в программе. Выдел №{tabbleVYD.Rows[j].ItemArray[1]} квартал №{tableKW.Rows[i].ItemArray[1]}");
