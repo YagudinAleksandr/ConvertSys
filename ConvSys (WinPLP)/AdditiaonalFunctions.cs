@@ -470,8 +470,13 @@ namespace ConvSys__WinPLP_
 
                         if(information[8]!="" && information[8]!=null)
                         {
-                            if (CRUDClass.Update(command, "TblVydIarus", "Polnota", information[8].Replace('.', ','), "NomZ", info.ToString()) == null)
-                                returnListOfInformation.Add($"Не удалось внести полноту яруса {information[0]}");
+                            object obj = CRUDClass.Read(commandToNSI, "KlsPolnota", "Kod", "KL", Convert.ToInt32(information[8]));
+                            if(obj!=null)
+                            {
+                                if (CRUDClass.Update(command, "TblVydIarus", "Polnota", obj.ToString(), "NomZ", info.ToString()) == null)
+                                    returnListOfInformation.Add($"Не удалось внести полноту яруса {information[0]}");
+                            }
+                            
                         }
                         if (information[9] != "" && information[9] != null)
                         {
@@ -1529,6 +1534,310 @@ namespace ConvSys__WinPLP_
             }
             else
                 returnListOfInformation.Add($"Не удалось создать макет №27");
+
+            return returnListOfInformation;
+        }
+        public static List<string> CreateTemplate28(OleDbCommand command, OleDbCommand commandToNSI, string data, string nomVyd)
+        {
+            List<string> returnListOfInformation = new List<string>();
+
+            string[] information = new string[8];
+            /*
+             * information[0] - признак доступности
+             * information[1] - тип транспорта
+             * information[2] - расстояние до дороги
+             * information[3] - -------------------
+             * information[4] - -------------------
+             * information[5] - -------------------
+             * information[6] - -------------------
+             * information[7] - -------------------
+             */
+            string[] dataFromBD = data.Split(',');
+
+            for (int i = 0; i < dataFromBD.Count(); i++)
+            {
+                if (dataFromBD[i] != "")
+                    information[i] = dataFromBD[i];
+            }
+
+            object objMaket = CreateTemplate(command, nomVyd, 28);
+
+            if (objMaket != null)
+            {
+                if (information[0] != null && information[0] != "")
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 2801, information[0], objMaket));
+                if (information[1] != null && information[1] != "")
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 2802, information[1], objMaket));
+                if (information[2] != null && information[2] != "")
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 2803, information[2], objMaket));
+            }
+            else
+                returnListOfInformation.Add($"Не удалось создать макет №28");
+
+            return returnListOfInformation;
+        }
+        public static List<string> CreateTemplate29(OleDbCommand command, OleDbCommand commandToNSI, string data, string nomVyd)
+        {
+            List<string> returnListOfInformation = new List<string>();
+
+            string[] information = new string[8];
+            /*
+             * information[0] - тип сети
+             * information[1] - год ввода
+             * information[2] - категория земель
+             * information[3] - порода
+             * information[4] - расстояние до осушителя
+             * information[5] - расстояние между осушителями
+             * information[6] - бонитет
+             * information[7] - ----------------------------
+             */
+            string[] dataFromBD = data.Split(',');
+
+            for (int i = 0; i < dataFromBD.Count(); i++)
+            {
+                if (dataFromBD[i] != "")
+                    information[i] = dataFromBD[i];
+            }
+
+            object objMaket = CreateTemplate(command, nomVyd, 29);
+
+            if (objMaket != null)
+            {
+                if (information[0] != null && information[0] != "")
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 2901, information[0], objMaket));
+                if (information[1] != null && information[1] != "")
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 2902, information[1], objMaket));
+                if (information[2] != null && information[2] != "")
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 2903, information[2], objMaket, "KlsKatZem"));
+                if (information[3] != null && information[3] != "")
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 2904, information[3], objMaket, "KlsPoroda"));
+                if (information[4] != null && information[4] != "")
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 2905, information[4], objMaket));
+                if (information[5] != null && information[5] != "")
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 2906, information[5], objMaket));
+                if (information[6] != null && information[6] != "")
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 2907, information[6], objMaket));
+            }
+            else
+                returnListOfInformation.Add($"Не удалось создать макет №29");
+
+            return returnListOfInformation;
+        }
+        public static List<string> CreateTemplate30(OleDbCommand command, OleDbCommand commandToNSI, string data, string nomVyd)
+        {
+            List<string> returnListOfInformation = new List<string>();
+
+            string[] information = new string[8];
+            /*
+             * information[0] - особенность 1
+             * information[1] - ----------------
+             * information[2] - ----------------
+             * information[3] - -----------------
+             * information[4] - ----------------
+             * information[5] - -----------------
+             * information[6] - -----------------
+             * information[7] - ------------------
+             */
+            string[] dataFromBD = data.Split(',');
+
+            for (int i = 0; i < dataFromBD.Count(); i++)
+            {
+                if (dataFromBD[i] != "")
+                    information[i] = dataFromBD[i];
+            }
+
+            object objMaket = CreateTemplate(command, nomVyd, 30);
+
+            if (objMaket != null)
+            {
+                if (information[0] != null && information[0] != "")
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 1201, information[0], objMaket, "KlsVydOsob"));
+                
+            }
+            else
+                returnListOfInformation.Add($"Не удалось создать макет №30");
+
+            return returnListOfInformation;
+        }
+        public static List<string> CreateTemplate33(OleDbCommand command, OleDbCommand commandToNSI, string data, string nomVyd)
+        {
+            List<string> returnListOfInformation = new List<string>();
+
+            string[] information = new string[8];
+            /*
+             * information[0] - номер
+             * information[1] - год рубки
+             * information[2] - номер лесосеки
+             * information[3] - номер квартала
+             * information[4] - номер лесничества
+             * information[5] - номер лесосеки
+             * information[6] - номер квартала
+             * information[7] - номер лесничества
+             */
+            string[] dataFromBD = data.Split(',');
+
+            for (int i = 0; i < dataFromBD.Count(); i++)
+            {
+                if (dataFromBD[i] != "")
+                    information[i] = dataFromBD[i];
+            }
+
+            object objMaket = CreateTemplate(command, nomVyd, 33);
+
+            if (objMaket != null)
+            {
+                if (information[0] != null && information[0] != "")
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 3301, information[0], objMaket));
+                if (information[1] != null && information[1] != "")
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 3302, information[1], objMaket));
+                if (information[2] != null && information[2] != "")
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 3303, information[2], objMaket));
+                if (information[3] != null && information[3] != "")
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 3304, information[3], objMaket));
+                if (information[4] != null && information[4] != "")
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 3305, information[4], objMaket));
+                if (information[5] != null && information[5] != "")
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 3306, information[5], objMaket));
+                if (information[6] != null && information[6] != "")
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 3307, information[6], objMaket));
+                if (information[7] != null && information[7] != "")
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 3308, information[7], objMaket));
+            }
+            else
+                returnListOfInformation.Add($"Не удалось создать макет №33");
+
+            return returnListOfInformation;
+        }
+        public static List<string> CreateTemplate34(OleDbCommand command, OleDbCommand commandToNSI, string data, string nomVyd)
+        {
+            List<string> returnListOfInformation = new List<string>();
+
+            string[] information = new string[8];
+            /*
+             * information[0] - тип комплексного пользования
+             * information[1] - балл урожайности
+             * information[2] - урожай ореха
+             * information[3] - комплексный ранг
+             * information[4] - смолопродуктивность
+             * information[5] - запас хвюлапки кедры
+             * information[6] - запас хв.лапки пихты
+             * information[7] - --------------------
+             */
+            string[] dataFromBD = data.Split(',');
+
+            for (int i = 0; i < dataFromBD.Count(); i++)
+            {
+                if (dataFromBD[i] != "")
+                    information[i] = dataFromBD[i];
+            }
+
+            object objMaket = CreateTemplate(command, nomVyd, 34);
+
+            if (objMaket != null)
+            {
+                if (information[0] != null && information[0] != "")
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 3401, information[0], objMaket));
+                if (information[1] != null && information[1] != "")
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 3402, information[1], objMaket));
+                if (information[2] != null && information[2] != "")
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 3403, information[2], objMaket));
+                if (information[3] != null && information[3] != "")
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 3404, information[3], objMaket));
+                if (information[4] != null && information[4] != "")
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 3405, information[4], objMaket));
+                if (information[5] != null && information[5] != "")
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 3406, information[5], objMaket));
+                if (information[6] != null && information[6] != "")
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 3407, information[6], objMaket));
+                if (information[7] != null && information[7] != "")
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 3408, information[7], objMaket));
+            }
+            else
+                returnListOfInformation.Add($"Не удалось создать макет №34");
+
+            return returnListOfInformation;
+        }
+        public static List<string> CreateTemplate35(OleDbCommand command, OleDbCommand commandToNSI, string data, string nomVyd)
+        {
+            List<string> returnListOfInformation = new List<string>();
+
+            string[] information = new string[8];
+            /*
+             * information[0] - гидросооружения
+             * information[1] - код сооружения
+             * information[2] - протяженность
+             * information[3] - состояние
+             * information[4] - -------------------
+             * information[5] - -------------------
+             * information[6] - -------------------
+             * information[7] - -------------------
+             */
+            string[] dataFromBD = data.Split(',');
+
+            for (int i = 0; i < dataFromBD.Count(); i++)
+            {
+                if (dataFromBD[i] != "")
+                    information[i] = dataFromBD[i];
+            }
+
+            object objMaket = CreateTemplate(command, nomVyd, 35);
+
+            if (objMaket != null)
+            {
+                if (information[0] != null && information[0] != "")
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 3501, information[0], objMaket));
+                if (information[1] != null && information[1] != "")
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 3502, information[1], objMaket));
+                if (information[2] != null && information[2] != "")
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 3503, information[2], objMaket));
+                if (information[3] != null && information[3] != "")
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 3504, information[3], objMaket));
+            }
+            else
+                returnListOfInformation.Add($"Не удалось создать макет №35");
+
+            return returnListOfInformation;
+        }
+        public static List<string> CreateTemplate99(OleDbCommand command, OleDbCommand commandToNSI, string data, string nomVyd)
+        {
+            List<string> returnListOfInformation = new List<string>();
+
+            string[] information = new string[8];
+            /*
+             * information[0] - номер исходного выдела
+             * information[1] - номер подвыдела
+             * information[2] - унаследованная площадь
+             * information[3] - базовый
+             * information[4] - дата изменения
+             * information[5] - --------------------
+             * information[6] - ----------------------
+             * information[7] - -----------------------
+             */
+            string[] dataFromBD = data.Split(',');
+
+            for (int i = 0; i < dataFromBD.Count(); i++)
+            {
+                if (dataFromBD[i] != "")
+                    information[i] = dataFromBD[i];
+            }
+
+            object objMaket = CreateTemplate(command, nomVyd, 99);
+
+            if (objMaket != null)
+            {
+                if (information[0] != null && information[0] != "")
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 9901, information[0], objMaket));
+                if (information[1] != null && information[1] != "")
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 9902, information[1], objMaket));
+                if (information[2] != null && information[2] != "")
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 9903, information[2], objMaket));
+                if (information[3] != null && information[3] != "")
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 9904, information[3], objMaket));
+                if (information[4] != null && information[4] != "")
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 9905, information[4], objMaket));
+            }
+            else
+                returnListOfInformation.Add($"Не удалось создать макет №99");
 
             return returnListOfInformation;
         }

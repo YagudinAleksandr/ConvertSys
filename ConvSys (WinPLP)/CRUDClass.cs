@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.OleDb;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ConvSys__WinPLP_
@@ -47,6 +43,20 @@ namespace ConvSys__WinPLP_
             try
             {
                 command.CommandText = @"SELECT " + tableCellWhat + " FROM " + tableName + " WHERE " + paramCell + "='" + data + "'";
+
+                return command.ExecuteScalar();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Возникла проблема при работе с базой данных! {ex.Message}");
+                return null;
+            }
+        }
+        public static object Read(OleDbCommand command, string tableName, string tableCellWhat, string paramCell, int data)
+        {
+            try
+            {
+                command.CommandText = @"SELECT " + tableCellWhat + " FROM " + tableName + " WHERE " + paramCell + "=" + data + "";
 
                 return command.ExecuteScalar();
             }

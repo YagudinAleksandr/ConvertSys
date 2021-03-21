@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Data.OleDb;
 using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ConvSys__WinPLP_
@@ -326,6 +321,55 @@ namespace ConvSys__WinPLP_
                                             break;
                                         case "27":
                                             informationForListBox = AdditiaonalFunctions.CreateTemplate27(commandToOUTDB, commandToNSI, informationString[1], informVydel.ToString());
+                                            foreach (string error in informationForListBox)
+                                            {
+                                                LB_Inform.Items.Add(error);
+                                            }
+                                            break;
+                                        case "28":
+                                            informationForListBox = AdditiaonalFunctions.CreateTemplate28(commandToOUTDB, commandToNSI, informationString[1], informVydel.ToString());
+                                            foreach (string error in informationForListBox)
+                                            {
+                                                LB_Inform.Items.Add(error);
+                                            }
+                                            break;
+                                        case "29":
+                                            informationForListBox = AdditiaonalFunctions.CreateTemplate29(commandToOUTDB, commandToNSI, informationString[1], informVydel.ToString());
+                                            foreach (string error in informationForListBox)
+                                            {
+                                                LB_Inform.Items.Add(error);
+                                            }
+                                            break;
+                                        case "30":
+                                            informationForListBox = AdditiaonalFunctions.CreateTemplate30(commandToOUTDB, commandToNSI, informationString[1], informVydel.ToString());
+                                            foreach (string error in informationForListBox)
+                                            {
+                                                LB_Inform.Items.Add(error);
+                                            }
+                                            break;
+                                        case "33":
+                                            informationForListBox = AdditiaonalFunctions.CreateTemplate33(commandToOUTDB, commandToNSI, informationString[1], informVydel.ToString());
+                                            foreach (string error in informationForListBox)
+                                            {
+                                                LB_Inform.Items.Add(error);
+                                            }
+                                            break;
+                                        case "34":
+                                            informationForListBox = AdditiaonalFunctions.CreateTemplate34(commandToOUTDB, commandToNSI, informationString[1], informVydel.ToString());
+                                            foreach (string error in informationForListBox)
+                                            {
+                                                LB_Inform.Items.Add(error);
+                                            }
+                                            break;
+                                        case "35":
+                                            informationForListBox = AdditiaonalFunctions.CreateTemplate35(commandToOUTDB, commandToNSI, informationString[1], informVydel.ToString());
+                                            foreach (string error in informationForListBox)
+                                            {
+                                                LB_Inform.Items.Add(error);
+                                            }
+                                            break;
+                                        case "99":
+                                            informationForListBox = AdditiaonalFunctions.CreateTemplate99(commandToOUTDB, commandToNSI, informationString[1], informVydel.ToString());
                                             foreach (string error in informationForListBox)
                                             {
                                                 LB_Inform.Items.Add(error);
