@@ -1261,7 +1261,7 @@ namespace ConvSys__WinPLP_
                 if (information[1] != null && information[1] != "")
                     returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 2102, information[1], objMaket));
                 if (information[2] != null && information[2] != "")
-                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 2103, information[2], objMaket, "KlsRekOcen"));
+                    returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 2103, information[2], objMaket, "KlsRekrOcen"));
                 if (information[3] != null && information[3] != "")
                     returnListOfInformation.AddRange(CreateTemplateAdditionalParam(command, commandToNSI, 2104, information[3], objMaket, "KlsNasUst"));
                 if (information[4] != null && information[4] != "")

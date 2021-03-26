@@ -27,8 +27,8 @@
     <ProductName>ConvSys %28WinPLP%29</ProductName>
     <PublisherName>Александр Ягудин</PublisherName>
     <SuiteName>ConvertSys</SuiteName>
-    <ApplicationRevision>3</ApplicationRevision>
-    <ApplicationVersion>0.1.0.%2a</ApplicationVersion>
+    <ApplicationRevision>2</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
