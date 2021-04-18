@@ -95,10 +95,20 @@ namespace ConvSys__WinPLP_
 
                 for (int i = 0; i < tableKW.Rows.Count; i++)
                 {
-                    //Создаем выдел
-                    object objectInform = CRUDClass.Create(commandToOUTDB, "TblKvr", "[NomZ],[KvrNomK]", $"'{tableKW.Rows[i].ItemArray[0]}','{tableKW.Rows[i].ItemArray[1]}'");
-
-                    //Если выдел создан
+                    //Создаем квартал, если номера квартала не существует в базе
+                    object informationAboutKw = CRUDClass.Read(commandToOUTDB, "TblKvr", "NomZ", "KvrNomK", int.Parse(tableKW.Rows[i].ItemArray[1].ToString()));
+                    object objectInform = null;
+                    if (informationAboutKw != null)
+                    {
+                        objectInform = informationAboutKw;
+                    }
+                    else
+                    {
+                        objectInform = CRUDClass.Create(commandToOUTDB, "TblKvr", "[NomZ],[KvrNomK]", $"'{tableKW.Rows[i].ItemArray[0]}','{tableKW.Rows[i].ItemArray[1]}'");
+                    }
+                    
+                    
+                    //Если данные получены по кварталу
                     if (objectInform != null)
                     {
                         //=====================================
@@ -397,7 +407,7 @@ namespace ConvSys__WinPLP_
                     }
                     else
                         LB_Inform.Items.Add($"Не удалось создать квартал №{tableKW.Rows[i].ItemArray[1]}");
-
+                    
                     //Увеличиваем значение Progress Bar
                     PB_Kwrt.PerformStep();
 
