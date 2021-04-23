@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // Общие сведения об этой сборке предоставляются следующим набором
 // набора атрибутов. Измените значения этих атрибутов для изменения сведений,
 // связанных со сборкой.
-[assembly: AssemblyTitle("ConvertSys 2")]
+[assembly: AssemblyTitle("ConvSys 2")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("ConvertSys 2")]
+[assembly: AssemblyProduct("ConvSys 2")]
 [assembly: AssemblyCopyright("Copyright ©  2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // Следующий GUID служит для идентификации библиотеки типов, если этот проект будет видимым для COM
-[assembly: Guid("0fcf6f0e-ce62-498e-b9a0-bdaeb2daa5c1")]
+[assembly: Guid("58994c5c-3af4-41f7-aacb-6dd39e31da3f")]
 
 // Сведения о версии сборки состоят из указанных ниже четырех значений:
 //

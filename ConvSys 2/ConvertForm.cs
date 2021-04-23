@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace ConvertSys_2
+namespace ConvSys_2
 {
     public partial class ConvertForm : Form
     {
