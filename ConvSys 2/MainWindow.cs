@@ -72,15 +72,21 @@ namespace ConvSys_2
                 return;
             }
 
-            try
+            DialogResult dialogResult = MessageBox.Show("Сейчас начнется конвертирование данных. Воизбежании утери нужных данных, сделайте резервную копию итоговой базы ЛесИС. Вы уверины, что хотите продолжить?", "Предупреждение", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+            if(dialogResult == DialogResult.Yes)
             {
-                ConvertForm convertForm = new ConvertForm();
-                convertForm.ShowDialog();
+                try
+                {
+                    ConvertForm convertForm = new ConvertForm(TB_DBFrom.Text, TB_DBnsi.Text, TB_DBOut.Text);
+                    convertForm.ShowDialog();
+                }
+                catch (Exception ex)
+                {
+                    mes(ex.Message);
+                }
             }
-            catch(Exception ex)
-            {
-                mes(ex.Message);
-            }
+            
         }
 
         private static void MessageErrorShow(string message)

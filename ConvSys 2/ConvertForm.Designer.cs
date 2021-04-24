@@ -30,19 +30,19 @@ namespace ConvSys_2
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConvertForm));
-            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.LB_ConvertInfList = new System.Windows.Forms.ListBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.progressBar2 = new System.Windows.Forms.ProgressBar();
+            this.PB_MainProgress = new System.Windows.Forms.ProgressBar();
             this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // listBox1
+            // LB_ConvertInfList
             // 
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.Location = new System.Drawing.Point(15, 92);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(773, 342);
-            this.listBox1.TabIndex = 1;
+            this.LB_ConvertInfList.FormattingEnabled = true;
+            this.LB_ConvertInfList.Location = new System.Drawing.Point(15, 92);
+            this.LB_ConvertInfList.Name = "LB_ConvertInfList";
+            this.LB_ConvertInfList.Size = new System.Drawing.Size(773, 342);
+            this.LB_ConvertInfList.TabIndex = 1;
             // 
             // label2
             // 
@@ -53,12 +53,12 @@ namespace ConvSys_2
             this.label2.TabIndex = 3;
             this.label2.Text = "Прогресс";
             // 
-            // progressBar2
+            // PB_MainProgress
             // 
-            this.progressBar2.Location = new System.Drawing.Point(15, 25);
-            this.progressBar2.Name = "progressBar2";
-            this.progressBar2.Size = new System.Drawing.Size(773, 23);
-            this.progressBar2.TabIndex = 4;
+            this.PB_MainProgress.Location = new System.Drawing.Point(15, 25);
+            this.PB_MainProgress.Name = "PB_MainProgress";
+            this.PB_MainProgress.Size = new System.Drawing.Size(773, 23);
+            this.PB_MainProgress.TabIndex = 4;
             // 
             // label1
             // 
@@ -75,12 +75,14 @@ namespace ConvSys_2
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.progressBar2);
+            this.Controls.Add(this.PB_MainProgress);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.listBox1);
+            this.Controls.Add(this.LB_ConvertInfList);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ConvertForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Конвертирование";
+            this.Shown += new System.EventHandler(this.ConvertForm_Shown);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -88,9 +90,9 @@ namespace ConvSys_2
 
         #endregion
 
-        private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.ListBox LB_ConvertInfList;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ProgressBar progressBar2;
+        private System.Windows.Forms.ProgressBar PB_MainProgress;
         private System.Windows.Forms.Label label1;
     }
 }
