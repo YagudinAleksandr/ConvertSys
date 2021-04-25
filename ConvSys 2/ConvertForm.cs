@@ -201,10 +201,132 @@ namespace ConvSys_2
                         continue;
                     }
 
-                    /*Обновляем данные по выделу*/
+                    /*
+                     * Обновляем данные по выделу
+                     */
 
+                    //Категория земель
+                    if (ds.Tables[0].Rows[i].ItemArray[5].ToString() != "" && ds.Tables[0].Rows[i].ItemArray[5].ToString() != "0")
+                    {
+                        string inform = SUpdateInfo.UpdateInformation(commandToOutDB, commandToNSI, "KlsKatZem", "KL", "TX", ds.Tables[0].Rows[i].ItemArray[5].ToString(), "TblVyd", "KatZem", "NomZ", mainVyd.ToString());
+                        if(inform != String.Empty)
+                        {
+                            LB_ConvertInfList.Items.Add(inform + $". Выдел №{ds.Tables[0].Rows[i].ItemArray[4]}, Квартал №{ds.Tables[0].Rows[i].ItemArray[2]}");
+                        }
+                            
+                    }
+
+                    //Категория защитности
+                    if (ds.Tables[0].Rows[i].ItemArray[6].ToString() != "" && ds.Tables[0].Rows[i].ItemArray[6].ToString() != "0")
+                    {
+                        string inform = SUpdateInfo.UpdateInformation(commandToOutDB, commandToNSI, "KlsKatZasch", "KL", "TX", ds.Tables[0].Rows[i].ItemArray[6].ToString(), "TblVyd", "KatZasch", "NomZ", mainVyd.ToString());
+                        if (inform != String.Empty)
+                        {
+                            LB_ConvertInfList.Items.Add(inform + $". Выдел №{ds.Tables[0].Rows[i].ItemArray[4]}, Квартал №{ds.Tables[0].Rows[i].ItemArray[2]}");
+                        }
+                    }
+
+                    //ОЗУ
+                    if (ds.Tables[0].Rows[i].ItemArray[7].ToString() != "" && ds.Tables[0].Rows[i].ItemArray[7].ToString() != "0")
+                    {
+                        string inform = SUpdateInfo.UpdateInformation(commandToOutDB, commandToNSI, "KlsOZU", "KL", "Kod", ds.Tables[0].Rows[i].ItemArray[7].ToString(), "TblVyd", "OZU", "NomZ", mainVyd.ToString());
+                        if (inform != String.Empty)
+                        {
+                            LB_ConvertInfList.Items.Add(inform + $". Выдел №{ds.Tables[0].Rows[i].ItemArray[4]}, Квартал №{ds.Tables[0].Rows[i].ItemArray[2]}");
+                        }
+                    }
+
+                    //Порода преобладающая
+                    if (ds.Tables[0].Rows[i].ItemArray[8].ToString() != "" && ds.Tables[0].Rows[i].ItemArray[8].ToString() != "0")
+                    {
+                        string inform = SUpdateInfo.UpdateInformation(commandToOutDB, commandToNSI, "KlsPoroda", "KL", "Kod", ds.Tables[0].Rows[i].ItemArray[8].ToString(), "TblVyd", "PorodaPrb", "NomZ", mainVyd.ToString());
+                        if (inform != String.Empty)
+                        {
+                            LB_ConvertInfList.Items.Add(inform + $". Выдел №{ds.Tables[0].Rows[i].ItemArray[4]}, Квартал №{ds.Tables[0].Rows[i].ItemArray[2]}");
+                        }
+                    }
+
+                    //Бонитет
+                    if (ds.Tables[0].Rows[i].ItemArray[9].ToString() != "" && ds.Tables[0].Rows[i].ItemArray[9].ToString() != "0")
+                    {
+                        string inform = SUpdateInfo.UpdateInformation(commandToOutDB, commandToNSI, "KlsBonitet", "KL", "Kod", ds.Tables[0].Rows[i].ItemArray[9].ToString(), "TblVyd", "Bonitet", "NomZ", mainVyd.ToString());
+                        if (inform != String.Empty)
+                        {
+                            LB_ConvertInfList.Items.Add(inform + $". Выдел №{ds.Tables[0].Rows[i].ItemArray[4]}, Квартал №{ds.Tables[0].Rows[i].ItemArray[2]}");
+                        }
+                    }
+
+                    //Тип леса
+                    if (ds.Tables[0].Rows[i].ItemArray[10].ToString() != "" && ds.Tables[0].Rows[i].ItemArray[10].ToString() != "0")
+                    {
+                        string inform = SUpdateInfo.UpdateInformation(commandToOutDB, commandToNSI, "KlsTipLesa", "KL", "Kod", ds.Tables[0].Rows[i].ItemArray[10].ToString(), "TblVyd", "TipLesa", "NomZ", mainVyd.ToString());
+                        if (inform != String.Empty)
+                        {
+                            LB_ConvertInfList.Items.Add(inform + $". Выдел №{ds.Tables[0].Rows[i].ItemArray[4]}, Квартал №{ds.Tables[0].Rows[i].ItemArray[2]}");
+                        }
+                    }
+
+                    //ТЛУ
+                    if (ds.Tables[0].Rows[i].ItemArray[11].ToString() != "" && ds.Tables[0].Rows[i].ItemArray[11].ToString() != "0")
+                    {
+                        string inform = SUpdateInfo.UpdateInformation(commandToOutDB, commandToNSI, "KlsTLU", "KL", "Kod", ds.Tables[0].Rows[i].ItemArray[11].ToString(), "TblVyd", "TLU", "NomZ", mainVyd.ToString());
+                        if (inform != String.Empty)
+                        {
+                            LB_ConvertInfList.Items.Add(inform + $". Выдел №{ds.Tables[0].Rows[i].ItemArray[4]}, Квартал №{ds.Tables[0].Rows[i].ItemArray[2]}");
+                        }
+                    }
+
+                    //Запас захламленности
+                    if (ds.Tables[0].Rows[i].ItemArray[12].ToString() != "" && ds.Tables[0].Rows[i].ItemArray[12].ToString() != "0")
+                    {
+                        if (CRUDClass.Update(commandToOutDB, "TblVyd", "ZapasZah", ds.Tables[0].Rows[i].ItemArray[12].ToString(), "NomZ", mainVyd.ToString()) == null)
+                        {
+                            LB_ConvertInfList.Items.Add($"Не удалось внести запас захламленности {ds.Tables[0].Rows[i].ItemArray[12].ToString()}. Выдел №{ds.Tables[0].Rows[i].ItemArray[4]}, Квартал №{ds.Tables[0].Rows[i].ItemArray[2]}");
+                        }
+                        
+                    }
+
+                    //Запас сухостоя
+                    if (ds.Tables[0].Rows[i].ItemArray[13].ToString() != "" && ds.Tables[0].Rows[i].ItemArray[13].ToString() != "0")
+                    {
+                        if (CRUDClass.Update(commandToOutDB, "TblVyd", "ZapasSuh", ds.Tables[0].Rows[i].ItemArray[13].ToString(), "NomZ", mainVyd.ToString()) == null)
+                        {
+                            LB_ConvertInfList.Items.Add($"Не удалось внести запас сухостоя {ds.Tables[0].Rows[i].ItemArray[12].ToString()}. Выдел №{ds.Tables[0].Rows[i].ItemArray[4]}, Квартал №{ds.Tables[0].Rows[i].ItemArray[2]}");
+                        }
+                        
+                    }
+
+                    //Рельеф экспозиция
+                    if (ds.Tables[0].Rows[i].ItemArray[14].ToString() != "" && ds.Tables[0].Rows[i].ItemArray[14].ToString() != "0")
+                    {
+                        string inform = SUpdateInfo.UpdateInformation(commandToOutDB, commandToNSI, "KlsSklonEkspoz", "KL", "Kod", ds.Tables[0].Rows[i].ItemArray[14].ToString(), "TblVyd", "SklonEkspoz", "NomZ", mainVyd.ToString());
+                        if (inform != String.Empty)
+                        {
+                            LB_ConvertInfList.Items.Add(inform + $" для экспозиции склона. Выдел №{ds.Tables[0].Rows[i].ItemArray[4]}, Квартал №{ds.Tables[0].Rows[i].ItemArray[2]}");
+                        }
+                    }
+
+                    //Рельеф крутизна
+                    if (ds.Tables[0].Rows[i].ItemArray[15].ToString() != "" && ds.Tables[0].Rows[i].ItemArray[15].ToString() != "0")
+                    {
+                        if (CRUDClass.Update(commandToOutDB, "TblVyd", "SklonKrut", ds.Tables[0].Rows[i].ItemArray[15].ToString(), "NomZ", mainVyd.ToString()) == null)
+                        {
+                            LB_ConvertInfList.Items.Add($"Не удалось внести крутизну склона {ds.Tables[0].Rows[i].ItemArray[15].ToString()}. Выдел №{ds.Tables[0].Rows[i].ItemArray[4]}, Квартал №{ds.Tables[0].Rows[i].ItemArray[2]}");
+                        }
+
+                    }
+
+
+                    /*
+                     * Хоз.мероприятия*
+                     */
+
+
+
+                    //Обнуление данных
                     mainKvr = mainVyd = null;
 
+                    //Увеличиваем прогресс на единицу
                     PB_MainProgress.PerformStep();
                 }
             }

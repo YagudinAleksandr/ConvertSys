@@ -116,5 +116,18 @@ namespace ConvSys_2
                 return false;
             }
         }
+        public static bool Delete(OleDbCommand command, string tableName, string cellWhere, string param)
+        {
+            try
+            {
+                command.CommandText = @"DELETE FROM" + tableName + " WHERE " + cellWhere + "='" + param + "'";
+                return true;
+            }
+            catch(Exception ex)
+            {
+                return false;
+            }
+           
+        }
     }
 }
