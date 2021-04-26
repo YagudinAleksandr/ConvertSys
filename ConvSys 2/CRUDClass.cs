@@ -121,6 +121,7 @@ namespace ConvSys_2
             try
             {
                 command.CommandText = @"DELETE FROM" + tableName + " WHERE " + cellWhere + "='" + param + "'";
+                command.ExecuteNonQuery();
                 return true;
             }
             catch(Exception ex)
@@ -128,6 +129,20 @@ namespace ConvSys_2
                 return false;
             }
            
+        }
+
+        public static bool Truncate(OleDbCommand command,string tableName)
+        {
+            try
+            {
+                command.CommandText = @"DELETE FROM " + tableName;
+                command.ExecuteNonQuery();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }
